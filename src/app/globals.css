@@ -22,6 +22,29 @@
   --font-mono: var(--font-space-mono);
 }
 
+:root {
+  /*
+   * Dónde empieza, por arriba, el panel fijo del cronómetro en escritorio: justo
+   * debajo de la cabecera, que allí se queda pegada al hacer scroll.
+   *
+   * `--site-header-height` la escribe SiteHeader (src/app/site-header.tsx) midiéndose
+   * en el navegador, y solo existe a partir de ese momento. Los 88 px son el valor de
+   * reserva que va DENTRO de var(), y ese detalle es justo lo que importa: si la
+   * variable no estuviera definida y no hubiera reserva, el calc entero sería
+   * inválido, `top` se quedaría en `auto` y el panel —que también lleva `bottom:auto`
+   * en escritorio— caería a su posición en el flujo del documento, a unos 3000 px del
+   * principio de la ficha. No se descolocaría un poco: desaparecería de la pantalla
+   * para siempre, porque al ser fijo tampoco vuelve al hacer scroll.
+   *
+   * Con la reserva dentro de var(), la posición es válida desde el primer instante,
+   * incluso sin JavaScript, y la medida real solo la afina cuando llega. Los 88 px
+   * son el alto de la cabecera hoy (40 de margen superior, 24 de la palabra «Café» y
+   * 24 de margen inferior); no hace falta mantenerlos exactos, porque son un punto de
+   * partida y no el valor con el que funciona la página.
+   */
+  --brew-timer-top: calc(var(--site-header-height, 88px) + 32px);
+}
+
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);

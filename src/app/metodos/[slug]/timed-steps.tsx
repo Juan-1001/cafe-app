@@ -150,8 +150,31 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
 
   return (
     <>
+      {/*
+        El panel va fijo para seguir a la vista mientras se baja por los pasos: en
+        móvil pegado abajo y a todo el ancho, y en escritorio como tarjeta arriba a
+        la derecha.
+
+        En escritorio arranca justo debajo de la cabecera, que ahí se queda fija al
+        hacer scroll. El cálculo vive en `--brew-timer-top`, en globals.css, y sale del
+        alto real de la cabecera medido en el navegador: no es un número escrito a
+        mano, porque ese alto cambia con el ancho de la ventana, con la tipografía ya
+        cargada o el día que la navegación gane otra sección.
+
+        Esa variable trae su propio valor de reserva, así que el panel tiene una
+        posición válida desde el primer instante y la medición solo la afina después.
+        Importa porque el fallo no sería estético: sin `top` válido, y con
+        `bottom:auto` en escritorio, el panel se iría a su posición en el flujo del
+        documento, a unos 3000 px de aquí, y no se vería nunca más.
+
+        El apilamiento es la segunda red: la cabecera lleva `z-20` y este panel
+        `z-10`, así que aunque los dos vuelvan a solaparse, el enlace sigue
+        recibiendo el clic. El recuadro tampoco ocupa más de lo que se ve —no hay
+        ninguna capa transparente alrededor—, así que fuera de la tarjeta la página
+        se deja pulsar con normalidad.
+      */}
       <div
-        className={`fixed inset-x-0 bottom-0 z-10 border-t border-ink px-6 py-4 transition-colors duration-200 motion-reduce:transition-none md:inset-x-auto md:top-6 md:right-6 md:bottom-auto md:w-80 md:border md:p-5 ${
+        className={`fixed inset-x-0 bottom-0 z-10 border-t border-ink px-6 py-4 transition-colors duration-200 motion-reduce:transition-none md:inset-x-auto md:top-(--brew-timer-top) md:right-6 md:bottom-auto md:w-80 md:border md:p-5 ${
           alerting ? "bg-lavender" : "bg-paper"
         }`}
         role="timer"
