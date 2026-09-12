@@ -8,11 +8,13 @@ import {
 } from "@/content/metodos/amounts";
 import type { Recipe } from "@/content/metodos/types";
 
-const CUP_OPTIONS = [1, 2, 3, 4];
+/** Lo que se ofrece cuando el método no acota las tazas que hace bien. */
+const DEFAULT_CUP_OPTIONS = [1, 2, 3, 4];
 
 type RecipeAmountsValue = {
   cups: number;
   setCups: (cups: number) => void;
+  options: number[];
   variables: Record<string, string>;
 };
 
@@ -46,13 +48,15 @@ export function RecipeAmountsProvider({
   waterPerCoffeeGram: number;
   children: React.ReactNode;
 }) {
-  const [cups, setCups] = useState(1);
+  const options = recipe.cupOptions ?? DEFAULT_CUP_OPTIONS;
+  // Se arranca en la primera opción del método, que no siempre es una taza.
+  const [cups, setCups] = useState(options[0]);
 
   const value = useMemo<RecipeAmountsValue>(() => {
     const amounts = computeAmounts(recipe, waterPerCoffeeGram, cups);
 
-    return { cups, setCups, variables: amountVariables(amounts) };
-  }, [recipe, waterPerCoffeeGram, cups]);
+    return { cups, setCups, options, variables: amountVariables(amounts) };
+  }, [recipe, waterPerCoffeeGram, cups, options]);
 
   return (
     <RecipeAmountsContext.Provider value={value}>
@@ -70,7 +74,7 @@ export function Amounts({ text }: { text: string }) {
 
 /** Selector de tazas. Los radios de verdad traen gratis el teclado y el lector de pantalla. */
 export function CupsControl() {
-  const { cups, setCups } = useRecipeAmounts();
+  const { cups, setCups, options } = useRecipeAmounts();
 
   return (
     <fieldset>
@@ -79,7 +83,7 @@ export function CupsControl() {
       </legend>
 
       <div className="mt-3 flex gap-2">
-        {CUP_OPTIONS.map((option) => (
+        {options.map((option) => (
           <label key={option} className="cursor-pointer">
             <input
               type="radio"

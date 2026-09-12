@@ -1,10 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fillAmounts } from "@/content/metodos/amounts";
 import { activeStepNumber, formatClock } from "@/content/metodos/timing";
+import { useBrewSound } from "./brew-sound";
 import { useAmountVariables } from "./recipe-amounts";
 import type { TimedStep } from "@/content/metodos/timing";
+
+/**
+ * Cuántos segundos del cronómetro sigue encendido el destello del cambio de paso.
+ * Como `elapsed` va de segundo en segundo, con 2 el destello dura dos tictacs.
+ */
+const FLASH_SECONDS = 2;
 
 /**
  * El cronómetro y la lista de pasos viven en el mismo componente porque comparten
@@ -15,6 +22,8 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
   // `elapsed` son los segundos que lleva el cronómetro, y es lo que se ve en pantalla.
   // Las cantidades del texto dependen de las tazas que haya elegido el visitante.
   const variables = useAmountVariables();
+  const { soundOn, toggleSound, prepare, playStepChange, playFinish } =
+    useBrewSound();
   const [elapsed, setElapsed] = useState(0);
   // `startedAt` es el instante real en el que arrancó. Si es null, está detenido.
   const [startedAt, setStartedAt] = useState<number | null>(null);
@@ -34,8 +43,15 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
   }, [startedAt]);
 
   function handleStart() {
+    // Pulsar es el gesto que el navegador exige para dejar sonar algo después.
+    prepare();
     // Al reanudar se descuenta lo ya corrido para no perderlo.
     setStartedAt(Date.now() - elapsed * 1000);
+  }
+
+  function handleToggleSound() {
+    if (!soundOn) prepare();
+    toggleSound();
   }
 
   function handlePause() {
@@ -53,15 +69,69 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
   const activeNumber = used ? activeStepNumber(steps, elapsed) : null;
   const activeStep = steps.find((step) => step.number === activeNumber) ?? null;
 
+  /**
+   * El último paso no tiene hora de final en el contenido, así que el momento de
+   * "ya está" es cuando ese paso arranca: en los dos métodos es justo el paso de
+   * servir, o sea que el café ya está hecho. Al derivarlo del paso activo, el
+   * estado se sostiene solo mientras el cronómetro siga donde está.
+   */
+  const lastNumber = steps.length > 0 ? steps[steps.length - 1].number : null;
+  const finished = activeNumber !== null && activeNumber === lastNumber;
+
+  /**
+   * El destello no necesita estado propio ni temporizador: se deduce de los segundos
+   * que lleva el paso actual, que ya se recalculan cuatro veces por segundo. Así se
+   * apaga solo, y con el cronómetro en pausa no se queda encendido para siempre.
+   */
+  const flashing =
+    running &&
+    !finished &&
+    activeStep?.startSeconds != null &&
+    elapsed - activeStep.startSeconds < FLASH_SECONDS;
+
+  const alerting = flashing || finished;
+
+  // Sobre el fondo lavender del aviso, los tonos claros de la paleta no llegan al
+  // contraste mínimo; ink sí, así que el texto del panel se oscurece mientras avisa.
+  const labelColor = alerting ? "text-ink" : "text-sage-deep";
+  const bodyColor = alerting ? "text-ink" : "text-coffee";
+
+  const previousActiveRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const previous = previousActiveRef.current;
+    previousActiveRef.current = activeNumber;
+
+    if (activeNumber === null || activeNumber === previous) return;
+    // Al arrancar de cero no se avisa: el visitante acaba de pulsar y está mirando.
+    // Retroceder solo pasa al reiniciar, y eso tampoco es un aviso.
+    if (previous === null || activeNumber < previous) return;
+
+    if (activeNumber === lastNumber) {
+      playFinish();
+      return;
+    }
+
+    playStepChange();
+  }, [activeNumber, lastNumber, playFinish, playStepChange]);
+
   return (
     <>
       <div
-        className="fixed inset-x-0 bottom-0 z-10 border-t border-ink bg-paper px-6 py-4 md:inset-x-auto md:top-6 md:right-6 md:bottom-auto md:w-80 md:border md:p-5"
+        className={`fixed inset-x-0 bottom-0 z-10 border-t border-ink px-6 py-4 transition-colors duration-200 motion-reduce:transition-none md:inset-x-auto md:top-6 md:right-6 md:bottom-auto md:w-80 md:border md:p-5 ${
+          alerting ? "bg-lavender" : "bg-paper"
+        }`}
         role="timer"
         aria-label="Cronómetro de la preparación"
       >
-        <p className="hidden font-mono text-xs uppercase tracking-widest text-sage-deep md:block">
-          Cronómetro
+        {/* Al terminar, el rótulo deja de ser de adorno y pasa a ser el aviso, así
+            que se muestra también en móvil, donde normalmente está escondido. */}
+        <p
+          className={`font-mono text-xs uppercase tracking-widest ${labelColor} ${
+            finished ? "block" : "hidden md:block"
+          }`}
+        >
+          {finished ? "Café listo" : "Cronómetro"}
         </p>
 
         {/* En móvil el reloj y el paso comparten fila; en escritorio se apilan. */}
@@ -70,15 +140,21 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
             {formatClock(elapsed)}
           </p>
 
+          {/* El aviso vive aquí en texto, no solo en el color ni en el sonido: este
+              párrafo se relee solo en los lectores de pantalla al cambiar. */}
           <p
-            className="min-w-0 flex-1 truncate text-right text-sm text-coffee md:mt-4 md:text-left"
+            className={`min-w-0 flex-1 truncate text-right text-sm ${bodyColor} md:mt-4 md:text-left`}
             aria-live="polite"
             data-testid="current-step"
           >
             {activeStep ? (
               <>
-                <span className="font-mono text-xs uppercase tracking-widest text-sage-deep">
-                  Paso {String(activeStep.number).padStart(2, "0")}{" "}
+                <span
+                  className={`font-mono text-xs uppercase tracking-widest ${labelColor}`}
+                >
+                  {finished
+                    ? "Listo "
+                    : `Paso ${String(activeStep.number).padStart(2, "0")} `}
                 </span>
                 {fillAmounts(activeStep.title, variables)}
               </>
@@ -88,7 +164,7 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
           </p>
         </div>
 
-        <div className="mt-3 flex gap-2 md:mt-4">
+        <div className="mt-3 flex flex-wrap gap-2 md:mt-4">
           <TimerButton onClick={handleStart} filled={!running}>
             Iniciar
           </TimerButton>
@@ -98,6 +174,19 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
           <TimerButton onClick={handleReset} filled={false}>
             Reiniciar
           </TimerButton>
+
+          <button
+            type="button"
+            onClick={handleToggleSound}
+            aria-pressed={!soundOn}
+            aria-label="Silenciar los avisos del cronómetro"
+            title={soundOn ? "Silenciar los avisos" : "Activar los avisos"}
+            className={`border border-ink px-3 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lavender-deep ${
+              soundOn ? "bg-paper text-ink" : "bg-ink text-paper"
+            }`}
+          >
+            <SpeakerIcon muted={!soundOn} />
+          </button>
         </div>
       </div>
 
@@ -167,12 +256,41 @@ function TimerButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex-1 border border-ink px-2 py-2 font-mono text-xs uppercase focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lavender-deep ${
+      className={`flex-1 border border-ink px-1 py-2 font-mono text-xs uppercase focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lavender-deep ${
         filled ? "bg-ink text-paper" : "bg-paper text-ink"
       }`}
     >
       {children}
     </button>
+  );
+}
+
+/** Altavoz de trazo fino, con las ondas tachadas cuando está en silencio. */
+function SpeakerIcon({ muted }: { muted: boolean }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className="h-4 w-4"
+    >
+      <path d="M8.5 3 5 5.75H2.75v4.5H5L8.5 13z" />
+      {muted ? (
+        <>
+          <path d="M11 6.25l3.25 3.5" />
+          <path d="M14.25 6.25 11 9.75" />
+        </>
+      ) : (
+        <>
+          <path d="M10.75 6.25a2.5 2.5 0 0 1 0 3.5" />
+          <path d="M12.75 4.75a5 5 0 0 1 0 6.5" />
+        </>
+      )}
+    </svg>
   );
 }
 

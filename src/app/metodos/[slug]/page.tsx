@@ -34,6 +34,7 @@ const SPEC_FIELDS = [
   { key: "waterTemperature", label: "Temperatura del agua", isTime: false, isRatio: false },
   { key: "totalTime", label: "Tiempo total", isTime: true, isRatio: false },
   { key: "output", label: "Rendimiento", isTime: false, isRatio: false },
+  { key: "cupProfile", label: "Perfil de taza", isTime: false, isRatio: false },
 ] as const satisfies readonly {
   key: keyof BrewMethod["specs"];
   label: string;
@@ -106,6 +107,20 @@ function RatioBar({ ratio }: { ratio: Ratio }) {
       </div>
     </div>
   );
+}
+
+/**
+ * El título de los errores lleva el número escrito con letra, no en cifra, así que
+ * no basta con interpolarlo: cada método trae los errores que tiene y aquí se busca
+ * la palabra. Si algún día son más de ocho, el título se queda sin número y ya está.
+ */
+const NUMBER_WORDS = ["dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho"];
+
+function mistakesHeading(count: number): string {
+  const word = NUMBER_WORDS[count - 2];
+  if (!word) return "Si algo salió mal, casi siempre es una de estas cosas";
+
+  return `Si algo salió mal, casi siempre es una de estas ${word} cosas`;
 }
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
@@ -274,7 +289,7 @@ export default async function BrewMethodPage({
         <section className="mt-24 px-6 md:mt-36 md:ml-[20%] md:px-16">
           <Eyebrow>Errores comunes</Eyebrow>
           <h2 className="mt-4 max-w-prose font-display text-3xl md:text-5xl">
-            Si algo salió mal, casi siempre es una de estas cuatro cosas
+            {mistakesHeading(method.commonMistakes.length)}
           </h2>
 
           <ul className="mt-12">

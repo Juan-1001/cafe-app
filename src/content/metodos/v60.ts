@@ -9,6 +9,8 @@ export const v60: BrewMethod = {
 
   recipe: {
     coffeeGramsPerCup: 15,
+    // Aquí la única pérdida es el agua que se quedan el molido y el papel: el cono
+    // se vacía entero en la jarra, así que no hay nada más que descontar.
     waterRetainedPerGram: 2,
     // Gramos de agua por gramo de café en cada hito del vertido.
     waterMarks: { floracion: 3, vertido1: 10 },
@@ -34,6 +36,10 @@ export const v60: BrewMethod = {
     output: {
       value: "{rendimiento}",
       note: "Lo que llega a la taza: el molido se queda con unos {retenida} de agua.",
+    },
+    cupProfile: {
+      value: "Limpia",
+      note: "El papel retiene los aceites y las partículas más finas del molido, así que la bebida queda casi transparente y los sabores se distinguen uno a uno. Es el método donde más se nota de dónde viene el grano.",
     },
   },
 

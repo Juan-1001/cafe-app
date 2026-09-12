@@ -16,6 +16,8 @@ export type BrewSpecs = {
   waterTemperature: Spec;
   totalTime: Spec;
   output: Spec;
+  /** A qué sabe la taza que sale de aquí: es lo que hace elegir un método y no otro. */
+  cupProfile: Spec;
 };
 
 /**
@@ -64,13 +66,24 @@ export type FunFact = {
 export type Recipe = {
   /** Gramos de café molido para una taza. */
   coffeeGramsPerCup: number;
-  /** Gramos de agua que el molido se queda y no llegan a la taza, por gramo de café. */
+  /**
+   * Gramos de agua que NO llegan a la taza, por gramo de café. Cuenta todo lo que
+   * se queda por el camino, no solo lo que absorbe el molido; cada método explica
+   * en su propio archivo qué pérdidas suma exactamente en esta cifra.
+   */
   waterRetainedPerGram: number;
   /**
    * Hitos de agua con nombre, en gramos de agua por gramo de café. La clave es la
    * que se usa en los textos: { floracion: 3 } se escribe como "{floracion}".
    */
   waterMarks: Record<string, number>;
+  /**
+   * Números de tazas que el aparato hace bien, en orden; el primero es el que se
+   * ofrece al entrar. Si no está, se ofrecen 1 a 4 como hasta ahora. Hay métodos
+   * con un mínimo (una prensa de litro necesita agua suficiente para cubrir la
+   * malla) y otros con capacidad fija, como la moka.
+   */
+  cupOptions?: number[];
 };
 
 export type BrewMethod = {
