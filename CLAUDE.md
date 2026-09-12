@@ -23,12 +23,27 @@ usuarios, no lo implementes: pregúntalo antes, porque está fuera del alcance a
 | Ruta        | Sección                | Contenido |
 |-------------|------------------------|-----------|
 | `/`         | Inicio                 | Bienvenida, qué es el café de especialidad y accesos a las demás secciones |
-| `/granos`   | Tipos de grano y orígenes | Variedades, países y regiones, procesos, altura, perfiles de sabor |
+| `/granos`   | Granos                 | Biblioteca de artículos sobre lo que le pasa al café antes de prepararlo |
 | `/metodos`  | Métodos de preparación | Guías paso a paso: V60, prensa francesa, Aeropress, espresso, moka, cold brew… |
 | `/recetas`  | Recetas                | Preparaciones concretas con ingredientes, proporciones y pasos |
 | `/tiendas`  | Tiendas en Bogotá      | Directorio de cafeterías recomendadas: barrio, qué las hace buenas, cómo llegar |
 
 `/tiendas` es parte del alcance de la v1, no un extra para después.
+
+`/granos` es una biblioteca de artículos, no un catálogo de orígenes. Se replanteó así
+porque variedades, países, procesos y altura son tipos de contenido distintos forzados en
+una misma ficha, y porque el catálogo de orígenes es contenido infinito: nunca está
+terminado. Cada artículo tiene nivel (introductorio o intermedio), tiempo de lectura
+calculado del propio cuerpo y un cuerpo hecho de bloques con tipo.
+
+El índice se ordena por **el recorrido del café** —la planta, la finca, el tostador—, no
+por nivel. El recorrido deja ver los huecos que faltan por contar, mientras que una lista
+solo crece; y agrupar por nivel repetiría el recurso de los capítulos por dificultad de
+`/metodos`, con lo que las dos secciones se leerían como la misma plantilla rellenada dos
+veces. Los artículos se leen sueltos: cada uno se entiende por su cuenta.
+
+Los orígenes y las variedades vuelven más adelante como artículo (por ejemplo, «las
+variedades que vas a ver en Colombia»), nunca como catálogo con una ficha por país.
 
 Cada tienda debe incluir un campo con la **fecha de la última verificación de sus datos**
 (dirección, horario, si sigue abierta) y esa fecha se muestra en la página. Los datos de
@@ -58,6 +73,28 @@ No hay base de datos ni gestor de contenidos externo.
 - Mientras no exista la imagen real, usa un **bloque de color sólido de la paleta** con la
   proporción correcta como marcador. Nunca apuntes a la ruta de un archivo que todavía no
   existe: eso deja la página rota sin que se note en el código.
+- Sí se puede dejar escrita la ruta de una foto que aún no está **siempre que algo compruebe
+  en la compilación que el archivo existe** y caiga al bloque de color cuando no. Lo que la
+  regla prohíbe es que la página pida una imagen inexistente, no que el contenido diga dónde
+  va a estar. Así la foto aparece sola el día que se guarda el archivo. Es lo que hace el
+  catálogo de equipo (`src/content/equipo/photo.ts`).
+
+### Equipo de los métodos
+
+Las piezas de equipo (molino, báscula, hervidor…) se repiten entre métodos, así que sus
+fotos viven una sola vez en el catálogo compartido `src/content/equipo/`, con una entrada
+por objeto y su ruta en `/public/images/equipo/`. No es una sección del sitio: no tiene
+ruta ni página propia.
+
+Cada método sigue teniendo su lista de equipo con su **nombre** y su **nota**, porque eso
+cambia de un método a otro —el V60 pide «Báscula con temporizador» y a la prensa le basta
+«Báscula»—, y apunta a la foto con una clave tipada del catálogo: una clave que no exista
+no compila. Por la misma razón hay dos hervidores distintos y no uno: el de cuello de cisne
+y el corriente son objetos diferentes, y esa diferencia es contenido.
+
+Las fotos del catálogo retratan **el objeto solo**, nunca la escena de un método, y su texto
+alternativo describe el objeto. Una foto de «la báscula con la prensa encima» sería la foto
+de otra cosa y no se podría compartir.
 
 ## Idioma y tono
 

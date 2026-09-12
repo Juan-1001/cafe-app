@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Eyebrow } from "@/app/eyebrow";
+import { resolveEquipmentImage } from "@/content/equipo/photo";
 import { brewMethods, getBrewMethod } from "@/content/metodos";
 import { parseRatio } from "@/content/metodos/ratio";
 import type { Ratio } from "@/content/metodos/ratio";
@@ -105,18 +107,13 @@ function mistakesHeading(count: number): string {
   return `Si algo salió mal, casi siempre es una de estas ${word} cosas`;
 }
 
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="font-mono text-xs uppercase tracking-widest text-sage-deep">
-      {children}
-    </p>
-  );
-}
-
 /**
- * Sin foto todavía: bloque sólido de la paleta, cuadrado.
- * Para publicar la real, guarda el archivo en /public/images/metodos/ y pon su
- * ruta en `image.src` dentro del contenido; aquí no hay nada más que tocar.
+ * La foto de una pieza de equipo, cuadrada.
+ *
+ * Llega ya resuelta desde el catálogo: si el archivo todavía no está guardado, viene
+ * con `src` en null y aquí se pinta el bloque de color. Para publicarla basta con
+ * dejar el archivo en /public/images/equipo/ con el nombre que dice el catálogo; ni
+ * este archivo ni el del contenido hay que tocarlos.
  */
 function EquipmentImage({ image }: { image: ContentImage }) {
   if (!image.src) {
@@ -154,11 +151,28 @@ export default async function BrewMethodPage({
           este hueco es el que evita que tape el final del artículo. */}
       <article className="pb-52 md:pb-32">
         <header>
-          {/* Marcador de la fotografía de cabecera: bloque sólido hasta que exista la imagen real. */}
-          <div
-            className="aspect-[4/3] w-full bg-dust md:ml-[20%] md:aspect-[21/9] md:w-[80%]"
-            aria-hidden="true"
-          />
+          {/*
+            La fotografía de cabecera. En escritorio ocupa el 80 % derecho en una
+            banda ancha; el recuadro crema del título se le monta encima por abajo.
+            Mientras un método no traiga foto, el mismo hueco se pinta en color.
+          */}
+          {method.image.src ? (
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-dust md:ml-[20%] md:aspect-[21/9] md:w-[80%]">
+              <Image
+                src={method.image.src}
+                alt={method.image.alt}
+                fill
+                priority
+                sizes="(min-width: 768px) 80vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+          ) : (
+            <div
+              className="aspect-[4/3] w-full bg-dust md:ml-[20%] md:aspect-[21/9] md:w-[80%]"
+              aria-hidden="true"
+            />
+          )}
 
           <div className="px-6 md:px-16">
             <div className="relative -mt-12 max-w-[85%] bg-paper pt-6 pr-6 md:-mt-24 md:max-w-[60%] md:pt-10 md:pr-12">
@@ -225,7 +239,7 @@ export default async function BrewMethodPage({
           <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 md:mt-14 md:grid-cols-3 md:gap-x-10 md:gap-y-14">
             {method.equipment.map((item) => (
               <li key={item.name}>
-                <EquipmentImage image={item.image} />
+                <EquipmentImage image={resolveEquipmentImage(item.piece)} />
                 <p className="mt-4 font-medium text-ink">{item.name}</p>
                 {item.note ? (
                   <p className="mt-1 text-sm text-coffee">{item.note}</p>

@@ -5,6 +5,11 @@ export const prensaFrancesa: BrewMethod = {
   name: "Prensa francesa",
   tagline:
     "Un cilindro de vidrio, una malla de metal y cuatro minutos de espera. Es el método que más perdona y el que más cuerpo le deja a la taza.",
+  image: {
+    src: "/images/metodos/prensa-francesa.jpg",
+    alt: "Una prensa francesa de vidrio y metal, con el café ya hecho y el émbolo bajado, sobre una mesa de madera clara. Delante, una taza blanca servida de café negro descansa en su plato, rodeada de granos de café sueltos. Una franja de luz de sol cruza la mesa en diagonal y el resto de la escena queda en penumbra.",
+  },
+
   difficulty: { label: "Principiante", level: 1 },
 
   recipe: {
@@ -66,32 +71,32 @@ export const prensaFrancesa: BrewMethod = {
     {
       name: "Prensa francesa de 1 litro",
       note: "La medida corriente, la que se vende como «de 8 tazas».",
-      image: { src: null, alt: "Prensa francesa de vidrio con el émbolo levantado" },
+      piece: "prensa-francesa",
     },
     {
       name: "Molino de muelas",
       note: "Aquí importa más que en ningún otro método: lo desigual acaba en tu taza.",
-      image: { src: null, alt: "Molino manual de muelas junto a granos de café" },
+      piece: "molino-de-muelas",
     },
     {
       name: "Báscula",
       note: "Pesar el café y el agua es lo único que hace repetible la receta.",
-      image: { src: null, alt: "Báscula digital con la prensa francesa encima" },
+      piece: "bascula",
     },
     {
       name: "Hervidor u olla",
       note: "No hace falta cuello de cisne: el agua entra de golpe, no en espiral.",
-      image: { src: null, alt: "Agua caliente cayendo dentro de una prensa francesa" },
+      piece: "hervidor",
     },
     {
       name: "Cuchara larga de madera",
       note: "Para romper la costra sin golpear el vidrio caliente.",
-      image: { src: null, alt: "Cuchara larga de madera apoyada junto a la prensa" },
+      piece: "cuchara-de-madera",
     },
     {
       name: "Jarra o termo para servir",
       note: "El café que se queda dentro de la prensa sigue extrayéndose y amarga.",
-      image: { src: null, alt: "Jarra de vidrio recibiendo el café de la prensa" },
+      piece: "jarra-de-vidrio",
     },
   ],
 

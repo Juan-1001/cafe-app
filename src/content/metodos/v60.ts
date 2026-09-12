@@ -5,6 +5,11 @@ export const v60: BrewMethod = {
   name: "V60",
   tagline:
     "Un cono acanalado y un filtro de papel para una taza limpia, aromática y fácil de repetir todas las mañanas.",
+  image: {
+    src: "/images/metodos/v60.jpg",
+    alt: "Alguien vierte agua caliente desde una tetera de cuello fino y curvo sobre un cono V60 con filtro de papel. El cono está encajado en una jarra de vidrio que ya tiene café hecho, y el conjunto se apoya sobre una báscula digital, encima de una mesa de madera. A los lados hay dos tazas de cerámica y, a la derecha, un molino eléctrico negro.",
+  },
+
   difficulty: { label: "Intermedio", level: 2 },
 
   recipe: {
@@ -47,32 +52,32 @@ export const v60: BrewMethod = {
     {
       name: "Cono V60 tamaño 02",
       note: "El de plástico conserva el calor mejor que el de cerámica.",
-      image: { src: null, alt: "Cono V60 apoyado sobre una jarra de vidrio" },
+      piece: "cono-v60",
     },
     {
       name: "Filtros de papel 02",
       note: "Los naturales saben a papel si no los enjuagas.",
-      image: { src: null, alt: "Filtros de papel cónicos para V60" },
+      piece: "filtros-papel-v60",
     },
     {
       name: "Molino de muelas",
       note: "El de cuchillas parte el grano en trozos desiguales.",
-      image: { src: null, alt: "Molino manual de muelas junto a granos de café" },
+      piece: "molino-de-muelas",
     },
     {
       name: "Báscula con temporizador",
       note: "Precisión de 0,1 g: pesar en vez de medir por cucharadas lo cambia todo.",
-      image: { src: null, alt: "Báscula digital con una jarra encima" },
+      piece: "bascula",
     },
     {
       name: "Hervidor de cuello de cisne",
       note: "Su pico fino te da control sobre el caudal del agua.",
-      image: { src: null, alt: "Hervidor de cuello de cisne vertiendo agua en espiral" },
+      piece: "hervidor-cuello-cisne",
     },
     {
       name: "Jarra o servidor de vidrio",
       note: "Cualquier taza sirve, pero en la jarra ves el nivel de la bebida.",
-      image: { src: null, alt: "Jarra de vidrio recibiendo el café bajo el cono" },
+      piece: "jarra-de-vidrio",
     },
   ],
 

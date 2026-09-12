@@ -5,24 +5,10 @@ import type { BrewMethod } from "@/content/metodos";
  * que la escala de dificultad se dibuje igual en los dos sitios y no se separen.
  */
 
-/** Reloj de trazo fino. Marca un dato de tiempo, no decora. */
-export function ClockIcon({ className = "h-3.5 w-3.5" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className={`${className} shrink-0`}
-    >
-      <circle cx="8" cy="8" r="6.25" />
-      <path d="M8 4.5V8l2.4 1.7" />
-    </svg>
-  );
-}
+// El reloj lo usan también las etiquetas de /granos, así que vive con el resto de los
+// iconos del sitio. Se reexporta desde aquí para que las páginas de métodos lo sigan
+// pidiendo donde siempre.
+export { ClockIcon } from "@/app/icons";
 
 export function DifficultyMeter({
   difficulty,

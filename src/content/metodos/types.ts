@@ -1,3 +1,6 @@
+import type { ContentImage } from "../types";
+import type { EquipmentKey } from "../equipo";
+
 /** Nivel de dificultad de un método, con su posición en la escala de 3. */
 export type Difficulty = {
   label: "Principiante" | "Intermedio" | "Avanzado";
@@ -20,21 +23,25 @@ export type BrewSpecs = {
   cupProfile: Spec;
 };
 
-/**
- * Imagen de contenido. Mientras `src` sea null se pinta un bloque de color de la
- * paleta con la proporción correcta; para publicar la foto real basta con guardar
- * el archivo en /public/images/metodos/ y poner aquí su ruta.
- */
-export type ContentImage = {
-  src: string | null;
-  alt: string;
-};
 
+/**
+ * Una pieza de equipo dentro de la lista de un método.
+ *
+ * La foto no está aquí: se pide al catálogo compartido con `piece`, porque el mismo
+ * molino sale en muchos métodos y guardar su foto en cada uno sería repetir el mismo
+ * archivo y arriesgarse a que se desincronicen.
+ *
+ * Lo que sí se queda aquí es lo que cambia de un método a otro. `name` porque cada
+ * receta afina lo suyo: el V60 pide «Báscula con temporizador» y a la prensa le basta
+ * «Báscula». Y `note` porque es la razón de tener esa pieza *en este método*, que es
+ * justo lo que no se puede compartir.
+ */
 export type EquipmentItem = {
   name: string;
-  /** Una línea: para qué sirve o qué mirar al comprarlo. */
+  /** Una línea: para qué sirve o qué mirar al comprarlo, en este método. */
   note?: string;
-  image: ContentImage;
+  /** Clave del catálogo de equipo. Si no existe, no compila. */
+  piece: EquipmentKey;
 };
 
 export type BrewStep = {
@@ -92,6 +99,15 @@ export type BrewMethod = {
   name: string;
   /** Una línea que describe el método. */
   tagline: string;
+  /**
+   * La fotografía del método. Es la misma en el índice y en la cabecera de su ficha, a
+   * propósito: es lo que permite reconocer que se ha llegado al método en el que se
+   * hizo clic sin tener que leer el título.
+   *
+   * Se fotografía apaisado, con el gesto entero en la toma —la jarra, el cono y la
+   * mano que sirve—, no en retrato estrecho.
+   */
+  image: ContentImage;
   difficulty: Difficulty;
   recipe: Recipe;
   specs: BrewSpecs;
@@ -100,3 +116,7 @@ export type BrewMethod = {
   commonMistakes: CommonMistake[];
   funFact?: FunFact;
 };
+
+// Se define una sola vez para todo el contenido; aquí se reexporta para que los
+// archivos de métodos la sigan importando desde su propio types.ts.
+export type { ContentImage };

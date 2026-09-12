@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { brewMethodsByEffort } from "@/content/metodos";
-import type { BrewMethod } from "@/content/metodos";
+import type { BrewMethod, ContentImage } from "@/content/metodos";
+import { Eyebrow } from "@/app/eyebrow";
 import { ClockIcon, DifficultyMeter } from "./indicators";
 
 export const metadata: Metadata = {
@@ -72,20 +74,31 @@ function ChapterLabel({ chapter }: { chapter: (typeof CHAPTERS)[number] }) {
 }
 
 /**
- * Marcador de la fotografía del método: bloque sólido de la paleta, apaisado y
- * ancho, que es la forma en la que se fotografía un método —el gesto de servir, la
- * jarra y el cono en la misma toma— y no un retrato estrecho.
+ * La fotografía del método, apaisada: es la forma en la que se fotografía un método
+ * —el gesto de servir, la jarra y el cono en la misma toma— y no un retrato estrecho.
  *
- * Los métodos todavía no traen foto propia en su contenido; cuando existan los
- * archivos, lo coherente es añadir un campo `image` al método y usarlo aquí y en la
- * cabecera de su ficha, en vez de apuntar desde aquí a una ruta que aún no existe.
+ * La proporción es 3:2 también en móvil. Antes era 4:3 en pantalla pequeña, pero eso
+ * obligaba a recortar la misma foto de dos maneras distintas según el ancho, y lo que
+ * se pierde al recortar una foto de método es precisamente lo de los bordes: la mano
+ * que sirve por arriba, la mesa por abajo.
+ *
+ * Mientras un método no traiga foto se pinta el bloque de color en ese mismo hueco.
  */
-function MethodImage() {
+function MethodImage({ image }: { image: ContentImage }) {
+  if (!image.src) {
+    return <div className="aspect-[3/2] w-full bg-dust" aria-hidden="true" />;
+  }
+
   return (
-    <div
-      className="aspect-[4/3] w-full bg-dust md:aspect-[3/2]"
-      aria-hidden="true"
-    />
+    <div className="relative aspect-[3/2] w-full overflow-hidden bg-dust">
+      <Image
+        src={image.src}
+        alt={image.alt}
+        fill
+        sizes="(min-width: 768px) 55vw, 100vw"
+        className="object-cover"
+      />
+    </div>
   );
 }
 
@@ -117,7 +130,7 @@ function MethodEntry({
         }`}
       >
         <div className={mirrored ? "md:order-2" : undefined}>
-          <MethodImage />
+          <MethodImage image={method.image} />
         </div>
 
         <div className="mt-6 flex flex-col md:mt-0">
@@ -141,9 +154,7 @@ function MethodEntry({
             </div>
 
             <div className="md:text-right">
-              <p className="font-mono text-xs uppercase tracking-widest text-sage-deep">
-                Perfil de taza
-              </p>
+              <Eyebrow>Perfil de taza</Eyebrow>
               <p className="mt-1 font-display text-2xl leading-none text-lavender-deep md:text-3xl">
                 {method.specs.cupProfile.value}
               </p>
@@ -195,9 +206,7 @@ export default function BrewMethodsPage() {
       {/* Titular a la izquierda y texto de entrada en la columna de la derecha: el
           hueco entre los dos es lo que hace que la cabecera ocupe el ancho entero. */}
       <header className="pt-16 md:pt-24">
-        <p className="font-mono text-xs uppercase tracking-widest text-sage-deep">
-          Métodos de preparación
-        </p>
+        <Eyebrow>Métodos de preparación</Eyebrow>
 
         <div className="mt-6 md:grid md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:items-end md:gap-16">
           <h1 className="font-display text-6xl leading-none md:text-8xl">

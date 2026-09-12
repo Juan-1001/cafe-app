@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 /**
@@ -8,7 +9,10 @@ import { useEffect, useRef } from "react";
  * /granos, /recetas o /tiendas antes de construirlas dejaría enlaces a un 404.
  * Cada sección nueva se añade a esta lista cuando su ruta esté en pie.
  */
-const NAV_LINKS = [{ href: "/metodos", label: "Métodos" }] as const;
+const NAV_LINKS = [
+  { href: "/granos", label: "Granos" },
+  { href: "/metodos", label: "Métodos" },
+] as const;
 
 /**
  * Este componente es de cliente por una sola razón: medir su propia altura en el
@@ -22,6 +26,7 @@ const NAV_LINKS = [{ href: "/metodos", label: "Métodos" }] as const;
  * dos líneas, o cuando termina de cargar la tipografía y las letras cambian de alto.
  */
 export function SiteHeader() {
+  const pathname = usePathname();
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -68,16 +73,46 @@ export function SiteHeader() {
 
       <nav>
         <ul className="flex gap-8">
-          {NAV_LINKS.map((link) => (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                className="font-mono text-xs uppercase tracking-widest text-coffee hover:text-lavender-deep"
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const isCurrentPage = pathname === link.href;
+            const isInSection = pathname.startsWith(`${link.href}/`);
+            const isActive = isCurrentPage || isInSection;
+
+            return (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  /*
+                   * En la página de la propia sección el enlace es la página actual y
+                   * va "page". Dentro de una ficha ya no lo es —es la sección que la
+                   * contiene—, así que "page" ahí sería falso para quien navega con
+                   * lector de pantalla; "true" significa justo eso: el elemento actual
+                   * dentro de este grupo.
+                   */
+                  aria-current={
+                    isCurrentPage ? "page" : isInSection ? "true" : undefined
+                  }
+                  /*
+                   * El activo no se distingue solo por el color, que dejaría fuera a
+                   * quien no lo percibe: lleva además un filete lavanda debajo. El
+                   * inactivo reserva ese mismo filete en transparente para que al
+                   * cambiar de sección la navegación no se mueva de sitio.
+                   *
+                   * El texto activo va en `ink` y no en lavanda porque son 12 px sobre
+                   * `paper`, donde el lavanda no llega al contraste mínimo. En el
+                   * filete sí vale: es un borde, no texto.
+                   */
+                  className={`block border-b-2 pb-1 font-mono text-xs uppercase tracking-widest hover:text-lavender-deep ${
+                    isActive
+                      ? "border-lavender text-ink"
+                      : "border-transparent text-coffee"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </nav>
     </header>
