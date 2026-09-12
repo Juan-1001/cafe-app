@@ -7,10 +7,17 @@ export const v60: BrewMethod = {
     "Un cono acanalado y un filtro de papel para una taza limpia, aromática y fácil de repetir todas las mañanas.",
   difficulty: { label: "Intermedio", level: 2 },
 
+  recipe: {
+    coffeeGramsPerCup: 15,
+    waterRetainedPerGram: 2,
+    // Gramos de agua por gramo de café en cada hito del vertido.
+    waterMarks: { floracion: 3, vertido1: 10 },
+  },
+
   specs: {
     ratio: {
       value: "1:16",
-      note: "15 g de café por 250 g de agua. Sube a 1:15 si la quieres más intensa.",
+      note: "{cafe} de café por {agua} de agua. Sube a 1:15 si la quieres más intensa.",
     },
     grind: {
       value: "Media-fina",
@@ -25,8 +32,8 @@ export const v60: BrewMethod = {
       note: "Desde el primer vertido hasta que deja de gotear.",
     },
     output: {
-      value: "220 ml",
-      note: "Una taza grande: el café molido se queda con unos 30 g de agua.",
+      value: "{rendimiento}",
+      note: "Lo que llega a la taza: el molido se queda con unos {retenida} de agua.",
     },
   },
 
@@ -75,28 +82,28 @@ export const v60: BrewMethod = {
       time: "Previo",
       title: "Añade el café y nivela el lecho",
       description:
-        "Vierte los 15 g de café recién molido, dale un golpecito al cono para aplanar la superficie y hunde un dedo en el centro para hacer un pequeño hoyo.",
+        "Vierte los {cafe} de café recién molido, dale un golpecito al cono para aplanar la superficie y hunde un dedo en el centro para hacer un pequeño hoyo.",
       why: "Un lecho plano hace que el agua atraviese todo el café por igual. El hoyo ayuda a que el primer chorro moje también el molido del fondo.",
     },
     {
       time: "0:00 – 0:45",
       title: "Floración",
       description:
-        "Arranca el cronómetro y vierte 45 g de agua, el triple del peso del café, mojando todo el molido. Verás una espuma que sube y baja sola.",
+        "Arranca el cronómetro y vierte {floracion} de agua, el triple del peso del café, mojando todo el molido. Verás una espuma que sube y baja sola.",
       why: "El café recién tostado guarda CO₂. Ese gas empuja el agua hacia afuera, así que si no lo dejas escapar primero, la extracción sale despareja.",
     },
     {
       time: "0:45 – 1:15",
-      title: "Primer vertido, hasta 150 g",
+      title: "Primer vertido, hasta {vertido1}",
       description:
         "Vierte en espiral, del centro hacia afuera, sin llegar a tocar las paredes del filtro.",
       why: "La espiral moja el café que quedó seco arriba. Si mojas el papel, parte del agua baja por el borde sin pasar por el café.",
     },
     {
       time: "1:15 – 1:45",
-      title: "Segundo vertido, hasta 250 g",
+      title: "Segundo vertido, hasta {agua}",
       description:
-        "Completa los 250 g con vertidos más suaves, manteniendo el nivel del agua alto pero sin que rebose.",
+        "Completa los {agua} con vertidos más suaves, manteniendo el nivel del agua alto pero sin que rebose.",
       why: "Con el lecho siempre cubierto, la temperatura y el ritmo de extracción se sostienen hasta el final.",
     },
     {

@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { fillAmounts } from "@/content/metodos/amounts";
 import { activeStepNumber, formatClock } from "@/content/metodos/timing";
+import { useAmountVariables } from "./recipe-amounts";
 import type { TimedStep } from "@/content/metodos/timing";
 
 /**
@@ -11,6 +13,8 @@ import type { TimedStep } from "@/content/metodos/timing";
  */
 export function TimedSteps({ steps }: { steps: TimedStep[] }) {
   // `elapsed` son los segundos que lleva el cronómetro, y es lo que se ve en pantalla.
+  // Las cantidades del texto dependen de las tazas que haya elegido el visitante.
+  const variables = useAmountVariables();
   const [elapsed, setElapsed] = useState(0);
   // `startedAt` es el instante real en el que arrancó. Si es null, está detenido.
   const [startedAt, setStartedAt] = useState<number | null>(null);
@@ -76,7 +80,7 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
                 <span className="font-mono text-xs uppercase tracking-widest text-sage-deep">
                   Paso {String(activeStep.number).padStart(2, "0")}{" "}
                 </span>
-                {activeStep.title}
+                {fillAmounts(activeStep.title, variables)}
               </>
             ) : (
               "Arranca el cronómetro al primer vertido."
@@ -129,15 +133,17 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
               </div>
 
               <div className="mt-4 max-w-prose md:mt-0">
-                <h3 className="font-display text-2xl md:text-3xl">{step.title}</h3>
+                <h3 className="font-display text-2xl md:text-3xl">
+                  {fillAmounts(step.title, variables)}
+                </h3>
                 <p className="mt-3 text-base text-ink md:text-lg">
-                  {step.description}
+                  {fillAmounts(step.description, variables)}
                 </p>
                 <p className="mt-4 text-base text-coffee">
                   <span className="font-mono text-xs uppercase tracking-widest text-sage-deep">
                     Por qué{" "}
                   </span>
-                  {step.why}
+                  {fillAmounts(step.why, variables)}
                 </p>
               </div>
             </li>

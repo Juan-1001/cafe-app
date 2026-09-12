@@ -57,6 +57,22 @@ export type FunFact = {
   source?: string;
 };
 
+/**
+ * Cantidades base del método, siempre para UNA taza. La calculadora las
+ * multiplica por el número de tazas y el resto del texto las recibe ya hechas.
+ */
+export type Recipe = {
+  /** Gramos de café molido para una taza. */
+  coffeeGramsPerCup: number;
+  /** Gramos de agua que el molido se queda y no llegan a la taza, por gramo de café. */
+  waterRetainedPerGram: number;
+  /**
+   * Hitos de agua con nombre, en gramos de agua por gramo de café. La clave es la
+   * que se usa en los textos: { floracion: 3 } se escribe como "{floracion}".
+   */
+  waterMarks: Record<string, number>;
+};
+
 export type BrewMethod = {
   /** Sale del nombre del archivo y es el último tramo de la URL: /metodos/<slug>. */
   slug: string;
@@ -64,6 +80,7 @@ export type BrewMethod = {
   /** Una línea que describe el método. */
   tagline: string;
   difficulty: Difficulty;
+  recipe: Recipe;
   specs: BrewSpecs;
   equipment: EquipmentItem[];
   steps: BrewStep[];

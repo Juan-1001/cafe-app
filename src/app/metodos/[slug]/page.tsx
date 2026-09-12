@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { brewMethods, getBrewMethod } from "@/content/metodos";
+import { parseRatio } from "@/content/metodos/ratio";
+import type { Ratio } from "@/content/metodos/ratio";
 import { toTimedSteps } from "@/content/metodos/timing";
+import { Amounts, CupsControl, RecipeAmountsProvider } from "./recipe-amounts";
 import { TimedSteps } from "./timed-steps";
 import type { BrewMethod, ContentImage } from "@/content/metodos";
 
@@ -26,15 +29,16 @@ export async function generateMetadata({
 }
 
 const SPEC_FIELDS = [
-  { key: "ratio", label: "Ratio café / agua", isTime: false },
-  { key: "grind", label: "Molienda", isTime: false },
-  { key: "waterTemperature", label: "Temperatura del agua", isTime: false },
-  { key: "totalTime", label: "Tiempo total", isTime: true },
-  { key: "output", label: "Rendimiento", isTime: false },
+  { key: "ratio", label: "Ratio café / agua", isTime: false, isRatio: true },
+  { key: "grind", label: "Molienda", isTime: false, isRatio: false },
+  { key: "waterTemperature", label: "Temperatura del agua", isTime: false, isRatio: false },
+  { key: "totalTime", label: "Tiempo total", isTime: true, isRatio: false },
+  { key: "output", label: "Rendimiento", isTime: false, isRatio: false },
 ] as const satisfies readonly {
   key: keyof BrewMethod["specs"];
   label: string;
   isTime: boolean;
+  isRatio: boolean;
 }[];
 
 /** Reloj de trazo fino. Marca un dato de tiempo, no decora. */
@@ -53,6 +57,54 @@ function ClockIcon({ className = "h-3.5 w-3.5" }: { className?: string }) {
       <circle cx="8" cy="8" r="6.25" />
       <path d="M8 4.5V8l2.4 1.7" />
     </svg>
+  );
+}
+
+/**
+ * Hace tangible el ratio: una casilla de café frente a las que pide de agua.
+ * Se dibuja sobre la banda lavender de la ficha, así que el café va en `ink` y
+ * el agua en `paper`; lavender sobre lavender no se vería.
+ */
+function RatioBar({ ratio }: { ratio: Ratio }) {
+  // El gráfico cuenta casillas enteras; las cifras exactas quedan en el texto.
+  const waterCells = Math.max(1, Math.round(ratio.water / ratio.coffee));
+  const cells = waterCells + 1;
+  const cellWidth = 10;
+  const gap = 2;
+  const height = 14;
+  const width = cells * (cellWidth + gap) - gap;
+
+  return (
+    <div className="mt-4 max-w-prose">
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        height="auto"
+        role="img"
+        aria-label={`${ratio.coffee} de café por cada ${ratio.water} de agua`}
+        className="block"
+      >
+        {Array.from({ length: cells }, (_, index) => (
+          <rect
+            key={index}
+            x={index * (cellWidth + gap)}
+            y={0}
+            width={cellWidth}
+            height={height}
+            fill={index === 0 ? "var(--color-ink)" : "var(--color-paper)"}
+          />
+        ))}
+      </svg>
+
+      <div className="mt-2 flex justify-between font-mono text-xs uppercase tracking-widest text-ink">
+        <span>
+          <Amounts text="{cafe}" /> café
+        </span>
+        <span>
+          <Amounts text="{agua}" /> agua
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -120,136 +172,155 @@ export default async function BrewMethodPage({
   const method = getBrewMethod(slug);
   if (!method) notFound();
 
+  const ratio = parseRatio(method.specs.ratio.value);
+
   return (
-    <article className="pb-40 md:pb-32">
-      <header>
-        {/* Marcador de la fotografía de cabecera: bloque sólido hasta que exista la imagen real. */}
-        <div
-          className="aspect-[4/3] w-full bg-dust md:ml-[20%] md:aspect-[21/9] md:w-[80%]"
-          aria-hidden="true"
-        />
+    <RecipeAmountsProvider
+      recipe={method.recipe}
+      waterPerCoffeeGram={ratio ? ratio.water / ratio.coffee : 0}
+    >
+      <article className="pb-40 md:pb-32">
+        <header>
+          {/* Marcador de la fotografía de cabecera: bloque sólido hasta que exista la imagen real. */}
+          <div
+            className="aspect-[4/3] w-full bg-dust md:ml-[20%] md:aspect-[21/9] md:w-[80%]"
+            aria-hidden="true"
+          />
 
-        <div className="px-6 md:px-16">
-          <div className="relative -mt-12 max-w-[85%] bg-paper pt-6 pr-6 md:-mt-24 md:max-w-[60%] md:pt-10 md:pr-12">
-            <Eyebrow>Método de preparación</Eyebrow>
-            <h1 className="mt-4 font-display text-6xl leading-none md:text-8xl">
-              {method.name}
-            </h1>
-          </div>
+          <div className="px-6 md:px-16">
+            <div className="relative -mt-12 max-w-[85%] bg-paper pt-6 pr-6 md:-mt-24 md:max-w-[60%] md:pt-10 md:pr-12">
+              <Eyebrow>Método de preparación</Eyebrow>
+              <h1 className="mt-4 font-display text-6xl leading-none md:text-8xl">
+                {method.name}
+              </h1>
+            </div>
 
-          <p className="mt-8 max-w-prose text-lg text-coffee md:mt-10 md:text-xl">
-            {method.tagline}
-          </p>
-
-          <div className="mt-8">
-            <DifficultyMeter difficulty={method.difficulty} />
-          </div>
-        </div>
-      </header>
-
-      <section className="mt-16 bg-lavender px-6 py-10 md:mt-28 md:px-16 md:py-14">
-        <h2 className="font-mono text-xs uppercase tracking-widest text-ink">
-          Ficha técnica
-        </h2>
-
-        <dl className="mt-8 md:grid md:grid-cols-2 md:gap-x-20">
-          {SPEC_FIELDS.map(({ key, label, isTime }) => {
-            const spec = method.specs[key];
-            return (
-              <div key={key} className="border-t border-ink py-5 md:py-6">
-                <dt className="text-sm text-ink md:text-base">{label}</dt>
-                <dd>
-                  <p className="mt-2 flex items-center gap-2 font-mono text-2xl text-ink md:text-3xl">
-                    {isTime ? <ClockIcon className="h-5 w-5" /> : null}
-                    {spec.value}
-                  </p>
-                  {spec.note ? (
-                    <p className="mt-2 max-w-prose text-sm text-ink">{spec.note}</p>
-                  ) : null}
-                </dd>
-              </div>
-            );
-          })}
-        </dl>
-      </section>
-
-      <section className="mt-20 px-6 md:mt-28 md:px-16">
-        <Eyebrow>Qué necesitas</Eyebrow>
-        <h2 className="mt-4 max-w-prose font-display text-3xl md:text-5xl">
-          El equipo mínimo para que salga igual cada vez
-        </h2>
-
-        <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 md:mt-14 md:grid-cols-3 md:gap-x-10 md:gap-y-14">
-          {method.equipment.map((item) => (
-            <li key={item.name}>
-              <EquipmentImage image={item.image} />
-              <p className="mt-4 font-medium text-ink">{item.name}</p>
-              {item.note ? (
-                <p className="mt-1 text-sm text-coffee">{item.note}</p>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="mt-24 px-6 md:mt-36 md:px-16">
-        <Eyebrow>Paso a paso</Eyebrow>
-        <h2 className="mt-4 max-w-prose font-display text-3xl md:text-5xl">
-          {method.steps.length} pasos, de la jarra vacía a la taza servida
-        </h2>
-
-        <TimedSteps steps={toTimedSteps(method.steps)} />
-      </section>
-
-      <section className="mt-24 px-6 md:mt-36 md:ml-[20%] md:px-16">
-        <Eyebrow>Errores comunes</Eyebrow>
-        <h2 className="mt-4 max-w-prose font-display text-3xl md:text-5xl">
-          Si algo salió mal, casi siempre es una de estas cuatro cosas
-        </h2>
-
-        <ul className="mt-12">
-          {method.commonMistakes.map((mistake) => (
-            <li
-              key={mistake.problem}
-              className="max-w-prose border-t border-dust py-8"
-            >
-              <h3 className="font-display text-2xl md:text-3xl">
-                {mistake.problem}
-              </h3>
-              <p className="mt-4 text-base text-coffee">
-                <span className="font-mono text-xs uppercase tracking-widest text-sage-deep">
-                  Por qué pasa{" "}
-                </span>
-                {mistake.cause}
-              </p>
-              <p className="mt-3 text-base text-ink">
-                <span className="font-mono text-xs uppercase tracking-widest text-sage-deep">
-                  Cómo se corrige{" "}
-                </span>
-                {mistake.fix}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {method.funFact ? (
-        <section className="mt-24 px-6 md:mt-36 md:ml-[20%] md:px-16">
-          <div className="max-w-prose bg-lavender px-6 py-10 md:px-10 md:py-12">
-            <h2 className="font-mono text-xs uppercase tracking-widest text-ink">
-              Dato curioso
-            </h2>
-            <p className="mt-6 font-display text-2xl leading-snug text-ink md:text-3xl">
-              {method.funFact.text}
+            <p className="mt-8 max-w-prose text-lg text-coffee md:mt-10 md:text-xl">
+              {method.tagline}
             </p>
-            {method.funFact.source ? (
-              <p className="mt-6 text-sm text-ink">
-                Fuente: {method.funFact.source}
-              </p>
-            ) : null}
+
+            <div className="mt-8">
+              <DifficultyMeter difficulty={method.difficulty} />
+            </div>
           </div>
+        </header>
+
+        <section className="mt-16 bg-lavender px-6 py-10 md:mt-28 md:px-16 md:py-14">
+          {/* Alineado a la izquierda: a la derecha vive el panel fijo del cronómetro. */}
+          <div className="md:flex md:items-start md:gap-16">
+            <h2 className="font-mono text-xs uppercase tracking-widest text-ink">
+              Ficha técnica
+            </h2>
+
+            <div className="mt-8 md:mt-0">
+              <CupsControl />
+            </div>
+          </div>
+
+          <dl className="mt-8 md:grid md:grid-cols-2 md:gap-x-20">
+            {SPEC_FIELDS.map(({ key, label, isTime, isRatio }) => {
+              const spec = method.specs[key];
+              const specRatio = isRatio ? parseRatio(spec.value) : null;
+
+              return (
+                <div key={key} className="border-t border-ink py-5 md:py-6">
+                  <dt className="text-sm text-ink md:text-base">{label}</dt>
+                  <dd>
+                    <p className="mt-2 flex items-center gap-2 font-mono text-2xl text-ink md:text-3xl">
+                      {isTime ? <ClockIcon className="h-5 w-5" /> : null}
+                      <Amounts text={spec.value} />
+                    </p>
+                    {specRatio ? <RatioBar ratio={specRatio} /> : null}
+                    {spec.note ? (
+                      <p className="mt-2 max-w-prose text-sm text-ink">
+                        <Amounts text={spec.note} />
+                      </p>
+                    ) : null}
+                  </dd>
+                </div>
+              );
+            })}
+          </dl>
         </section>
-      ) : null}
-    </article>
+
+        <section className="mt-20 px-6 md:mt-28 md:px-16">
+          <Eyebrow>Qué necesitas</Eyebrow>
+          <h2 className="mt-4 max-w-prose font-display text-3xl md:text-5xl">
+            El equipo mínimo para que salga igual cada vez
+          </h2>
+
+          <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 md:mt-14 md:grid-cols-3 md:gap-x-10 md:gap-y-14">
+            {method.equipment.map((item) => (
+              <li key={item.name}>
+                <EquipmentImage image={item.image} />
+                <p className="mt-4 font-medium text-ink">{item.name}</p>
+                {item.note ? (
+                  <p className="mt-1 text-sm text-coffee">{item.note}</p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mt-24 px-6 md:mt-36 md:px-16">
+          <Eyebrow>Paso a paso</Eyebrow>
+          <h2 className="mt-4 max-w-prose font-display text-3xl md:text-5xl">
+            {method.steps.length} pasos, de la jarra vacía a la taza servida
+          </h2>
+
+          <TimedSteps steps={toTimedSteps(method.steps)} />
+        </section>
+
+        <section className="mt-24 px-6 md:mt-36 md:ml-[20%] md:px-16">
+          <Eyebrow>Errores comunes</Eyebrow>
+          <h2 className="mt-4 max-w-prose font-display text-3xl md:text-5xl">
+            Si algo salió mal, casi siempre es una de estas cuatro cosas
+          </h2>
+
+          <ul className="mt-12">
+            {method.commonMistakes.map((mistake) => (
+              <li
+                key={mistake.problem}
+                className="max-w-prose border-t border-dust py-8"
+              >
+                <h3 className="font-display text-2xl md:text-3xl">
+                  {mistake.problem}
+                </h3>
+                <p className="mt-4 text-base text-coffee">
+                  <span className="font-mono text-xs uppercase tracking-widest text-sage-deep">
+                    Por qué pasa{" "}
+                  </span>
+                  {mistake.cause}
+                </p>
+                <p className="mt-3 text-base text-ink">
+                  <span className="font-mono text-xs uppercase tracking-widest text-sage-deep">
+                    Cómo se corrige{" "}
+                  </span>
+                  {mistake.fix}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {method.funFact ? (
+          <section className="mt-24 px-6 md:mt-36 md:ml-[20%] md:px-16">
+            <div className="max-w-prose bg-lavender px-6 py-10 md:px-10 md:py-12">
+              <h2 className="font-mono text-xs uppercase tracking-widest text-ink">
+                Dato curioso
+              </h2>
+              <p className="mt-6 font-display text-2xl leading-snug text-ink md:text-3xl">
+                {method.funFact.text}
+              </p>
+              {method.funFact.source ? (
+                <p className="mt-6 text-sm text-ink">
+                  Fuente: {method.funFact.source}
+                </p>
+              ) : null}
+            </div>
+          </section>
+        ) : null}
+      </article>
+    </RecipeAmountsProvider>
   );
 }
