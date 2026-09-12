@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { brewMethods, getBrewMethod } from "@/content/metodos";
 import { parseRatio } from "@/content/metodos/ratio";
 import type { Ratio } from "@/content/metodos/ratio";
-import { toTimedSteps } from "@/content/metodos/timing";
+import { parseEndSeconds, toTimedSteps } from "@/content/metodos/timing";
 import { Amounts, CupsControl, RecipeAmountsProvider } from "./recipe-amounts";
 import { TimedSteps } from "./timed-steps";
 import type { BrewMethod, ContentImage } from "@/content/metodos";
@@ -194,7 +194,9 @@ export default async function BrewMethodPage({
       recipe={method.recipe}
       waterPerCoffeeGram={ratio ? ratio.water / ratio.coffee : 0}
     >
-      <article className="pb-40 md:pb-32">
+      {/* En móvil el panel del cronómetro va fijo abajo y ahora ocupa unos 180 px:
+          este hueco es el que evita que tape el final del artículo. */}
+      <article className="pb-52 md:pb-32">
         <header>
           {/* Marcador de la fotografía de cabecera: bloque sólido hasta que exista la imagen real. */}
           <div
@@ -283,7 +285,13 @@ export default async function BrewMethodPage({
             {method.steps.length} pasos, de la jarra vacía a la taza servida
           </h2>
 
-          <TimedSteps steps={toTimedSteps(method.steps)} />
+          {/* El final del último paso sale del tiempo total de la ficha técnica. */}
+          <TimedSteps
+            steps={toTimedSteps(
+              method.steps,
+              parseEndSeconds(method.specs.totalTime.value),
+            )}
+          />
         </section>
 
         <section className="mt-24 px-6 md:mt-36 md:ml-[20%] md:px-16">

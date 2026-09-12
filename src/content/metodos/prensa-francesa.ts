@@ -42,7 +42,9 @@ export const prensaFrancesa: BrewMethod = {
       note: "En Bogotá el agua hierve cerca de los 91 °C, así que aquí no hay forma de pasarse: úsala apenas deje de burbujear.",
     },
     totalTime: {
-      value: "4:30 – 5:00",
+      // El final de este rango es lo que el cronómetro usa para saber cuándo se
+      // acabó: el último paso, servir, arranca en 5:00 y se lleva el medio minuto.
+      value: "5:00 – 5:30",
       note: "Desde que echas el agua hasta que la jarra queda vacía.",
     },
     output: {

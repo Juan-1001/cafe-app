@@ -9,6 +9,11 @@ export type TimedStep = BrewStep & {
    * cronómetro (los pasos "Previo", que se hacen antes de arrancarlo).
    */
   startSeconds: number | null;
+  /**
+   * Segundo en el que el paso cede el turno: es el arranque del paso siguiente, y
+   * en el último, el final de la preparación entera. Null si no se puede deducir.
+   */
+  endSeconds: number | null;
 };
 
 /**
@@ -22,13 +27,59 @@ export function parseStartSeconds(time: string): number | null {
   return Number(match[1]) * 60 + Number(match[2]);
 }
 
-/** Añade a cada paso su número y su arranque en segundos, sin tocar el contenido. */
-export function toTimedSteps(steps: BrewStep[]): TimedStep[] {
-  return steps.map((step, index) => ({
-    ...step,
-    number: index + 1,
-    startSeconds: parseStartSeconds(step.time),
-  }));
+/**
+ * Saca el último "m:ss" del texto. En un rango como "3:00 – 3:30" es el final, y en
+ * "≈ 5:00", el único que hay. Se usa sobre el tiempo total de la ficha técnica para
+ * saber cuándo se da por terminada la preparación, sin añadir campos al contenido.
+ */
+export function parseEndSeconds(time: string): number | null {
+  const matches = time.match(/\d+:[0-5]\d/g);
+  if (!matches) return null;
+
+  const [minutes, seconds] = matches[matches.length - 1].split(":");
+
+  return Number(minutes) * 60 + Number(seconds);
+}
+
+/**
+ * Añade a cada paso su número y sus dos extremos en segundos, sin tocar el contenido.
+ * El final de un paso no está escrito en ninguna parte: es el arranque del siguiente.
+ * El último no tiene siguiente, así que recibe el final de la preparación entera.
+ */
+export function toTimedSteps(
+  steps: BrewStep[],
+  finishSeconds: number | null = null,
+): TimedStep[] {
+  const starts = steps.map((step) => parseStartSeconds(step.time));
+
+  return steps.map((step, index) => {
+    const startSeconds = starts[index];
+    // Se busca el siguiente que ocurra en el cronómetro: los pasos "Previo" no cuentan.
+    const nextStart =
+      starts.slice(index + 1).find((value) => value !== null) ?? null;
+
+    return {
+      ...step,
+      number: index + 1,
+      startSeconds,
+      endSeconds: startSeconds === null ? null : (nextStart ?? finishSeconds),
+    };
+  });
+}
+
+/**
+ * Segundos que faltan para que el paso ceda el turno, o null si no se sabe. Un final
+ * que no sea posterior al arranque significa que el contenido no cuadra; en ese caso
+ * se prefiere no mostrar cuenta atrás antes que mostrar uno negativo.
+ */
+export function remainingSeconds(
+  step: TimedStep,
+  elapsedSeconds: number,
+): number | null {
+  if (step.startSeconds === null || step.endSeconds === null) return null;
+  if (step.endSeconds <= step.startSeconds) return null;
+
+  return Math.max(0, step.endSeconds - elapsedSeconds);
 }
 
 /**

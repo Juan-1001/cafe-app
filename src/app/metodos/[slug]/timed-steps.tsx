@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { fillAmounts } from "@/content/metodos/amounts";
-import { activeStepNumber, formatClock } from "@/content/metodos/timing";
+import {
+  activeStepNumber,
+  formatClock,
+  remainingSeconds,
+} from "@/content/metodos/timing";
 import { useBrewSound } from "./brew-sound";
 import { useAmountVariables } from "./recipe-amounts";
 import type { TimedStep } from "@/content/metodos/timing";
@@ -69,14 +73,38 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
   const activeNumber = used ? activeStepNumber(steps, elapsed) : null;
   const activeStep = steps.find((step) => step.number === activeNumber) ?? null;
 
+  const lastStep = steps.length > 0 ? steps[steps.length - 1] : null;
+  const lastNumber = lastStep?.number ?? null;
+
   /**
-   * El último paso no tiene hora de final en el contenido, así que el momento de
-   * "ya está" es cuando ese paso arranca: en los dos métodos es justo el paso de
-   * servir, o sea que el café ya está hecho. Al derivarlo del paso activo, el
-   * estado se sostiene solo mientras el cronómetro siga donde está.
+   * El final de la preparación es el final del último paso, que sale del tiempo
+   * total de la ficha técnica. Si ese texto no se pudo leer, se vuelve a lo de
+   * antes: se da por terminado en cuanto arranca el último paso.
    */
-  const lastNumber = steps.length > 0 ? steps[steps.length - 1].number : null;
-  const finished = activeNumber !== null && activeNumber === lastNumber;
+  const finishSeconds = lastStep?.endSeconds ?? null;
+  const finished =
+    used &&
+    (finishSeconds !== null
+      ? elapsed >= finishSeconds
+      : activeNumber !== null && activeNumber === lastNumber);
+
+  /** Lo que falta para que el paso actual ceda el turno. Null si no se sabe. */
+  const remaining = activeStep ? remainingSeconds(activeStep, elapsed) : null;
+  const countingDown = !finished && remaining !== null;
+
+  /**
+   * Qué mide el número grande. Mientras haya cuenta atrás es lo que falta, porque
+   * es lo único que se quiere saber de lejos; al terminar pasa a ser el tiempo que
+   * costó la preparación, y si no hay cuenta atrás, el cronómetro de siempre.
+   */
+  const primarySeconds = countingDown ? remaining : elapsed;
+  const primaryLabel = finished
+    ? "Café listo"
+    : countingDown
+      ? "Falta"
+      : used
+        ? "Transcurrido"
+        : "Cronómetro";
 
   /**
    * El destello no necesita estado propio ni temporizador: se deduce de los segundos
@@ -107,13 +135,18 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
     // Retroceder solo pasa al reiniciar, y eso tampoco es un aviso.
     if (previous === null || activeNumber < previous) return;
 
-    if (activeNumber === lastNumber) {
-      playFinish();
-      return;
-    }
-
     playStepChange();
-  }, [activeNumber, lastNumber, playFinish, playStepChange]);
+  }, [activeNumber, playStepChange]);
+
+  // El aviso de final ya no cuelga del último paso, sino del final de verdad.
+  const previousFinishedRef = useRef(false);
+
+  useEffect(() => {
+    const previous = previousFinishedRef.current;
+    previousFinishedRef.current = finished;
+
+    if (finished && !previous) playFinish();
+  }, [finished, playFinish]);
 
   return (
     <>
@@ -124,45 +157,53 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
         role="timer"
         aria-label="Cronómetro de la preparación"
       >
-        {/* Al terminar, el rótulo deja de ser de adorno y pasa a ser el aviso, así
-            que se muestra también en móvil, donde normalmente está escondido. */}
+        {/* El rótulo ya no es de adorno: dice qué mide el número grande, que no
+            siempre es lo mismo. Por eso se ve también en móvil. */}
         <p
-          className={`font-mono text-xs uppercase tracking-widest ${labelColor} ${
-            finished ? "block" : "hidden md:block"
-          }`}
+          className={`font-mono text-xs uppercase tracking-widest ${labelColor}`}
         >
-          {finished ? "Café listo" : "Cronómetro"}
+          {primaryLabel}
         </p>
 
-        {/* En móvil el reloj y el paso comparten fila; en escritorio se apilan. */}
-        <div className="flex items-baseline justify-between gap-4 md:mt-3 md:block">
-          <p className="font-mono text-4xl text-ink md:text-5xl">
-            {formatClock(elapsed)}
+        {/* Lo que falta manda sobre el total: va en el número grande y el tiempo
+            corrido lo acompaña en pequeño. En un reposo de cuatro minutos el dato
+            que se busca de lejos es cuánto queda, no cuánto se lleva. */}
+        <div className="mt-2 flex items-end justify-between gap-4">
+          <p className="font-mono text-4xl leading-none text-ink md:text-5xl">
+            {formatClock(primarySeconds)}
           </p>
 
-          {/* El aviso vive aquí en texto, no solo en el color ni en el sonido: este
-              párrafo se relee solo en los lectores de pantalla al cambiar. */}
-          <p
-            className={`min-w-0 flex-1 truncate text-right text-sm ${bodyColor} md:mt-4 md:text-left`}
-            aria-live="polite"
-            data-testid="current-step"
-          >
-            {activeStep ? (
-              <>
-                <span
-                  className={`font-mono text-xs uppercase tracking-widest ${labelColor}`}
-                >
-                  {finished
-                    ? "Listo "
-                    : `Paso ${String(activeStep.number).padStart(2, "0")} `}
-                </span>
-                {fillAmounts(activeStep.title, variables)}
-              </>
-            ) : (
-              "Arranca el cronómetro al primer vertido."
-            )}
-          </p>
+          {countingDown ? (
+            <p
+              className={`font-mono text-xs uppercase tracking-widest ${labelColor}`}
+            >
+              Van {formatClock(elapsed)}
+            </p>
+          ) : null}
         </div>
+
+        {/* El aviso vive aquí en texto, no solo en el color ni en el sonido: este
+            párrafo se relee solo en los lectores de pantalla al cambiar. */}
+        <p
+          className={`mt-3 truncate text-sm ${bodyColor}`}
+          aria-live="polite"
+          data-testid="current-step"
+        >
+          {activeStep ? (
+            <>
+              <span
+                className={`font-mono text-xs uppercase tracking-widest ${labelColor}`}
+              >
+                {finished
+                  ? "Listo "
+                  : `Paso ${String(activeStep.number).padStart(2, "0")} `}
+              </span>
+              {fillAmounts(activeStep.title, variables)}
+            </>
+          ) : (
+            "Arranca el cronómetro al primer vertido."
+          )}
+        </p>
 
         <div className="mt-3 flex flex-wrap gap-2 md:mt-4">
           <TimerButton onClick={handleStart} filled={!running}>
