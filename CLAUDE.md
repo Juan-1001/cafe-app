@@ -1,0 +1,194 @@
+@AGENTS.md
+
+# cafe-app
+
+## Qué es
+
+Web de contenido para aficionados al café de especialidad. El objetivo es que alguien
+curioso llegue, aprenda y se lleve algo aplicable: entender de dónde viene un grano,
+cómo prepararlo en casa y dónde tomarse un buen café en Bogotá.
+
+No es la web de una cafetería ni una tienda: **no hay carrito, ni pagos, ni pedidos**.
+
+## Quién la usa
+
+Visitantes anónimos. **No hay registro, ni inicio de sesión, ni cuentas de usuario, ni
+panel de administración.** Todo el contenido es público y de solo lectura.
+
+Si una tarea parece pedir autenticación, favoritos guardados, comentarios o aportes de
+usuarios, no lo implementes: pregúntalo antes, porque está fuera del alcance actual.
+
+## Secciones
+
+| Ruta        | Sección                | Contenido |
+|-------------|------------------------|-----------|
+| `/`         | Inicio                 | Bienvenida, qué es el café de especialidad y accesos a las demás secciones |
+| `/granos`   | Tipos de grano y orígenes | Variedades, países y regiones, procesos, altura, perfiles de sabor |
+| `/metodos`  | Métodos de preparación | Guías paso a paso: V60, prensa francesa, Aeropress, espresso, moka, cold brew… |
+| `/recetas`  | Recetas                | Preparaciones concretas con ingredientes, proporciones y pasos |
+| `/tiendas`  | Tiendas en Bogotá      | Directorio de cafeterías recomendadas: barrio, qué las hace buenas, cómo llegar |
+
+`/tiendas` es parte del alcance de la v1, no un extra para después.
+
+Cada tienda debe incluir un campo con la **fecha de la última verificación de sus datos**
+(dirección, horario, si sigue abierta) y esa fecha se muestra en la página. Los datos de
+locales caducan: sin fecha visible no se puede saber si la información sigue sirviendo.
+
+Cada sección tiene una página índice que lista sus elementos y una página de detalle por
+elemento (por ejemplo `/metodos/v60`, `/tiendas/<slug>`).
+
+## Contenido
+
+El contenido vive **en archivos dentro del repositorio**, en `src/content/<sección>/`.
+No hay base de datos ni gestor de contenidos externo.
+
+- Un archivo por elemento (un grano, un método, una receta, una tienda).
+- Los datos estructurados (nombre, origen, tiempo de preparación, barrio, etc.) van en
+  campos explícitos y tipados, no dispersos en el texto.
+- El `slug` de la URL sale del nombre del archivo.
+- Al añadir contenido, respeta la forma de los archivos que ya existen en esa carpeta en
+  lugar de inventar una estructura nueva.
+
+### Imágenes
+
+- Las fotografías se descargan de **Unsplash o Pexels** y se guardan en el repositorio,
+  en `/public/images/<sección>/`.
+- **Nunca se enlazan imágenes desde dominios externos.** Nada de URLs a Unsplash, a un CDN
+  ni a ningún otro sitio: el archivo vive en `/public`.
+- Mientras no exista la imagen real, usa un **bloque de color sólido de la paleta** con la
+  proporción correcta como marcador. Nunca apuntes a la ruta de un archivo que todavía no
+  existe: eso deja la página rota sin que se note en el código.
+
+## Idioma y tono
+
+- **Todo el texto visible está en español**, incluidas rutas, títulos, botones y mensajes.
+  El código (nombres de variables, componentes, comentarios) va en inglés.
+- Tono cercano y didáctico, sin sonar a manual técnico. Se explican los términos del café
+  la primera vez que aparecen (extracción, molienda, proceso lavado/natural…).
+- Sin lenguaje de venta ni promesas de marketing.
+
+## Estética
+
+Referencia visual: revista de café bien editada. Cuidada y cálida.
+
+- Base de tonos tierra (crema y tostado) con lavanda como acento protagonista. La paleta
+  exacta está en «Sistema de diseño»: no se usan colores fuera de ella.
+- Mucho espacio en blanco; se prefiere una página que respire a una densa.
+- Fotografía grande y protagonista; el texto la acompaña.
+- Tipografía elegante y legible, con contraste claro entre títulos y cuerpo de texto.
+- Diseño responsive: se lee bien en móvil, que es donde se consultará una receta o un
+  método mientras se prepara el café.
+
+Evita: fondos oscuros, estilo «dashboard» y tarjetas dentro de tarjetas. La lista completa
+está en «Antipatrones visuales».
+
+## Sistema de diseño
+
+Estos son los valores exactos del proyecto. **No inventes colores, tipografías ni tamaños
+fuera de estos tokens.** Están definidos en `src/app/globals.css` con `@theme` de
+Tailwind v4 y se usan siempre a través de las utilidades de Tailwind (`bg-paper`,
+`text-coffee`, `font-display`…), nunca con el valor hexadecimal escrito a mano.
+
+### Tipografías
+
+Se cargan con `next/font/google` en `src/app/layout.tsx` (self-hosted, sin peticiones a
+Google desde el navegador).
+
+| Familia | Token / utilidad | Uso |
+|---------|------------------|-----|
+| **Fraunces** | `--font-display` → `font-display` | Títulos y display |
+| **IBM Plex Sans** | `--font-sans` → `font-sans` (por defecto en `body`) | Cuerpo de texto, navegación e interfaz. Su **itálica** (`italic`) se usa para énfasis y para nombres de variedades |
+| **Space Mono** | `--font-mono` → `font-mono` | Datos técnicos (ratio, molienda, temperatura, altura), etiquetas de categoría y números |
+
+**Space Mono nunca se usa para párrafos**, solo para dato suelto, etiqueta o cifra.
+
+### Colores
+
+| Token | Hex | Uso |
+|-------|-----|-----|
+| `paper` | `#F1EDE5` | Fondo principal |
+| `ink` | `#171719` | Texto principal y fondos oscuros |
+| `coffee` | `#4A3028` | Texto secundario y detalles cálidos |
+| `lavender` | `#807EC5` | Acento protagonista: fondos, títulos grandes, gráficos |
+| `lavender-deep` | `#605DAE` | Acento en texto pequeño y enlaces sobre `paper` |
+| `sage` | `#777C61` | Segundo acento: uso decorativo y texto grande |
+| `sage-deep` | `#5F6350` | Segundo acento en texto pequeño sobre `paper` |
+| `dust` | `#C9C0B5` | Bordes y fondos secundarios |
+
+### Reglas de uso del color
+
+Estas reglas existen para no bajar del contraste AA; no son preferencias estéticas.
+
+- **Texto por debajo de 24 px sobre `paper`:** solo `ink`, `coffee`, `lavender-deep` o
+  `sage-deep`.
+- **`lavender` y `sage`** solo en texto de **24 px o más**, fondos y elementos gráficos.
+- **`dust` nunca se usa para texto**, en ningún tamaño ni sobre ningún fondo.
+- **Sobre fondo `ink`, `lavender` sí es válido para texto pequeño.**
+
+Contrastes medidos sobre `paper`: `ink` 15.3:1 · `coffee` 10.3:1 · `sage-deep` 5.3:1 ·
+`lavender-deep` 4.9:1 · `sage` 3.7:1 · `lavender` 3.2:1 · `dust` 1.5:1. Sobre `ink`:
+`lavender` 4.9:1. De ahí sale el corte en 24 px: AA pide 4.5:1 en texto normal y 3:1 en
+texto grande.
+
+### Espaciado
+
+La escala va en **múltiplos de 4 px** (`--spacing: 4px`), así que las utilidades de
+Tailwind se leen directamente en píxeles: `p-1` = 4 px, `p-2` = 8 px, `gap-6` = 24 px.
+No uses valores arbitrarios tipo `p-[13px]`: redondea al múltiplo de 4 más cercano.
+
+## Antipatrones visuales
+
+Este sitio debe verse **editorial y hecho a mano, no generado**. Evita:
+
+- **Hero centrado** con título, subtítulo y dos botones. Prefiere composiciones asimétricas.
+- **Rejillas de tres tarjetas iguales** como recurso por defecto.
+- **Ritmo vertical uniforme**: todas las secciones con el mismo alto y el mismo padding.
+- **Iconos genéricos** acompañando cada punto de una lista.
+- **Sombras difusas y esquinas muy redondeadas.** Prefiere bordes finos y esquinas rectas o
+  apenas redondeadas.
+- **Gradientes.**
+- **Todo el contenido dentro de un contenedor centrado del mismo ancho.** Varía los anchos:
+  texto de lectura angosto, imágenes amplias o a sangre.
+
+En su lugar:
+
+- Contraste fuerte de escala tipográfica entre títulos y cuerpo.
+- Uso deliberado del espacio en blanco asimétrico.
+- Elementos que rompan la retícula de forma intencional.
+
+## Stack y convenciones
+
+- Next.js 16 con App Router, React 19, TypeScript y Tailwind CSS v4.
+- Todo lo del sitio es contenido estático: usa Server Components por defecto y reserva
+  `"use client"` para lo que realmente necesite interacción en el navegador.
+- Estilos con clases de Tailwind; los tokens de color y tipografía se definen una sola vez
+  en `src/app/globals.css` y se reutilizan.
+- Sin librerías de UI ni dependencias nuevas salvo que se justifiquen y se acuerden antes.
+
+Comandos:
+
+```bash
+npm run dev     # servidor de desarrollo
+npm run build   # build de producción
+npm run lint    # eslint
+```
+
+## Antes de darme algo por terminado
+
+No digas que un cambio está listo hasta haber comprobado, en este orden:
+
+1. `npm run lint` pasa sin errores.
+2. `npm run build` termina sin errores.
+3. **Contraste**: todo el texto cumple como mínimo el nivel AA (4.5:1 en texto normal,
+   3:1 en texto grande). Los tonos tierra claros sobre crema fallan con facilidad, así que
+   verifícalos en lugar de darlos por buenos.
+4. **Móvil**: la página se ve bien a **375 px de ancho**, sin desbordes horizontales, sin
+   texto cortado y con las imágenes en su proporción.
+
+Si alguno de los cuatro no pasa y no lo puedes arreglar, dímelo explícitamente en lugar
+de entregar el cambio como terminado.
+
+## Estado actual
+
+El proyecto está recién iniciado: solo existe la plantilla por defecto de Next.js en
+`src/app/`. Las secciones, el contenido y el diseño descritos arriba están por construir.

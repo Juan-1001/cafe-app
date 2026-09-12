@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* Paleta del sistema de diseño. No añadir colores fuera de estos tokens. */
+@theme {
+  --color-paper: #f1ede5;
+  --color-ink: #171719;
+  --color-coffee: #4a3028;
+  --color-lavender: #807ec5;
+  --color-lavender-deep: #605dae;
+  --color-sage: #777c61;
+  --color-sage-deep: #5f6350;
+  --color-dust: #c9c0b5;
+
+  /* Escala de espaciado en múltiplos de 4px: p-1 = 4px, p-2 = 8px, p-6 = 24px… */
+  --spacing: 4px;
+}
+
+/* Tipografías cargadas con next/font en src/app/layout.tsx. */
+@theme inline {
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-ibm-plex-sans);
+  --font-mono: var(--font-space-mono);
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
