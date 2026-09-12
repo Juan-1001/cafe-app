@@ -192,3 +192,15 @@ de entregar el cambio como terminado.
 
 El proyecto está recién iniciado: solo existe la plantilla por defecto de Next.js en
 `src/app/`. Las secciones, el contenido y el diseño descritos arriba están por construir.
+
+## Pendientes conocidos
+
+Defectos detectados y aceptados a sabiendas. No hace falta volver a señalarlos ni
+arreglarlos por iniciativa propia; si un trabajo futuro toca la zona, este es el sitio
+donde mirar antes.
+
+- **El cronómetro se superpone al recuadro del título entre 768 y 1000 px de ancho.** En
+  ese rango, el panel fijo del cronómetro de las fichas de método pisa la esquina derecha
+  del recuadro crema del título. No tapa texto, así que se decidió no corregirlo por
+  ahora. Si en el futuro se rediseña el cronómetro, valorar pasarlo a una columna propia
+  en escritorio: dejaría de flotar sobre el contenido y el solape desaparecería solo.
