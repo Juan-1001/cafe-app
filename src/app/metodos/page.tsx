@@ -1,0 +1,228 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { brewMethodsByEffort } from "@/content/metodos";
+import type { BrewMethod } from "@/content/metodos";
+import { ClockIcon, DifficultyMeter } from "./indicators";
+
+export const metadata: Metadata = {
+  title: "Métodos de preparación",
+  description:
+    "Cada método de preparación explicado paso a paso: qué necesitas, cuánto tarda y a qué sabe la taza que sale.",
+};
+
+/**
+ * Los capítulos de la página, uno por nivel de dificultad. El nivel viene en el
+ * contenido de cada método, así que un método nuevo cae en su capítulo sin tocar
+ * este archivo; y un capítulo que se quede sin métodos no se pinta.
+ *
+ * El número va escrito a mano en vez de calcularse de la posición porque tiene que
+ * ser el mismo siempre: si algún día no hay ningún método intermedio, el capítulo
+ * de los exigentes sigue siendo el 03 y no se convierte en el 02.
+ */
+const CHAPTERS = [
+  {
+    level: 1,
+    number: "01",
+    title: "Para empezar",
+    note: "Perdonan el error. Si te pasas medio minuto o el molido no queda perfecto, la taza sigue estando buena.",
+  },
+  {
+    level: 2,
+    number: "02",
+    title: "Cuando quieras afinar",
+    note: "Piden báscula, cronómetro y algo de pulso al servir el agua. A cambio, puedes decidir a qué sabe la taza.",
+  },
+  {
+    level: 3,
+    number: "03",
+    title: "Para exigentes",
+    note: "Dejan poco margen: hay que controlar molienda, presión y tiempo a la vez, y un pequeño desajuste se nota entero.",
+  },
+] as const satisfies readonly {
+  level: BrewMethod["difficulty"]["level"];
+  number: string;
+  title: string;
+  note: string;
+}[];
+
+/**
+ * Rótulo de capítulo. Es una marca de sección, no un titular: va en mono pequeño, al
+ * mismo tamaño que las demás etiquetas del sitio, para que el nombre del método sea
+ * siempre lo más grande de la página. El lila queda reducido a la línea de arriba y
+ * a la cifra; con cinco capítulos, la página son cinco reglas finas y no cinco
+ * franjas de color peleándose con el contenido.
+ *
+ * La nota se va al extremo derecho en escritorio: ocupa el lado que la composición
+ * deja libre, en lugar de amontonarse debajo del título.
+ */
+function ChapterLabel({ chapter }: { chapter: (typeof CHAPTERS)[number] }) {
+  return (
+    <div className="flex flex-wrap items-baseline gap-x-8 gap-y-3 border-t-2 border-lavender pt-4">
+      <span className="font-mono text-xs tracking-widest text-lavender-deep">
+        {chapter.number}
+      </span>
+      <h2 className="font-mono text-xs uppercase tracking-widest text-ink">
+        {chapter.title}
+      </h2>
+      <p className="text-sm text-coffee md:ml-auto md:max-w-[46ch] md:text-right">
+        {chapter.note}
+      </p>
+    </div>
+  );
+}
+
+/**
+ * Marcador de la fotografía del método: bloque sólido de la paleta, apaisado y
+ * ancho, que es la forma en la que se fotografía un método —el gesto de servir, la
+ * jarra y el cono en la misma toma— y no un retrato estrecho.
+ *
+ * Los métodos todavía no traen foto propia en su contenido; cuando existan los
+ * archivos, lo coherente es añadir un campo `image` al método y usarlo aquí y en la
+ * cabecera de su ficha, en vez de apuntar desde aquí a una ruta que aún no existe.
+ */
+function MethodImage() {
+  return (
+    <div
+      className="aspect-[4/3] w-full bg-dust md:aspect-[3/2]"
+      aria-hidden="true"
+    />
+  );
+}
+
+/**
+ * Una entrada de la lista, a ancho completo. El perfil de taza cierra la fila por el
+ * lado contrario a la dificultad: de todos los datos es el que hace elegir un método
+ * y no otro, así que no puede quedar enterrado en el montón.
+ */
+function MethodEntry({
+  method,
+  mirrored,
+}: {
+  method: BrewMethod;
+  /**
+   * Las entradas van alternando el lado de la imagen. No es un adorno: con quince
+   * métodos, quince filas idénticas se leen como una tabla, y así cada entrada usa
+   * el lado de la página que la anterior dejó libre.
+   */
+  mirrored: boolean;
+}) {
+  return (
+    <li className="border-t border-dust">
+      <Link
+        href={`/metodos/${method.slug}`}
+        className={`group block py-10 md:grid md:gap-14 md:py-16 ${
+          mirrored
+            ? "md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]"
+            : "md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"
+        }`}
+      >
+        <div className={mirrored ? "md:order-2" : undefined}>
+          <MethodImage />
+        </div>
+
+        <div className="mt-6 flex flex-col md:mt-0">
+          <h3 className="font-display text-5xl leading-none group-hover:text-lavender-deep md:text-7xl">
+            {method.name}
+          </h3>
+
+          <p className="mt-5 max-w-prose text-base text-coffee md:mt-6 md:text-lg">
+            {method.tagline}
+          </p>
+
+          {/* Al fondo de la columna en escritorio, para que cierre a la misma altura
+              que la imagen de al lado. */}
+          <div className="mt-8 flex flex-wrap items-end justify-between gap-x-10 gap-y-6 border-t border-dust pt-5 md:mt-auto">
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
+              <DifficultyMeter difficulty={method.difficulty} />
+              <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-coffee">
+                <ClockIcon />
+                {method.specs.totalTime.value}
+              </span>
+            </div>
+
+            <div className="md:text-right">
+              <p className="font-mono text-xs uppercase tracking-widest text-sage-deep">
+                Perfil de taza
+              </p>
+              <p className="mt-1 font-display text-2xl leading-none text-lavender-deep md:text-3xl">
+                {method.specs.cupProfile.value}
+              </p>
+            </div>
+          </div>
+        </div>
+      </Link>
+    </li>
+  );
+}
+
+/**
+ * El zigzag de las entradas se cuenta sobre la página entera y no dentro de cada
+ * capítulo: si se reiniciara en cada uno, dos entradas seguidas podrían quedar con
+ * la imagen del mismo lado justo a los lados del rótulo.
+ */
+function chapterSections(methods: BrewMethod[]) {
+  let entryIndex = 0;
+
+  return CHAPTERS.map((chapter) => {
+    const chapterMethods = methods.filter(
+      (method) => method.difficulty.level === chapter.level,
+    );
+    if (chapterMethods.length === 0) return null;
+
+    return (
+      <section key={chapter.number} className="mt-20 md:mt-32">
+        <ChapterLabel chapter={chapter} />
+
+        <ul className="mt-4">
+          {chapterMethods.map((method) => (
+            <MethodEntry
+              key={method.slug}
+              method={method}
+              mirrored={entryIndex++ % 2 === 1}
+            />
+          ))}
+        </ul>
+      </section>
+    );
+  });
+}
+
+export default function BrewMethodsPage() {
+  const methods = brewMethodsByEffort();
+
+  return (
+    <div className="px-6 pb-24 md:px-16 md:pb-36">
+      {/* Titular a la izquierda y texto de entrada en la columna de la derecha: el
+          hueco entre los dos es lo que hace que la cabecera ocupe el ancho entero. */}
+      <header className="pt-16 md:pt-24">
+        <p className="font-mono text-xs uppercase tracking-widest text-sage-deep">
+          Métodos de preparación
+        </p>
+
+        <div className="mt-6 md:grid md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:items-end md:gap-16">
+          <h1 className="font-display text-6xl leading-none md:text-8xl">
+            Un mismo café, muchas tazas distintas
+          </h1>
+
+          <div className="mt-10 md:mt-0">
+            <p className="max-w-prose text-lg text-coffee">
+              Los mismos granos saben distinto según cómo pase el agua por ellos:
+              cuánto tiempo están en contacto, a qué temperatura y qué se queda por
+              el camino. Eso es la <em className="italic">extracción</em>, y cada
+              método la resuelve a su manera.
+            </p>
+
+            <p className="mt-5 max-w-prose text-base text-coffee">
+              Aquí tienes cada uno con su paso a paso, sus cantidades y, sobre todo,
+              a qué sabe la taza que sale. Están ordenados de lo más fácil de lograr
+              a lo que pide más pulso, así que si estás empezando, empieza por
+              arriba.
+            </p>
+          </div>
+        </div>
+      </header>
+
+      {chapterSections(methods)}
+    </div>
+  );
+}
