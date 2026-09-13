@@ -3,11 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { articlesByJourney } from "@/content/granos";
 import { getEntryMethod, home } from "@/content/home";
-import { brewMethodsByEffort } from "@/content/metodos";
+import { brewMethodsByPenalty } from "@/content/metodos";
 import type { ContentImage } from "@/content/metodos";
 import { Eyebrow } from "./eyebrow";
 import { ClockIcon } from "./icons";
-import { DifficultyMeter } from "./metodos/indicators";
+import { ErrorPenaltyMeter } from "./metodos/indicators";
 
 export const metadata: Metadata = {
   title: "Café · De dónde viene y cómo prepararlo",
@@ -82,7 +82,7 @@ export default function Home() {
 
   // Los demás, en el mismo orden que la página de métodos: del más accesible al que más
   // pide. El de entrada se quita porque ya está arriba, en grande.
-  const otherMethods = brewMethodsByEffort().filter(
+  const otherMethods = brewMethodsByPenalty().filter(
     (method) => method.slug !== entryMethod.slug,
   );
 
@@ -156,7 +156,7 @@ export default function Home() {
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-dust pt-5">
-              <DifficultyMeter difficulty={entryMethod.difficulty} />
+              <ErrorPenaltyMeter penalty={entryMethod.errorPenalty} />
               <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-coffee">
                 <ClockIcon />
                 {entryMethod.specs.totalTime.value}
@@ -212,7 +212,7 @@ export default function Home() {
                     <ClockIcon />
                     {method.specs.totalTime.value}
                     <span aria-hidden="true">·</span>
-                    {method.difficulty.label}
+                    {method.errorPenalty.label}
                   </span>
                 </Link>
               </li>

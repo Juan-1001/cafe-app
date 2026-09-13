@@ -15,3 +15,21 @@ export type ContentImage = {
   src: string | null;
   alt: string;
 };
+
+/**
+ * Un documento al que el contenido remite. Empezó siendo la fuente de un dato de un
+ * artículo de /granos y subió aquí al aparecer el segundo uso: las fichas de método
+ * también remiten a documentos, aunque por otro motivo —ver `Grounding`—, y una sola
+ * definición evita que las dos se separen.
+ *
+ * `retrieved` no es un adorno: los enlaces se mueren y las cifras se actualizan, así
+ * que la fecha dice hasta cuándo se sabe que esto era lo que decía el documento.
+ */
+export type Source = {
+  /** Quién publica, tal y como se cita a la vista: "Organización Internacional del Café". */
+  publisher: string;
+  title: string;
+  url: string;
+  /** Fecha ISO (YYYY-MM-DD) en la que se consultó. */
+  retrieved: string;
+};

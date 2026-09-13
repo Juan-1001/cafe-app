@@ -1,11 +1,30 @@
-import type { ContentImage } from "../types";
+import type { ContentImage, Source } from "../types";
 import type { EquipmentKey } from "../equipo";
 
-/** Nivel de dificultad de un método, con su posición en la escala de 3. */
-export type Difficulty = {
-  label: "Principiante" | "Intermedio" | "Avanzado";
-  level: 1 | 2 | 3;
-};
+/**
+ * Cuánto castiga el método un error. Es el eje que ordena el índice y agrupa sus
+ * capítulos, y el nivel crece con el castigo: 1 perdona un descuido, 3 no deja
+ * rectificar una vez empezado.
+ *
+ * Mide solo eso. En la palabra «dificultad» que había aquí antes cabían tres cosas
+ * distintas —cuántas decisiones tomas, cuánto te castiga equivocarte y cuánto equipo
+ * necesitas— y estaban mezcladas: el nivel ordenaba por una y las notas de los
+ * capítulos hablaban de otra. Se quedó el castigo por dos razones. Es la pregunta con
+ * la que se llega al índice, «¿esto me va a salir bien la primera vez?». Y es la única
+ * de las tres que reparte los métodos: por decisiones la moka sería de las fáciles
+ * —el aparato fija la dosis, el agua y el final— y mandar ahí a alguien que empieza
+ * sería un mal consejo, y por equipo casi todos caen en el mismo montón.
+ *
+ * Cuántas decisiones toma quien prepara no desaparece: describe mejor que ninguna otra
+ * cosa lo que un método es, pero es un dato de la ficha y no un orden de entrada.
+ *
+ * Va como unión de pares y no como dos campos sueltos para que una etiqueta no pueda
+ * acabar con el nivel de otra: `{ label: "Tolerante", level: 3 }` no compila.
+ */
+export type ErrorPenalty =
+  | { label: "Tolerante"; level: 1 }
+  | { label: "Preciso"; level: 2 }
+  | { label: "Implacable"; level: 3 };
 
 /** Dato de la ficha técnica: el valor va en Space Mono, la nota lo explica. */
 export type Spec = {
@@ -93,6 +112,31 @@ export type Recipe = {
   cupOptions?: number[];
 };
 
+/**
+ * Sobre qué está construida la ficha.
+ *
+ * No es la lista de fuentes de `/granos`, que dice de dónde sale cada dato de un texto
+ * lleno de datos. Esto dice otra cosa y por eso es un tipo aparte: de qué está hecho el
+ * método entero. Hay métodos que se pueden escribir sobre las instrucciones de quien
+ * fabricó el aparato, y hay al menos uno —el colado en tela— del que nadie ha publicado
+ * nunca una medición, y cuya única fuente legítima es la gente que lo prepara. Eso el
+ * lector tiene que verlo en la página, no deducirlo de que falten cifras.
+ *
+ * Es opcional: un método que no tenga nada que declarar no pinta el bloque. Lo que no
+ * puede pasar es que una ficha se apoye en la práctica y no lo diga.
+ */
+export type Grounding = {
+  /** Uno o más párrafos. Explican sobre qué se escribió y qué no se pudo comprobar. */
+  body: string[];
+  /**
+   * Los documentos a los que remite el bloque: dónde se puede ver que la práctica
+   * existe, y el estudio del que sale una cifra cuando lo hay. Van juntos porque son
+   * lo mismo aquí —aquello sobre lo que se apoya la ficha— y el texto de `body` dice
+   * cuál es cuál.
+   */
+  references?: Source[];
+};
+
 export type BrewMethod = {
   /** Sale del nombre del archivo y es el último tramo de la URL: /metodos/<slug>. */
   slug: string;
@@ -108,13 +152,14 @@ export type BrewMethod = {
    * mano que sirve—, no en retrato estrecho.
    */
   image: ContentImage;
-  difficulty: Difficulty;
+  errorPenalty: ErrorPenalty;
   recipe: Recipe;
   specs: BrewSpecs;
   equipment: EquipmentItem[];
   steps: BrewStep[];
   commonMistakes: CommonMistake[];
   funFact?: FunFact;
+  grounding?: Grounding;
 };
 
 // Se define una sola vez para todo el contenido; aquí se reexporta para que los

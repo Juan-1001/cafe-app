@@ -53,7 +53,15 @@ export const aeropress: BrewMethod = {
     alt: "Un AeroPress montado sobre una taza blanca, en una mesa de madera: el cilindro de plástico translúcido lleno de café y agua, y dos manos empujando el émbolo hacia abajo con calma. Al lado, la bolsa de café abierta y una báscula pequeña.",
   },
 
-  difficulty: { label: "Principiante", level: 1 },
+  /*
+   * Tolerante, aunque sea el método más corto del sitio. El tiempo engaña: aquí medio
+   * minuto de más es una parte grande del total, pero lo que cambia es la intensidad y
+   * no la taza entera. Sus errores comunes son estorbos del gesto —gotea antes de
+   * prensar, cuesta bajar el émbolo, queda café pegado arriba— y entre el papel y el
+   * remojo la taza sale limpia igual. Por eso se queda con la prensa francesa y no
+   * sube al nivel del V60, donde equivocarse se paga en el sabor.
+   */
+  errorPenalty: { label: "Tolerante", level: 1 },
 
   recipe: {
     coffeeGramsPerCup: 15,

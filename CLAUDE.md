@@ -251,7 +251,7 @@ de entregar el cambio como terminado.
 ## Estado actual
 
 En pie: la **home**, **`/granos`** con tres artículos (uno por cada etapa del recorrido) y
-**`/metodos`** con dos métodos. `/recetas` y `/tiendas` están por construir.
+**`/metodos`** con cuatro métodos. `/recetas` y `/tiendas` están por construir.
 
 Mientras una sección no exista, **nada enlaza a su ruta**: ni la cabecera ni la home.
 Un enlace a `/recetas` hoy es un 404. Cada sección nueva se añade a la navegación y a la

@@ -10,7 +10,14 @@ export const v60: BrewMethod = {
     alt: "Alguien vierte agua caliente desde una tetera de cuello fino y curvo sobre un cono V60 con filtro de papel. El cono está encajado en una jarra de vidrio que ya tiene café hecho, y el conjunto se apoya sobre una báscula digital, encima de una mesa de madera. A los lados hay dos tazas de cerámica y, a la derecha, un molino eléctrico negro.",
   },
 
-  difficulty: { label: "Intermedio", level: 2 },
+  /*
+   * Preciso: sus cuatro errores comunes son sabores y no estorbos. Un vertido desde muy
+   * alto o treinta segundos de más y la taza sale amarga o aguada, y no hay manera de
+   * saberlo hasta probarla. Lo que lo separa del nivel de arriba es que aquí el error
+   * se corrige en el vertido siguiente; en un método implacable, cuando lo notas la
+   * taza ya está hecha.
+   */
+  errorPenalty: { label: "Preciso", level: 2 },
 
   recipe: {
     coffeeGramsPerCup: 15,

@@ -37,10 +37,10 @@ export const home = {
   /**
    * El método por el que entra alguien que llega sin saber por dónde empezar.
    *
-   * Se fija a mano y no se calcula del nivel de dificultad porque es una decisión
+   * Se fija a mano y no se calcula del castigo del error porque es una decisión
    * editorial: el día que haya ocho métodos puede convenir entrar por la moka aunque
-   * la prensa francesa siga siendo la más fácil. La dificultad es un dato del método;
-   * por dónde se entra al sitio, no.
+   * la prensa francesa siga siendo la que más perdona. Lo que castiga un método es un
+   * dato suyo; por dónde se entra al sitio, no.
    *
    * `note` habla de este método en concreto, así que vive pegada al slug: quien cambie
    * uno tiene el otro delante y no se olvida de reescribirlo. Lo que la nota NO dice es

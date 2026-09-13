@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { brewMethodsByEffort } from "@/content/metodos";
+import { brewMethodsByPenalty } from "@/content/metodos";
 import type { BrewMethod, ContentImage } from "@/content/metodos";
 import { Eyebrow } from "@/app/eyebrow";
-import { ClockIcon, DifficultyMeter } from "./indicators";
+import { ClockIcon, ErrorPenaltyMeter } from "./indicators";
 
 export const metadata: Metadata = {
   title: "Métodos de preparación",
@@ -13,9 +13,15 @@ export const metadata: Metadata = {
 };
 
 /**
- * Los capítulos de la página, uno por nivel de dificultad. El nivel viene en el
- * contenido de cada método, así que un método nuevo cae en su capítulo sin tocar
+ * Los capítulos de la página, uno por nivel de castigo del error. El nivel viene en
+ * el contenido de cada método, así que un método nuevo cae en su capítulo sin tocar
  * este archivo; y un capítulo que se quede sin métodos no se pinta.
+ *
+ * Los títulos hablan del método y no del lector: antes decían «Para empezar» y «Para
+ * exigentes», que clasifican a quien lee, y las tres notas estaban escritas cada una
+ * sobre un eje distinto —una sobre el error, otra sobre el equipo, otra sobre las
+ * decisiones que hay que tomar—. Ahora las tres dicen lo que de verdad ordena la
+ * página: qué pasa si te equivocas.
  *
  * El número va escrito a mano en vez de calcularse de la posición porque tiene que
  * ser el mismo siempre: si algún día no hay ningún método intermedio, el capítulo
@@ -25,23 +31,23 @@ const CHAPTERS = [
   {
     level: 1,
     number: "01",
-    title: "Para empezar",
-    note: "Perdonan el error. Si te pasas medio minuto o el molido no queda perfecto, la taza sigue estando buena.",
+    title: "Perdonan casi todo",
+    note: "Medio minuto de más o un molido desigual no arruinan la taza. Si te distraes a mitad, sigue saliendo café.",
   },
   {
     level: 2,
     number: "02",
-    title: "Cuando quieras afinar",
-    note: "Piden báscula, cronómetro y algo de pulso al servir el agua. A cambio, puedes decidir a qué sabe la taza.",
+    title: "Piden que estés ahí",
+    note: "Hay un tramo corto donde lo que haces se nota entero: el vertido, el tiempo. El error se paga en el sabor, pero se corrige en la taza siguiente.",
   },
   {
     level: 3,
     number: "03",
-    title: "Para exigentes",
-    note: "Dejan poco margen: hay que controlar molienda, presión y tiempo a la vez, y un pequeño desajuste se nota entero.",
+    title: "No dan segunda oportunidad",
+    note: "Cuando notas que algo va mal, la taza ya está hecha: no hay forma de rectificar a mitad de camino.",
   },
 ] as const satisfies readonly {
-  level: BrewMethod["difficulty"]["level"];
+  level: BrewMethod["errorPenalty"]["level"];
   number: string;
   title: string;
   note: string;
@@ -104,7 +110,7 @@ function MethodImage({ image }: { image: ContentImage }) {
 
 /**
  * Una entrada de la lista, a ancho completo. El perfil de taza cierra la fila por el
- * lado contrario a la dificultad: de todos los datos es el que hace elegir un método
+ * lado contrario al medidor: de todos los datos es el que hace elegir un método
  * y no otro, así que no puede quedar enterrado en el montón.
  */
 function MethodEntry({
@@ -146,7 +152,7 @@ function MethodEntry({
               que la imagen de al lado. */}
           <div className="mt-8 flex flex-wrap items-end justify-between gap-x-10 gap-y-6 border-t border-dust pt-5 md:mt-auto">
             <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
-              <DifficultyMeter difficulty={method.difficulty} />
+              <ErrorPenaltyMeter penalty={method.errorPenalty} />
               <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-coffee">
                 <ClockIcon />
                 {method.specs.totalTime.value}
@@ -176,7 +182,7 @@ function chapterSections(methods: BrewMethod[]) {
 
   return CHAPTERS.map((chapter) => {
     const chapterMethods = methods.filter(
-      (method) => method.difficulty.level === chapter.level,
+      (method) => method.errorPenalty.level === chapter.level,
     );
     if (chapterMethods.length === 0) return null;
 
@@ -199,7 +205,7 @@ function chapterSections(methods: BrewMethod[]) {
 }
 
 export default function BrewMethodsPage() {
-  const methods = brewMethodsByEffort();
+  const methods = brewMethodsByPenalty();
 
   return (
     <div className="px-6 pb-24 md:px-16 md:pb-36">

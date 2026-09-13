@@ -4,6 +4,7 @@ import Link from "next/link";
 import { articles, getArticle, JOURNEY_STAGES } from "@/content/granos";
 import type { Source } from "@/content/granos";
 import { readingMinutes } from "@/content/granos/reading-time";
+import { formatDate } from "@/app/date";
 import { Block } from "../blocks";
 import { MetaPills } from "../meta";
 
@@ -94,15 +95,6 @@ function Sources({ sources }: { sources: Source[] }) {
       </ul>
     </section>
   );
-}
-
-/** "2026-09-12" → "12 de septiembre de 2026". */
-function formatDate(iso: string): string {
-  return new Date(`${iso}T00:00:00`).toLocaleDateString("es-CO", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
 }
 
 export default async function ArticlePage({

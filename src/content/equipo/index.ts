@@ -90,6 +90,20 @@ export const EQUIPMENT = {
     photo: "/images/equipo/prensa-francesa.jpg",
     alt: "Prensa francesa vacía sobre una encimera de mármol: una jarra cilíndrica de vidrio transparente sujeta por un armazón negro con asa, y una tapa de la que sale un vástago rematado en un pomo. En el fondo del vidrio se ve el disco de malla metálica.",
   },
+  "colador-de-tela": {
+    name: "Colador de tela",
+    /*
+     * Foto pendiente. La ruta se declara desde ahora porque `resolveEquipmentImage`
+     * comprueba en la compilación si el archivo está: mientras no exista se pinta el
+     * bloque de color.
+     *
+     * Lo que hay que ir a buscar es el colador solo, no una escena de alguien colando:
+     * el aro con la tela y el mango, apoyado o sostenido, con la tela bien visible.
+     * Una foto del colador sobre la olla en pleno vertido sería la foto del método.
+     */
+    photo: "/images/equipo/colador-de-tela.jpg",
+    alt: "Un colador de café de tela: una bolsa de tela clara, con forma de cono poco profundo, cosida al borde de un aro de metal del que sale un mango largo y recto de alambre. La tela está teñida de marrón por el uso.",
+  },
   "cuchara-de-madera": {
     name: "Cuchara larga de madera",
     photo: "/images/equipo/cuchara-de-madera.webp",

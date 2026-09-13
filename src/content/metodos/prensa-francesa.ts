@@ -10,7 +10,9 @@ export const prensaFrancesa: BrewMethod = {
     alt: "Una prensa francesa de vidrio y metal, con el café ya hecho y el émbolo bajado, sobre una mesa de madera clara. Delante, una taza blanca servida de café negro descansa en su plato, rodeada de granos de café sueltos. Una franja de luz de sol cruza la mesa en diagonal y el resto de la escena queda en penumbra.",
   },
 
-  difficulty: { label: "Principiante", level: 1 },
+  // Ninguno de sus errores echa a perder la taza: el peor deja un dedo de poso en el
+  // fondo o una segunda taza amarga, y los dos se arreglan a la mañana siguiente.
+  errorPenalty: { label: "Tolerante", level: 1 },
 
   recipe: {
     coffeeGramsPerCup: 15,

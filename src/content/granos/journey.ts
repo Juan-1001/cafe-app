@@ -3,11 +3,12 @@
  * esqueleto de la sección: el índice se lee de arriba abajo como ese viaje, y cada
  * artículo declara en qué etapa ocurre lo que cuenta.
  *
- * Se ordena así, y no por nivel de dificultad, por dos razones. La primera es que el
- * recorrido deja ver los huecos: si una etapa no tiene artículos, se nota que falta
- * contarla, mientras que una lista solo crece. La segunda es que /metodos ya agrupa
- * por dificultad con capítulos numerados; repetir aquí el mismo recurso haría que las
- * dos secciones se leyeran como la misma plantilla rellenada dos veces.
+ * Se ordena así, y no por el nivel de los artículos, por dos razones. La primera es
+ * que el recorrido deja ver los huecos: si una etapa no tiene artículos, se nota
+ * que falta contarla, mientras que una lista solo crece. La segunda es que /metodos
+ * ya agrupa en capítulos numerados —allí, por cuánto castiga el error—; repetir aquí
+ * el mismo recurso haría que las dos secciones se leyeran como la misma plantilla
+ * rellenada dos veces.
  *
  * El número va escrito a mano en lugar de salir de la posición porque tiene que ser
  * estable: si algún día no hubiera ningún artículo de finca, el tostador sigue siendo

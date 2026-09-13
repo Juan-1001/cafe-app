@@ -54,11 +54,15 @@ export function StageIcon({ className = "h-3.5 w-3.5" }: IconProps) {
 }
 
 /**
- * Tres barras que suben. Marca el nivel del artículo.
+ * Un libro abierto. Marca el nivel del artículo: cuánto café hay que saber ya para
+ * leerlo sin perderse.
  *
- * Es deliberadamente parecido al medidor de dificultad de los métodos, porque dice lo
- * mismo —cuánto te va a exigir esto—, pero dibujado en trazo y no en bloques macizos:
- * allí es el dato principal de la ficha y aquí es una etiqueta más.
+ * Antes eran tres barras que subían, a propósito parecidas al medidor de los métodos.
+ * Ese parecido dejó de ser cierto: allí la escala pasó a medir cuánto castiga el
+ * método un error —habla del método— y aquí se sigue hablando del lector y de lo que
+ * trae puesto. Dos cosas distintas dibujadas igual se leen como la misma, así que se
+ * separan. Y de paso se va una escala de tres peldaños que nunca cuadró con un dato
+ * de dos valores, introductorio o intermedio.
  */
 export function LevelIcon({ className = "h-3.5 w-3.5" }: IconProps) {
   return (
@@ -72,9 +76,9 @@ export function LevelIcon({ className = "h-3.5 w-3.5" }: IconProps) {
       aria-hidden="true"
       className={`${className} shrink-0`}
     >
-      <path d="M3.5 12.5V9.5" />
-      <path d="M8 12.5V6.5" />
-      <path d="M12.5 12.5V3.5" />
+      <path d="M8 5v8" />
+      <path d="M8 5C6.4 3.9 4.5 3.5 2.5 3.7v8c2-.2 4 .2 5.5 1.3" />
+      <path d="M8 5c1.6-1.1 3.5-1.5 5.5-1.3v8c-2-.2-4 .2-5.5 1.3" />
     </svg>
   );
 }

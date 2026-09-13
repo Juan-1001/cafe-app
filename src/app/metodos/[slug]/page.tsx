@@ -7,10 +7,11 @@ import { brewMethods, getBrewMethod } from "@/content/metodos";
 import { parseRatio } from "@/content/metodos/ratio";
 import type { Ratio } from "@/content/metodos/ratio";
 import { parseEndSeconds, toTimedSteps } from "@/content/metodos/timing";
-import { ClockIcon, DifficultyMeter } from "../indicators";
+import { ClockIcon, ErrorPenaltyMeter } from "../indicators";
 import { Amounts, CupsControl, RecipeAmountsProvider } from "./recipe-amounts";
 import { TimedSteps } from "./timed-steps";
-import type { BrewMethod, ContentImage } from "@/content/metodos";
+import type { BrewMethod, ContentImage, Grounding } from "@/content/metodos";
+import { formatDate } from "@/app/date";
 
 export const dynamicParams = false;
 
@@ -187,7 +188,7 @@ export default async function BrewMethodPage({
             </p>
 
             <div className="mt-8">
-              <DifficultyMeter difficulty={method.difficulty} />
+              <ErrorPenaltyMeter penalty={method.errorPenalty} />
             </div>
           </div>
         </header>
@@ -313,7 +314,68 @@ export default async function BrewMethodPage({
             </div>
           </section>
         ) : null}
+
+        {method.grounding ? <GroundingBlock grounding={method.grounding} /> : null}
       </article>
     </RecipeAmountsProvider>
+  );
+}
+
+/**
+ * Sobre qué está construida la ficha, al final del todo.
+ *
+ * No es la lista de fuentes de un artículo de /granos, aunque se le parezca en la
+ * forma: allí se dice de dónde sale cada dato y aquí se dice de qué está hecho el
+ * método entero, que en el caso del colado en tela es la práctica de quien lo prepara
+ * y ninguna medición. Por eso lleva párrafos y no solo una lista: sin el texto, tres
+ * enlaces sueltos parecerían las fuentes de unas cifras que no existen.
+ *
+ * Va sin fondo ni recuadro, separado por un filete grueso, porque es una nota al pie
+ * del sitio y no un bloque destacado más: si compitiera con el dato curioso, el lector
+ * leería lo segundo primero.
+ */
+function GroundingBlock({ grounding }: { grounding: Grounding }) {
+  return (
+    <section className="mt-28 border-t-2 border-ink px-6 pt-6 md:mt-40 md:px-16">
+      <h2 className="font-mono text-xs uppercase tracking-widest text-ink">
+        Sobre qué está escrita esta ficha
+      </h2>
+
+      <div className="mt-8 max-w-prose">
+        {grounding.body.map((paragraph, index) => (
+          <p
+            key={index}
+            className="mt-5 text-base text-coffee first:mt-0 md:text-lg"
+          >
+            {paragraph}
+          </p>
+        ))}
+      </div>
+
+      {grounding.references && grounding.references.length > 0 ? (
+        <ul className="mt-12 md:grid md:grid-cols-2 md:gap-x-16">
+          {grounding.references.map((reference) => (
+            <li key={reference.url} className="border-t border-dust py-5">
+              <p className="font-mono text-xs uppercase tracking-widest text-sage-deep">
+                {reference.publisher}
+              </p>
+
+              <a
+                href={reference.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 block max-w-[52ch] text-base text-lavender-deep underline underline-offset-4"
+              >
+                {reference.title}
+              </a>
+
+              <p className="mt-2 font-mono text-xs text-coffee">
+                Consultado el {formatDate(reference.retrieved)}
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </section>
   );
 }

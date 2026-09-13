@@ -1,4 +1,4 @@
-import type { ContentImage } from "../types";
+import type { ContentImage, Source } from "../types";
 import type { JourneyStage } from "./journey";
 
 /**
@@ -10,17 +10,11 @@ export type ArticleLevel = "Introductorio" | "Intermedio";
 /**
  * De dónde sale un dato comprobable. Se listan al final del artículo.
  *
- * `retrieved` no es un adorno: los enlaces se mueren y las cifras se actualizan, así
- * que la fecha dice hasta cuándo se sabe que esto era lo que decía la fuente.
+ * La definición vive en `../types` desde que las fichas de método también remiten a
+ * documentos; aquí se reexporta para que los artículos la sigan pidiendo donde
+ * siempre.
  */
-export type Source = {
-  /** Quién publica, tal y como se cita a la vista: "Organización Internacional del Café". */
-  publisher: string;
-  title: string;
-  url: string;
-  /** Fecha ISO (YYYY-MM-DD) en la que se consultó. */
-  retrieved: string;
-};
+export type { Source };
 
 /**
  * Una fila de una comparación: el nombre de lo que se compara y su valor en cada
