@@ -1,4 +1,4 @@
-import type { ContentImage, Source } from "../types";
+import type { ContentImage, DeclaredImage, Source } from "../types";
 import type { EquipmentKey } from "../equipo";
 import type { DifficultyScores } from "./difficulty";
 
@@ -268,8 +268,13 @@ export type BrewMethod = {
    *
    * Se fotografía apaisado, con el gesto entero en la toma —la jarra, el cono y la
    * mano que sirve—, no en retrato estrecho.
+   *
+   * La ruta se escribe desde el primer día, aunque el archivo todavía no exista:
+   * `resolveContentImage` comprueba en la compilación si está y, mientras no lo esté,
+   * la página pinta el bloque de color. Guardar la foto en su sitio es lo único que
+   * hace falta para publicarla.
    */
-  image: ContentImage;
+  image: DeclaredImage;
   /** Las cuatro notas de las que sale la dificultad. Ver . */
   difficulty: DifficultyScores;
   /**

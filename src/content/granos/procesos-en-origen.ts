@@ -101,8 +101,11 @@ export const procesosEnOrigen: Article = {
       // ahora: es lo que dice qué fotografía hay que ir a buscar.
       kind: "image",
       image: {
-        src: null,
+        // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que
+        // se guarde, `resolveContentImage` deja el bloque de color en su sitio.
+        file: "/images/granos/procesos-en-origen-camas-de-secado.jpg",
         alt: "Vista desde arriba de una cama de secado: una gran bandeja de malla elevada sobre patas de madera, cubierta de una capa fina de granos de café extendidos a mano. Se distinguen dos zonas, una de cerezas enteras arrugadas y oscuras y otra de granos pálidos con su cascarilla. Al fondo, más camas en fila bajo un techo de plástico translúcido.",
+        credit: null,
       },
       caption:
         "Camas de secado. Es donde se pasan los días que decide todo lo que viene después.",
@@ -308,8 +311,11 @@ export const procesosEnOrigen: Article = {
     {
       kind: "image",
       image: {
-        src: null,
+        // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que
+        // se guarde, `resolveContentImage` deja el bloque de color en su sitio.
+        file: "/images/granos/procesos-en-origen-pergamino.jpg",
         alt: "Un puñado de café en pergamino sostenido en la palma de una mano abierta. Los granos son pálidos, de un beige amarillento, y están cubiertos por una cascarilla fina y papelosa que en algunos se ha resquebrajado y deja ver el grano verdoso de dentro. Al fondo, desenfocada, la malla de una cama de secado.",
+        credit: null,
       },
       caption:
         "Café en pergamino, seco y listo para guardar. La cascarilla se le quita justo antes de venderlo, no antes: es su último abrigo.",

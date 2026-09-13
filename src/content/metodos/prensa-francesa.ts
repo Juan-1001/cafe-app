@@ -6,8 +6,9 @@ export const prensaFrancesa: BrewMethod = {
   tagline:
     "Un cilindro de vidrio, una malla de metal y cuatro minutos de espera. Es el método que más perdona y el que más cuerpo le deja a la taza.",
   image: {
-    src: "/images/metodos/prensa-francesa.jpg",
+    file: "/images/metodos/prensa-francesa.jpg",
     alt: "Una prensa francesa de vidrio y metal, con el café ya hecho y el émbolo bajado, sobre una mesa de madera clara. Delante, una taza blanca servida de café negro descansa en su plato, rodeada de granos de café sueltos. Una franja de luz de sol cruza la mesa en diagonal y el resto de la escena queda en penumbra.",
+    credit: null,
   },
 
   // 27,5 sobre 100: nivel 1. El método más fácil del sitio junto con el colado en tela,

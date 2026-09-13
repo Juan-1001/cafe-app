@@ -55,9 +55,11 @@ export const sifon: BrewMethod = {
   tagline:
     "Dos bulbos de vidrio, un mechero de alcohol y el café subiendo solo por un tubo. Es el método más aparatoso que existe y el único donde se ve la extracción entera mientras ocurre: por eso te lo preparan delante en la barra y no en la cocina de tu casa.",
   image: {
-    // Foto pendiente. Mientras `src` sea null se pinta el bloque de color.
-    src: null,
+    // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que se
+    // guarde, `resolveContentImage` deja el bloque de color en su sitio.
+    file: "/images/metodos/sifon.jpg",
     alt: "Un sifón de café encendido sobre la barra de una cafetería: abajo la esfera de vidrio con la llama azul del mechero debajo, y arriba el vaso cilíndrico lleno de agua oscura con el café removiéndose en remolino. Una mano sostiene una varilla de bambú dentro del vaso de arriba. El vapor empaña el vidrio y al fondo se adivina la cafetería desenfocada.",
+    credit: null,
   },
 
   /*

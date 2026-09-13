@@ -45,11 +45,12 @@ export const coladoEnTela: BrewMethod = {
   tagline:
     "Una olla, un colador de tela y la mano. Es el café de las casas de este país, el único método del sitio que no te pide comprar nada y el que más gente prepara sin que nadie le haya explicado nunca cómo.",
   image: {
-    // Foto pendiente. Mientras `src` sea null se pinta el bloque de color en su sitio;
-    // la ruta no se escribe hasta que el archivo exista de verdad. El alt se escribe
-    // igual desde ahora: es lo que dice qué fotografía hay que ir a buscar.
-    src: null,
+    // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que se
+    // guarde, `resolveContentImage` deja el bloque de color en su sitio. El alt se
+    // escribe igual desde ahora: es lo que dice qué fotografía hay que ir a buscar.
+    file: "/images/metodos/colado-en-tela.jpg",
     alt: "Unas manos vierten agua caliente desde una olla de aluminio sobre un colador de tela sujeto por su aro, apoyado en la boca de una jarra de vidrio. La tela, teñida de marrón por el uso, está llena de café molido mojado. Alrededor, una mesa de cocina con una taza y una bolsa de café abierta.",
+    credit: null,
   },
 
   /*

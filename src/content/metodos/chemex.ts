@@ -50,10 +50,11 @@ export const chemex: BrewMethod = {
   tagline:
     "La jarra de vidrio con collar de madera que has visto en media Bogotá. Por dentro es el mismo método que el V60 —agua caliente cayendo sobre papel— pero hace café para tres y se sirve en la misma jarra en la que se cuela, y por eso es la que te llevan a la mesa.",
   image: {
-    // Foto pendiente. Mientras `src` sea null se pinta el bloque de color; la ruta no
-    // se escribe hasta que el archivo exista de verdad.
-    src: null,
+    // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que se
+    // guarde, `resolveContentImage` deja el bloque de color en su sitio.
+    file: "/images/metodos/chemex.jpg",
     alt: "Una Chemex sobre una mesa de madera, con el filtro de papel puesto y una mano vertiendo agua desde un hervidor de cuello de cisne en círculos sobre el café molido. En el cuerpo de abajo ya hay café hecho, y el vapor sube entre la mano y la boca de la jarra. Al lado, dos tazas vacías y una báscula.",
+    credit: null,
   },
 
   /*

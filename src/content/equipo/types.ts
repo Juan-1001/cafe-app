@@ -1,3 +1,5 @@
+import type { PhotoCredit } from "../types";
+
 /**
  * Una pieza de equipo, fotografiada por su cuenta.
  *
@@ -35,4 +37,10 @@ export type EquipmentPiece = {
    * el resto, contexto reconocible en cualquier receta.
    */
   alt: string;
+  /**
+   * Quién hizo la foto. Mismo trato que en `DeclaredImage`: va sin `?` para que dejarla
+   * sin crédito tenga que ser una decisión escrita, y `null` significa que la autoría
+   * no se pudo recuperar, no que dé igual.
+   */
+  credit: PhotoCredit | null;
 };

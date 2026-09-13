@@ -6,8 +6,9 @@ export const v60: BrewMethod = {
   tagline:
     "Un cono acanalado y un filtro de papel para una taza limpia, aromática y fácil de repetir todas las mañanas.",
   image: {
-    src: "/images/metodos/v60.jpg",
+    file: "/images/metodos/v60.jpg",
     alt: "Alguien vierte agua caliente desde una tetera de cuello fino y curvo sobre un cono V60 con filtro de papel. El cono está encajado en una jarra de vidrio que ya tiene café hecho, y el conjunto se apoya sobre una báscula digital, encima de una mesa de madera. A los lados hay dos tazas de cerámica y, a la derecha, un molino eléctrico negro.",
+    credit: null,
   },
 
   /*

@@ -28,5 +28,6 @@ export function resolveEquipmentImage(key: EquipmentKey): ContentImage {
   return {
     src: fs.existsSync(file) ? piece.photo : null,
     alt: piece.alt,
+    credit: piece.credit,
   };
 }

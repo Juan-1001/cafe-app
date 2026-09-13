@@ -93,14 +93,43 @@ la portada sin su bloque principal.
   en `/public/images/<sección>/`.
 - **Nunca se enlazan imágenes desde dominios externos.** Nada de URLs a Unsplash, a un CDN
   ni a ningún otro sitio: el archivo vive en `/public`.
-- Mientras no exista la imagen real, usa un **bloque de color sólido de la paleta** con la
-  proporción correcta como marcador. Nunca apuntes a la ruta de un archivo que todavía no
-  existe: eso deja la página rota sin que se note en el código.
-- Sí se puede dejar escrita la ruta de una foto que aún no está **siempre que algo compruebe
-  en la compilación que el archivo existe** y caiga al bloque de color cuando no. Lo que la
-  regla prohíbe es que la página pida una imagen inexistente, no que el contenido diga dónde
-  va a estar. Así la foto aparece sola el día que se guarda el archivo. Es lo que hace el
-  catálogo de equipo (`src/content/equipo/photo.ts`).
+- Mientras no exista la imagen real se pinta un **bloque de color sólido de la paleta** con
+  la proporción correcta. Lo que la regla prohíbe es que la página pida una imagen que no
+  está, no que el contenido diga dónde va a estar.
+- **El contenido escribe siempre la ruta, aunque el archivo todavía no exista**, y quien
+  comprueba en la compilación si está es un resolutor: `resolveContentImage`
+  (`src/content/image.ts`) para métodos y artículos, y `resolveEquipmentImage`
+  (`src/content/equipo/photo.ts`) para el catálogo de equipo. Si el archivo no está,
+  devuelven `src: null` y la página pinta el color. **Guardar el archivo en su sitio es lo
+  único que hace falta para publicar una foto**: no se toca ni el contenido ni el código.
+- Por eso el contenido declara **`file`** y las páginas reciben **`src`**. Son nombres
+  distintos a propósito: así una imagen sin resolver no encaja donde se espera una resuelta
+  y saltarse el resolutor es un error de compilación, no un hueco que aparece en la web.
+- **Nombres de archivo**: `<slug>.jpg` para la portada de un método, `<slug>-<qué-es>.jpg`
+  para las fotos dentro de un artículo, y el nombre que diga el catálogo para las piezas de
+  equipo. Si se cambia la convención, se renombra también lo que ya existía: una convención
+  que solo gobierna lo nuevo son dos formatos conviviendo.
+
+### Autoría de las fotografías
+
+Las fotos se buscan con la API de Pexels, y sus términos piden un enlace visible a Pexels
+en toda página que la use, más crédito al fotógrafo. Pero la razón de fondo es la misma que
+gobierna las cifras: **aquí no se enseña material de otro sin decir de quién es**.
+
+Cada imagen lleva un campo `credit` con el nombre, el enlace a la página de la foto y la
+fuente. **Va sin `?`**: dejarlo en `null` tiene que ser un acto escrito, y `null` significa
+«autoría no recuperable», no «da igual». Donde es null, la página lo dice en voz alta
+—«autoría no registrada»— en vez de callarse. Hoy lo son las seis fotos descargadas a mano
+antes de que existiera el campo: Pexels y Unsplash quitan los metadatos al servir el archivo
+y los originales ya no están. **Un crédito a ojo sería peor que el hueco.**
+
+Dónde se ve, en una frase: **el crédito acompaña a la foto cuando la foto se mira, y se
+agrupa al pie de la página cuando la foto solo sirve para reconocer algo.** En la práctica,
+va pegado en los bloques de imagen de un artículo, que ya tienen pie; y agrupado en un
+bloque «Fotografías» al final de la home, del índice de métodos y de cada ficha, donde son
+ocho portadas seguidas o miniaturas cuadradas y una línea bajo cada una las convertiría en
+un muro de letra pequeña. Solo se acredita **lo que de verdad se ve**: una foto que todavía
+es bloque de color no se le ha pedido a nadie.
 
 ### Equipo de los métodos
 

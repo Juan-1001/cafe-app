@@ -73,8 +73,11 @@ export const nivelesDeTueste: Article = {
       // igual desde ahora: es lo que dice qué fotografía hay que ir a buscar.
       kind: "image",
       image: {
-        src: null,
+        // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que
+        // se guarde, `resolveContentImage` deja el bloque de color en su sitio.
+        file: "/images/granos/niveles-de-tueste-cafe-verde.jpg",
         alt: "Un montón de granos de café verde sin tostar, vistos de cerca y desde arriba. No son marrones sino de un gris verdoso apagado y mate, y cada grano tiene una hendidura que lo recorre a lo largo por el centro. Entre ellos quedan restos de la película fina y translúcida que los envuelve.",
+        credit: null,
       },
       caption:
         "Café verde, tal y como llega al tostador después de meses de finca. Todavía no huele a café.",
@@ -151,8 +154,11 @@ export const nivelesDeTueste: Article = {
     {
       kind: "image",
       image: {
-        src: null,
+        // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que
+        // se guarde, `resolveContentImage` deja el bloque de color en su sitio.
+        file: "/images/granos/niveles-de-tueste-tueste-oscuro.jpg",
         alt: "Primer plano de granos de café tostados muy oscuros, casi negros, apilados unos sobre otros. La superficie de cada grano devuelve la luz en puntos brillantes: están cubiertos de una capa fina de aceite salida de dentro. La hendidura del centro se ve abierta y más clara que el resto del grano.",
+        credit: null,
       },
       caption:
         "El brillo no es frescura. Son los aceites del propio grano, que asoman cuando el tueste llega lejos.",

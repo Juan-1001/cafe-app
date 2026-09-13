@@ -7,7 +7,9 @@ import {
   methodDifficulty,
 } from "@/content/metodos";
 import type { BrewMethod, ContentImage } from "@/content/metodos";
+import { resolveContentImage } from "@/content/image";
 import { Eyebrow } from "@/app/eyebrow";
+import { PhotoCredits } from "@/app/photo-credits";
 import { ClockIcon, DifficultyMeter } from "./indicators";
 
 export const metadata: Metadata = {
@@ -121,7 +123,7 @@ function MethodEntry({
         }`}
       >
         <div className={mirrored ? "md:order-2" : undefined}>
-          <MethodImage image={method.image} />
+          <MethodImage image={resolveContentImage(method.image)} />
         </div>
 
         <div className="mt-6 flex flex-col md:mt-0">
@@ -230,6 +232,10 @@ export default function BrewMethodsPage() {
       </header>
 
       {chapterSections(methods)}
+
+      <PhotoCredits
+        images={methods.map((method) => resolveContentImage(method.image))}
+      />
     </div>
   );
 }

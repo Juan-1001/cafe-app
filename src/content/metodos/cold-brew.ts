@@ -83,11 +83,12 @@ export const coldBrew: BrewMethod = {
   tagline:
     "Café hecho sin una sola gota de agua caliente. Lo que en los demás métodos hace el calor en tres minutos, aquí lo hace el tiempo en catorce horas: se deja el café en agua del tiempo, se olvida uno de él y al día siguiente está hecho.",
   image: {
-    // Foto pendiente. Mientras `src` sea null se pinta el bloque de color; la ruta no
-    // se escribe hasta que el archivo exista. El alt se escribe ya: es lo que dice qué
-    // fotografía hay que ir a buscar.
-    src: null,
+    // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que se
+    // guarde, `resolveContentImage` deja el bloque de color en su sitio. El alt se
+    // escribe ya: es lo que dice qué fotografía hay que ir a buscar.
+    file: "/images/metodos/cold-brew.jpg",
     alt: "Un frasco de vidrio alto sobre una encimera clara, lleno hasta la mitad de agua que ya se ha vuelto marrón oscura, con el café molido grueso suspendido y una capa de posos flotando en la superficie. Al lado, un vaso con hielo en el que alguien está sirviendo café frío desde otro frasco, y la tapa metálica apoyada boca arriba.",
+    credit: null,
   },
 
   /*

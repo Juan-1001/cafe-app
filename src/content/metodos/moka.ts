@@ -62,11 +62,12 @@ export const moka: BrewMethod = {
   tagline:
     "La cafetera italiana de toda la vida: aluminio, fuego y un gorgoteo que avisa. Es el único método del sitio donde tú no decides casi nada, y el único que no perdona haberte distraído.",
   image: {
-    // Foto pendiente. Mientras `src` sea null se pinta el bloque de color en su sitio;
-    // la ruta no se escribe hasta que el archivo exista de verdad. El alt se escribe
-    // igual desde ahora: es lo que dice qué fotografía hay que ir a buscar.
-    src: null,
+    // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que se
+    // guarde, `resolveContentImage` deja el bloque de color en su sitio. El alt se
+    // escribe igual desde ahora: es lo que dice qué fotografía hay que ir a buscar.
+    file: "/images/metodos/moka.jpg",
     alt: "Una cafetera moka de aluminio sobre la hornilla encendida de una estufa de gas, con la llama baja y recogida bajo la base. La tapa está abierta y por el tubo central asoma el café, oscuro y espeso, que empieza a llenar el recolector. Al lado, sobre la encimera, dos tacitas blancas esperan.",
+    credit: null,
   },
 
   /*

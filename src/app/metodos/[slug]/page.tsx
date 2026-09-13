@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Eyebrow } from "@/app/eyebrow";
+import { PhotoCredits } from "@/app/photo-credits";
 import { resolveEquipmentImage } from "@/content/equipo/photo";
+import { resolveContentImage } from "@/content/image";
 import {
   brewMethods,
   getBrewMethod,
@@ -136,6 +138,16 @@ export default async function BrewMethodPage({
    */
   const hasTimer = timedSteps.some((step) => step.startSeconds !== null);
 
+  // La ficha declara dónde va a estar su foto; esto mira si el archivo está de verdad
+  // en /public y, si no, deja el bloque de color.
+  const cover = resolveContentImage(method.image);
+
+  // Se resuelven una vez y se usan dos: en la rejilla y en el pie de créditos. Así el
+  // pie no puede acreditar una foto que la rejilla no llegó a pintar.
+  const equipmentImages = method.equipment.map((item) =>
+    resolveEquipmentImage(item.piece),
+  );
+
   return (
     <RecipeAmountsProvider
       recipe={method.recipe}
@@ -152,11 +164,11 @@ export default async function BrewMethodPage({
             banda ancha; el recuadro crema del título se le monta encima por abajo.
             Mientras un método no traiga foto, el mismo hueco se pinta en color.
           */}
-          {method.image.src ? (
+          {cover.src ? (
             <div className="relative aspect-[4/3] w-full overflow-hidden bg-dust md:ml-[20%] md:aspect-[21/9] md:w-[80%]">
               <Image
-                src={method.image.src}
-                alt={method.image.alt}
+                src={cover.src}
+                alt={cover.alt}
                 fill
                 priority
                 sizes="(min-width: 768px) 80vw, 100vw"
@@ -251,9 +263,9 @@ export default async function BrewMethodPage({
           </h2>
 
           <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 md:mt-14 md:grid-cols-3 md:gap-x-10 md:gap-y-14">
-            {method.equipment.map((item) => (
+            {method.equipment.map((item, index) => (
               <li key={item.name}>
-                <EquipmentImage image={resolveEquipmentImage(item.piece)} />
+                <EquipmentImage image={equipmentImages[index]} />
                 <p className="mt-4 font-medium text-ink">{item.name}</p>
                 {item.note ? (
                   <p className="mt-1 text-sm text-coffee">{item.note}</p>
@@ -332,6 +344,13 @@ export default async function BrewMethodPage({
         ) : null}
 
         {method.grounding ? <GroundingBlock grounding={method.grounding} /> : null}
+
+        {/* La portada y las miniaturas de equipo se acreditan juntas aquí abajo. Bajo
+            cada miniatura cuadrada, una línea de crédito mediría casi tanto como la
+            propia foto y convertiría la rejilla en un muro de letra pequeña. */}
+        <div className="px-6 md:px-16">
+          <PhotoCredits images={[cover, ...equipmentImages]} />
+        </div>
       </article>
     </RecipeAmountsProvider>
   );

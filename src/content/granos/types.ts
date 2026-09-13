@@ -1,4 +1,4 @@
-import type { ContentImage, Source } from "../types";
+import type { DeclaredImage, Source } from "../types";
 import type { JourneyStage } from "./journey";
 
 /**
@@ -201,13 +201,14 @@ export type ArticleBlock =
    * Una fotografía, apoyada en la mitad derecha de la página. Es un respiro: corta el
    * texto técnico sin meter ruido.
    *
-   * Mientras `image.src` sea null se pinta un bloque de color de la paleta con la
-   * proporción correcta. El `alt` se escribe igual desde el primer día, aunque todavía
-   * no haya foto: es lo que dice qué fotografía hay que buscar.
+   * La ruta se escribe desde el primer día, aunque el archivo todavía no exista:
+   * `resolveContentImage` comprueba en la compilación si está y, mientras no lo esté,
+   * se pinta un bloque de color de la paleta con la proporción correcta. El `alt` se
+   * escribe también desde el principio: es lo que dice qué fotografía hay que buscar.
    */
   | {
       kind: "image";
-      image: ContentImage;
+      image: DeclaredImage;
       /**
        * Orientación de la fotografía. Decide el hueco en el que se pinta, y ese hueco
        * tiene la proporción exacta de la foto para que no se recorte nada: una foto

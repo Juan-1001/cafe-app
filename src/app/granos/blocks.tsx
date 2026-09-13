@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { resolveContentImage } from "@/content/image";
+import { PhotoCreditLine } from "@/app/photo-credits";
 import type { ArticleBlock, ComparisonRow } from "@/content/granos/types";
 import { Scale } from "./scale";
 
@@ -143,16 +145,6 @@ function Stat({ block }: { block: Extract<ArticleBlock, { kind: "stat" }> }) {
 }
 
 /**
- * La fotografía del artículo. Se apoya en la mitad derecha y llega hasta el margen,
- * así que el texto que viene después vuelve a empezar a la izquierda y el salto se
- * nota: es lo que hace de respiro.
- *
- * Sin foto todavía se pinta el bloque de color con su proporción. Nunca se apunta a la
- * ruta de un archivo que no existe: la página se vería rota sin que el código lo diga.
- * Para publicarla, se guarda el archivo en /public/images/granos/ y se pone su ruta en
- * `image.src` dentro del artículo; aquí no hay nada que tocar.
- */
-/**
  * Cada orientación trae su marco y su sitio. La proporción es la de la foto, así que
  * `object-cover` no llega a recortar nada; y la vertical arranca más a la derecha
  * porque si ocupara el mismo ancho que una apaisada saldría una torre de imagen.
@@ -170,22 +162,37 @@ const IMAGE_SHAPES = {
   },
 } as const;
 
+/**
+ * La fotografía del artículo. Se apoya en la mitad derecha y llega hasta el margen,
+ * así que el texto que viene después vuelve a empezar a la izquierda y el salto se
+ * nota: es lo que hace de respiro.
+ *
+ * El artículo declara la ruta de la foto aunque el archivo no exista todavía, y
+ * `resolveContentImage` mira en la compilación si está: mientras no esté se pinta el
+ * bloque de color con su proporción, así que la página nunca pide una imagen que no
+ * hay. Para publicarla basta con guardar el archivo en /public/images/granos/ con el
+ * nombre que dice el artículo; ni este archivo ni el del contenido hay que tocarlos.
+ *
+ * Esto obliga a que este módulo se quede en el servidor, que es donde se genera el
+ * sitio: el único bloque que baja al navegador es `Scale`, y vive en su propio archivo.
+ */
 function ArticleImage({
   block,
 }: {
   block: Extract<ArticleBlock, { kind: "image" }>;
 }) {
   const shape = IMAGE_SHAPES[block.shape];
+  const image = resolveContentImage(block.image);
 
   return (
     <figure className={`mt-16 md:mt-24 ${shape.offset}`}>
-      {block.image.src ? (
+      {image.src ? (
         <div
           className={`relative ${shape.frame} w-full overflow-hidden bg-dust`}
         >
           <Image
-            src={block.image.src}
-            alt={block.image.alt}
+            src={image.src}
+            alt={image.alt}
             fill
             sizes={shape.sizes}
             className="object-cover"
@@ -198,9 +205,19 @@ function ArticleImage({
         />
       )}
 
-      {block.caption ? (
+      {/*
+        Aquí el crédito va pegado a la foto y no agrupado al pie de la página, al revés
+        que en /metodos. Es la regla del sitio: acompaña a la foto cuando la foto se
+        mira —y esta se mira, es un respiro a media lectura y ya tiene pie—, y se agrupa
+        abajo cuando la foto solo sirve para reconocer algo.
+
+        Solo se acredita lo que se ve: si el archivo todavía no está, no se ha pedido
+        nada a Pexels y no hay a quién acreditar.
+      */}
+      {block.caption || image.src ? (
         <figcaption className="mt-4 max-w-[46ch] text-sm text-coffee">
-          {withEmphasis(block.caption)}
+          {block.caption ? withEmphasis(block.caption) : null}
+          {image.src ? <PhotoCreditLine credit={image.credit} /> : null}
         </figcaption>
       ) : null}
     </figure>

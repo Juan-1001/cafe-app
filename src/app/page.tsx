@@ -7,8 +7,10 @@ import {
   brewMethodsByDifficulty,
   methodDifficulty,
 } from "@/content/metodos";
+import { resolveContentImage } from "@/content/image";
 import type { ContentImage } from "@/content/metodos";
 import { Eyebrow } from "./eyebrow";
+import { PhotoCredits } from "./photo-credits";
 import { ClockIcon } from "./icons";
 import { DifficultyMeter } from "./metodos/indicators";
 
@@ -138,7 +140,7 @@ export default function Home() {
           className="group block md:grid md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-center md:gap-16 md:pl-16"
         >
           <div className="md:order-2">
-            <EntryImage image={entryMethod.image} />
+            <EntryImage image={resolveContentImage(entryMethod.image)} />
           </div>
 
           <div className="px-6 py-12 md:px-0 md:py-20">
@@ -291,6 +293,12 @@ export default function Home() {
           <SectionLink href="/granos">{home.journey.link}</SectionLink>
         </div>
       </section>
+
+      {/* La portada solo enseña una foto, la del método de entrada, pero el crédito va
+          igual: la obligación es de la página que la muestra, no del número de fotos. */}
+      <div className="px-6 md:px-16">
+        <PhotoCredits images={[resolveContentImage(entryMethod.image)]} />
+      </div>
     </div>
   );
 }

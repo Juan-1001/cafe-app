@@ -66,8 +66,9 @@ export const arabicaVsRobusta: Article = {
     {
       kind: "image",
       image: {
-        src: "/images/granos/arabica-vs-robusta_4.jpg",
+        file: "/images/granos/arabica-vs-robusta-cerezas-en-la-rama.jpg",
         alt: "Primer plano de una rama de cafeto cargada de frutos redondos y apretados unos contra otros. La mayoría están maduros, de un rojo intenso que tira a morado, y entre ellos quedan varios todavía verdes. Todos están cubiertos de gotas de agua. Detrás, las hojas del cafetal quedan desenfocadas en verde claro.",
+        credit: null,
       },
       caption:
         "El café es la semilla de una fruta. A esa fruta se le llama cereza, y en la misma rama conviven en distintos puntos de maduración.",
@@ -208,8 +209,9 @@ export const arabicaVsRobusta: Article = {
       // lo ha encontrado hasta ahora.
       kind: "image",
       image: {
-        src: "/images/granos/arabica-vs-robusta_5.jpg",
+        file: "/images/granos/arabica-vs-robusta-granos-tostados.jpg",
         alt: "Dos manos sostienen en horizontal un frasco de vidrio lleno hasta la mitad de granos de café ya tostados, de color marrón oscuro y brillante. Una cuchara metálica de mango largo saca una porción del frasco. Detrás, desenfocado, el delantal oscuro de quien lo sostiene.",
+        credit: null,
       },
       caption:
         "El final del recorrido: la semilla de aquella fruta, ya seca y tostada. Entre la rama y el frasco pasan todos los pasos que deciden a qué va a saber.",
