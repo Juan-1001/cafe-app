@@ -130,6 +130,18 @@ export const EQUIPMENT = {
     photo: "/images/equipo/cuchara-de-madera.webp",
     alt: "Cuchara de madera vista desde arriba sobre un fondo liso y claro. Tiene el mango largo y recto y la pala redonda y poco honda.",
   },
+  /*
+   * Un frasco con tapa no es la «jarra de vidrio» de aquí abajo, por la misma razón por
+   * la que hay dos hervidores. La jarra está abierta y sirve para servir; este cierra, y
+   * cierra porque su café pasa catorce horas dentro de la nevera, junto a la comida.
+   * Fundirlos en «un recipiente de vidrio» borraría justo lo que hace falta saber para
+   * comprar el correcto.
+   */
+  "frasco-con-tapa": {
+    name: "Frasco de vidrio con tapa",
+    photo: "/images/equipo/frasco-con-tapa.jpg",
+    alt: "Un frasco de vidrio transparente, alto y de boca ancha, vacío y cerrado con una tapa metálica de rosca. Está de pie sobre una superficie clara y lisa.",
+  },
   "jarra-de-vidrio": {
     name: "Jarra de vidrio",
     // Hay una segunda foto de jarra sin usar, `jarra-para-servir.webp`. Se eligió esta

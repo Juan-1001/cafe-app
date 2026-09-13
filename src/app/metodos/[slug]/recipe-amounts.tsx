@@ -7,6 +7,8 @@ import {
   fillAmounts,
 } from "@/content/metodos/amounts";
 import type { Recipe } from "@/content/metodos/types";
+import type { TimedStep } from "@/content/metodos/timing";
+import { StepList } from "./step-list";
 
 /** Lo que se ofrece cuando el método no acota las tazas que hace bien. */
 const DEFAULT_CUP_OPTIONS = [1, 2, 3, 4];
@@ -86,6 +88,28 @@ export function Amounts({ text }: { text: string }) {
   const variables = useAmountVariables();
 
   return <>{fillAmounts(text, variables)}</>;
+}
+
+/**
+ * La lista de pasos de los métodos sin cronómetro, con sus cantidades sustituidas.
+ *
+ * Existe por una combinación que no se había dado nunca: un método que calcula
+ * cantidades y además no lleva cronómetro. La moka, la única sin cronómetro hasta que
+ * llegó el cold brew, tampoco tenía receta, así que la página le pasaba a `StepList`
+ * unas variables vacías y eso era correcto. Con el cold brew dejó de serlo: sus pasos
+ * enseñaban «{frasco}» escrito tal cual en pantalla.
+ *
+ * Se vio porque `fillAmounts` deja el nombre a la vista cuando no encuentra la
+ * cantidad, en vez de poner un cero. Un hueco raro en pantalla se nota; un «0 g» no.
+ *
+ * Es un componente de cliente y solo por esto: las cantidades dependen de las tazas
+ * que elija quien lee, que es estado del navegador. `StepList` se queda sin hooks y
+ * sin `"use client"`, que es lo que permite que la use también el cronómetro.
+ */
+export function PlainSteps({ steps }: { steps: TimedStep[] }) {
+  const variables = useAmountVariables();
+
+  return <StepList steps={steps} activeNumber={null} variables={variables} />;
 }
 
 /** Selector de tazas. Los radios de verdad traen gratis el teclado y el lector de pantalla. */

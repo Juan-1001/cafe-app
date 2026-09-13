@@ -28,9 +28,13 @@ import type { BrewMethod } from "./types";
  *   mejor en su lugar: en sus preguntas frecuentes, «el café sale frío o demasiado
  *   caliente» se contesta revisando el nivel del agua. Eso es oficial y además se puede
  *   hacer. Por eso la casilla de temperatura no lleva grados.
- * - **Los «4 a 6 minutos» al fuego.** No hay cifra oficial de tiempo. El manual da un
- *   suceso: «retire la cafetera cuando el recolector esté lleno». De ahí sale que esta
- *   sea la única ficha del sitio sin tiempo total y sin cronómetro.
+ * - **Los «4 a 6 minutos» al fuego.** No hay cifra oficial de tiempo ni ninguna
+ *   medición publicada. El manual da un suceso: «retire la cafetera cuando el
+ *   recolector esté lleno». Por eso esta ficha nació sin tiempo total y sigue sin
+ *   cronómetro. Lo que cambió después es que el hueco tampoco servía —quien no ha
+ *   usado una moka no sabe si esto son dos minutos o veinte—, así que ahora hay un
+ *   rango declarado como elección del sitio, para una olla de 6 tazas, y dicho en la
+ *   página como estimación y no como dato. Ver la casilla de `totalTime`.
  * - **Arrancar con agua caliente.** El manual dice agua fría, explícito. La práctica de
  *   arrancar con agua ya caliente está muy extendida y tiene un mecanismo plausible
  *   —menos rato al fuego, menos se tuesta el café de arriba—, pero nadie la ha medido.
@@ -201,10 +205,34 @@ export const moka: BrewMethod = {
       note: "No la eliges tú. El agua entra fría y la caldera, ya cerrada, decide a qué temperatura empuja: es la única cosa de todo el sitio que se cocina a puerta cerrada. Si el café te sale frío o demasiado caliente, el fabricante manda revisar una sola cosa, y no es el fuego: el nivel del agua.",
     },
     /*
-     * Sin `totalTime`, y de ahí que esta sea la única ficha sin cronómetro. El manual
-     * no da minutos: da un suceso. «Cuando el recolector (6) esté lleno de café, retire
-     * la cafetera de la fuente de calor».
+     * ELECCIÓN DEL SITIO, NO DATO DEL FABRICANTE. Igual que el 1:15 del AeroPress y
+     * que el 1:11 del cold brew.
+     *
+     * Conviene ser preciso sobre qué es este número y qué no. El manual de Bialetti no
+     * da ningún tiempo: da un suceso, «cuando el recolector (6) esté lleno de café,
+     * retire la cafetera de la fuente de calor». Tampoco existe ninguna medición
+     * publicada de cuánto tarda una moka, ni ninguna estadística de cocinas
+     * colombianas: eso no está escrito en ninguna parte y no se va a fingir que sí.
+     *
+     * Esta ficha antes no tenía tiempo total por ese motivo, y el hueco resultó peor
+     * que una estimación declarada: alguien que no ha usado nunca una moka no sabe si
+     * esto son dos minutos o veinte, y esa es la pregunta que se hace antes de
+     * ponerla al fuego. Así que el sitio pone un rango, dice que es suyo, y dice para
+     * qué olla vale.
+     *
+     * De dónde sale el rango: una moka de 6 tazas —la más común en una cocina— con
+     * agua fría hasta la válvula y la llama baja que manda el fabricante, desde que se
+     * pone al fuego hasta el gorgoteo. Las de 3 tazas van antes y las grandes tardan
+     * más; una llama alta lo acorta y es justo lo que no hay que hacer.
+     *
+     * Escrito en minutos y no en «m:ss» a propósito: en este sitio la forma «m:ss» es
+     * la de los métodos donde el reloj es una instrucción, y aquí solo orienta. Esa
+     * correspondencia la comprueba `index.ts` al compilar.
      */
+    totalTime: {
+      value: "5 – 8 min",
+      note: "Desde que la pones al fuego hasta el gorgoteo, en una moka de 6 tazas con la llama baja. Es una estimación de este sitio para que sepas si te da tiempo, no una cifra del fabricante: lo que manda es el recolector lleno y el ruido, no el reloj. Si suena antes, apágala antes.",
+    },
     /*
      * Sin `output`: lo que sale depende de la olla que haya en esa cocina, y eso ya se
      * cuenta arriba, en el bloque de cantidades. Repetirlo aquí con una cifra sola
@@ -281,7 +309,7 @@ export const moka: BrewMethod = {
       title: "Quédate cerca y escucha",
       description:
         "No te vayas. En unos minutos el café empieza a salir por el tubo central, primero oscuro y en hilo, y va llenando el recolector.",
-      why: "Este es el único método del sitio sin cronómetro, porque el fabricante no da un tiempo sino una señal. Y es el único donde irse a hacer otra cosa arruina la taza sin remedio: cuando vuelvas ya estará hecha.",
+      why: "Aquí no hay cronómetro, porque el fabricante no da un tiempo sino una señal: el minuto exacto en que sube depende de tu fuego y de tu olla. Los minutos de la ficha técnica son para que sepas si te da tiempo, no para que los cumplas. Y este es el único método donde irse a hacer otra cosa arruina la taza sin remedio: cuando vuelvas ya estará hecha.",
     },
     {
       time: "Al gorgoteo",

@@ -26,27 +26,46 @@ export type Spec = {
 };
 
 /**
- * La ficha técnica. Tres de sus casillas son opcionales, y no por comodidad: hay
+ * La ficha técnica. Dos de sus casillas son opcionales, y no por comodidad: hay
  * métodos donde la respuesta no es «no la sabemos» sino «esa pregunta no existe
  * aquí», y una casilla que dijera «lo fija el aparato» parecería un dato sin serlo.
  *
  * La moka es el caso que las abrió. No tiene `ratio` porque quien prepara no elige
- * la proporción: el embudo y la válvula la fijan. No tiene `totalTime` porque su
- * fabricante da un suceso y no un tiempo —se retira cuando el recolector está
- * lleno—, y por eso es el único método del sitio sin cronómetro. Y no tiene
- * `output` porque lo que sale depende del tamaño de olla que haya en esa cocina,
- * que es justo lo que cuenta su bloque de `device`.
+ * la proporción: el embudo y la válvula la fijan. Y no tiene `output` porque lo que
+ * sale depende del tamaño de olla que haya en esa cocina, que es justo lo que
+ * cuenta su bloque de `device`.
  *
  * Un método que declare `ratio` tiene que escribirlo con la forma «1:16»: si no,
  * la compilación falla en `index.ts`. Ese control existe porque el agua de la
  * calculadora se deduce leyendo este texto, y un ratio mal escrito la dejaba en
  * cero sin que nada avisara.
+ *
+ * ## El tiempo total es obligatorio, y su notación decide si hay cronómetro
+ *
+ * `totalTime` estuvo un tiempo siendo opcional, por la moka: su fabricante da un
+ * suceso y no un tiempo, así que la ficha se quedó sin la casilla. El hueco resultó
+ * peor que una estimación declarada —quien no ha usado una moka no sabe si eso son
+ * dos minutos o veinte—, así que la moka pasó a declarar un rango dicho como
+ * elección del sitio, y el campo volvió a ser obligatorio. Todo método dura algo.
+ *
+ * Lo que varía no es si hay tiempo, sino si el reloj es una instrucción o solo
+ * orienta, y eso se dice **con la notación**:
+ *
+ * - **«3:00 – 3:30», en minutos y segundos**, es un método donde el reloj manda. Sus
+ *   pasos llevan sus propios «m:ss» y la página dibuja el cronómetro.
+ * - **«5 – 8 min» o «14 – 18 h»**, en unidad gruesa, es un método donde el tiempo
+ *   solo orienta: la moka se retira cuando el recolector está lleno y el cold brew se
+ *   cuela cuando te gusta. Ninguno de sus pasos lleva «m:ss» y no hay cronómetro.
+ *
+ * `index.ts` comprueba al compilar que las dos cosas concuerdan en los dos sentidos,
+ * porque el fallo contrario es mudo: escribir «12:00» pensando en doce horas hace que
+ * el sitio pinte un cronómetro de doce minutos sin que nada avise.
  */
 export type BrewSpecs = {
   ratio?: Spec;
   grind: Spec;
   waterTemperature: Spec;
-  totalTime?: Spec;
+  totalTime: Spec;
   output?: Spec;
   /** A qué sabe la taza que sale de aquí: es lo que hace elegir un método y no otro. */
   cupProfile: Spec;

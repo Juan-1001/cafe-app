@@ -12,8 +12,12 @@ import { parseRatio } from "@/content/metodos/ratio";
 import type { Ratio } from "@/content/metodos/ratio";
 import { parseEndSeconds, toTimedSteps } from "@/content/metodos/timing";
 import { ClockIcon, DifficultyMeter } from "../indicators";
-import { Amounts, CupsControl, RecipeAmountsProvider } from "./recipe-amounts";
-import { StepList } from "./step-list";
+import {
+  Amounts,
+  CupsControl,
+  PlainSteps,
+  RecipeAmountsProvider,
+} from "./recipe-amounts";
 import { TimedSteps } from "./timed-steps";
 import type {
   BrewMethod,
@@ -162,15 +166,21 @@ export default async function BrewMethodPage({
 
   const difficulty = methodDifficulty(method);
 
+  /*
+   * El final de la preparación sale del tiempo total, y solo lo hay cuando ese tiempo
+   * está escrito como reloj: «14 – 18 h» devuelve null, que es lo correcto.
+   */
   const timedSteps = toTimedSteps(
     method.steps,
-    method.specs.totalTime ? parseEndSeconds(method.specs.totalTime.value) : null,
+    parseEndSeconds(method.specs.totalTime.value),
   );
 
   /*
-   * Hay cronómetro si hay algún paso que ocurra en él. La moka no tiene ninguno
-   * —sus pasos son sucesos, «al fuego», «al gorgoteo»— y su ficha sale sin panel:
-   * un cronómetro que no puede marcar nada sería un adorno que pide que lo pulses.
+   * Hay cronómetro si hay algún paso que ocurra en él. Dos métodos no tienen ninguno:
+   * la moka, cuyos pasos son sucesos («al fuego», «al gorgoteo»), y el cold brew, que
+   * dura catorce horas. Sus fichas salen sin panel: un cronómetro que no puede marcar
+   * nada sería un adorno que pide que lo pulses, y uno que contara hacia adelante
+   * durante una noche entera no serviría para nada.
    */
   const hasTimer = timedSteps.some((step) => step.startSeconds !== null);
 
@@ -308,7 +318,7 @@ export default async function BrewMethodPage({
           {hasTimer ? (
             <TimedSteps steps={timedSteps} />
           ) : (
-            <StepList steps={timedSteps} activeNumber={null} variables={{}} />
+            <PlainSteps steps={timedSteps} />
           )}
         </section>
 
