@@ -35,6 +35,10 @@ import type { BrewMethod } from "./types";
  *   arrancar con agua ya caliente está muy extendida y tiene un mecanismo plausible
  *   —menos rato al fuego, menos se tuesta el café de arriba—, pero nadie la ha medido.
  *   Entra atribuida en los errores comunes, nunca como recomendación de este sitio.
+ * - **Dónde cae la molienda dentro de su casilla.** Se repite mucho que la moka pide un
+ *   punto más fino que un goteo, y nadie lo ha medido. La ficha la sitúa en «media-fina»
+ *   porque es el hueco que dejan las dos prohibiciones del fabricante, y ahí comparte
+ *   casilla con el V60 y el AeroPress sin fingir que se puede afinar más.
  * - **«En altura la moka hace mejor café, porque el agua hierve a 88-95 °C, que es la
  *   temperatura ideal».** No se escribe, y no por falta de respaldo: el razonamiento
  *   está mal. Da por hecho que la moka prepara a la temperatura de ebullición del
@@ -73,6 +77,17 @@ export const moka: BrewMethod = {
    * Que tome pocas decisiones no es lo mismo que perdonar. Es justo lo que explica el
    * comentario de `ErrorPenalty` en types.ts: por número de decisiones la moka sería de
    * las fáciles, y mandar ahí a alguien que empieza sería un mal consejo.
+   *
+   * Sobre cómo se comprobó, porque el criterio de las otras fichas aquí da un resultado
+   * mezclado y conviene dejarlo escrito. La prueba del AeroPress —mirar si los errores
+   * comunes son sabores o estorbos del gesto— sale 2 y 2: quemado y frío son la taza,
+   * pero la válvula soltando vapor y «no sale nada» son estorbos. Lo que pasa es que
+   * esa prueba trae un supuesto escondido que solo valía allí: en el AeroPress los
+   * estorbos no costaban nada, «entre el papel y el remojo la taza sale limpia igual».
+   * Aquí sí cuestan: «no sale nada» es quedarte sin café. Contados por lo que cuestan y
+   * no por su clase, cuatro de los cinco se llevan la taza entera, y ninguno se puede
+   * arreglar mientras pasa. Por ahí es por donde entra en el nivel 3, no por la prueba
+   * literal.
    */
   errorPenalty: { label: "Implacable", level: 3 },
 
@@ -127,18 +142,29 @@ export const moka: BrewMethod = {
      * la página deduce leyendo este campo.
      */
     grind: {
-      value: "Para moka",
       /*
-       * El manual no da micras ni descripciones: da una categoría y una prohibición.
-       * Cita textual: «Use ground coffee for Moka, that is with a suitable grinding»,
-       * y en las advertencias, la lista de lo que no se puede usar incluye en
-       * mayúsculas «CAFFÈ PER FILTRI PERCOLATORI O MACCHINE ESPRESSO».
+       * «Media-fina» y no «Para moka», que era lo que decía antes y no orienta a nadie:
+       * quien tiene un molino con dial necesita la casilla de la escala del sitio, no
+       * el nombre del paquete.
        *
-       * La descripción de dónde cae entre los otros métodos del sitio no sale del
-       * manual: es la definición de la categoría, puesta aquí para que se pueda
-       * comparar con las otras fichas.
+       * De dónde sale la casilla. El manual no describe la molienda: da una categoría
+       * —«Use ground coffee for Moka, that is with a suitable grinding»— y dos
+       * prohibiciones, que en las advertencias van en mayúsculas: «CAFFÈ PER FILTRI
+       * PERCOLATORI O MACCHINE ESPRESSO». Esas dos prohibiciones son el dato. Dejan la
+       * molienda acotada por los dos lados —más fina que la de filtro, más gruesa que
+       * la de espresso— y en la escala de este sitio ese hueco es exactamente
+       * «media-fina». No es una equivalencia inventada: es el espacio que queda cuando
+       * el fabricante descarta lo de arriba y lo de abajo.
+       *
+       * Lo que NO se pudo comprobar, y por eso no se escribe: dónde cae la moka dentro
+       * de esa casilla respecto del V60 y del AeroPress. Se repite mucho que la moka
+       * pide un punto más fino que un goteo, y puede que sea cierto, pero no hay ningún
+       * documento que lo mida. Así que los tres comparten casilla y comparación táctil,
+       * que es lo único que el material sostiene. Si algún día aparece la medición, aquí
+       * es donde hay que afinarlo.
        */
-      note: "Se vende así, con ese nombre en el paquete. Queda entre la del goteo y la del espresso. El fabricante prohíbe expresamente usar café de filtro o de máquina de espresso: el de espresso tapona el filtro y hace que la válvula suelte vapor.",
+      value: "Media-fina",
+      note: "El mismo punto que el V60 y el AeroPress: como el azúcar de mesa, granulada entre los dedos y no polvo. En el paquete la vas a ver como «para moka». Y más que el punto exacto importa que todos los trozos midan lo mismo: un molino de cuchillas hace polvo y grumos a la vez, y es el polvo el que tapona el filtro de metal y manda la presión a la válvula. Por eso aquí se pide molino de muelas.",
     },
     waterTemperature: {
       value: "La fija el aparato",
@@ -199,7 +225,7 @@ export const moka: BrewMethod = {
       time: "Previo",
       title: "Muele el café justo antes",
       description:
-        "Muele en el punto «para moka». Si compras el café ya molido, comprueba que el paquete lo diga: el de espresso es más fino y aquí no sirve.",
+        "Muele media-fina, el mismo punto que pide el V60. Si compras el café ya molido, busca el que dice «para moka»: el de máquina de espresso es más fino y aquí no sirve.",
       why: "Una molienda demasiado fina tapona el filtro, y cuando el agua no encuentra por dónde salir, la presión se va por la válvula de seguridad. Una demasiado gruesa deja pasar el agua tan rápido que el café sale aguado.",
     },
     {

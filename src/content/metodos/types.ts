@@ -21,6 +21,15 @@ import type { EquipmentKey } from "../equipo";
  * Va como unión de pares y no como dos campos sueltos para que una etiqueta no pueda
  * acabar con el nivel de otra: `{ label: "Tolerante", level: 3 }` no compila.
  */
+/*
+ * El rótulo del nivel 3 se revisó al entrar la moka, porque «Implacable» suena a
+ * difícil y la moka no lo es: son pocos pasos, sin báscula y sin cronómetro. Se
+ * consideró cambiarlo por uno que nombrara la consecuencia y no la exigencia, y se
+ * decidió dejarlo como está. El nivel en sí sí se comprobó, y cómo se comprobó está
+ * escrito junto al `errorPenalty` de `moka.ts`: la prueba de los errores comunes sale
+ * mezclada y el método entra en el nivel 3 por lo que cuestan los errores, no por su
+ * clase.
+ */
 export type ErrorPenalty =
   | { label: "Tolerante"; level: 1 }
   | { label: "Preciso"; level: 2 }
