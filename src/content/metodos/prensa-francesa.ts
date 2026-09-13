@@ -67,8 +67,8 @@ export const prensaFrancesa: BrewMethod = {
     },
     totalTime: {
       // El final de este rango es lo que el cronómetro usa para saber cuándo se
-      // acabó: el último paso, servir, arranca en 5:00 y se lleva el medio minuto.
-      value: "5:00 – 5:30",
+      // acabó: el último paso, servir, arranca en 5:15 y se lleva el medio minuto.
+      value: "5:15 – 5:45",
       note: "Desde que echas el agua hasta que la jarra queda vacía.",
     },
     output: {
@@ -149,21 +149,21 @@ export const prensaFrancesa: BrewMethod = {
       why: "La tapa conserva el calor y la quietud deja que la extracción —el paso de los sabores del grano al agua— avance parejo. Si revuelves ahora, los trozos más finos se sueltan y se van al fondo hechos barro.",
     },
     {
-      time: "4:00 – 4:30",
+      time: "4:00 – 4:45",
       title: "Rompe la costra y retira la espuma",
       description:
         "Con la cuchara larga, empuja la costra hacia abajo con dos o tres movimientos suaves: la mayor parte del café se hunde solo. Retira después la espuma y los granos que sigan arriba.",
       why: "Esa costra es café que pasó cuatro minutos tocando más aire que agua. Sacarla le quita a la taza un amargor áspero que no aporta nada.",
     },
     {
-      time: "4:30",
+      time: "4:45",
       title: "Baja el émbolo despacio",
       description:
         "Apóyalo en la superficie y empújalo con presión constante, sin prisa, hasta el fondo. Si se atasca, súbelo un poco y vuelve a bajar.",
       why: "El émbolo no filtra: solo aparta el café hacia abajo. Bajarlo de golpe levanta una nube de partículas del fondo y te las reparte por toda la bebida.",
     },
     {
-      time: "≈ 5:00",
+      time: "≈ 5:15",
       title: "Sirve la jarra entera",
       description:
         "Pasa el café a las tazas o a una jarra aparte de inmediato, y frena cuando el chorro empiece a verse turbio: ese último dedo de líquido se queda en la prensa.",

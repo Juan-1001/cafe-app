@@ -23,6 +23,16 @@ import type { BrewMethod } from "./types";
  *   clasificación previa que confirmar. Sale 20,0 y es el más fácil del sitio. Ver la
  *   nota de `difficulty`.
  *
+ * Y una cuarta que llegó después: **es el primer método cuya ficha técnica deja
+ * elegir un dato en vez de enseñarlo**. Listo para beber o concentrado no son dos
+ * recetas: son la misma agua entrando en un momento o en dos, así que la taza que sale
+ * es la misma y el rendimiento no se mueve al cambiar de opción. Eso, que parece un
+ * error de la página, es justo lo que el método tiene que enseñar, y por eso la
+ * elección vive en la casilla del ratio —donde se ve el ratio cambiar, la barra
+ * acortarse y el rendimiento quedarse quieto— y no en un paso del paso a paso. El paso
+ * que antes decía «si lo quieres concentrado, parte el agua en dos» desapareció: era
+ * una decisión disfrazada de instrucción, y se toma antes de empezar.
+ *
  * Sobre las cifras, que en este método son casi todas repetidas y no medidas.
  *
  * La ficha se apoya en un estudio que no podía encajar mejor con este sitio: café
@@ -155,16 +165,38 @@ export const coldBrew: BrewMethod = {
      * bien: lo que el café retiene depende del café, no del agua. Da igual cuándo
      * entre esa agua.
      */
-    waterMarks: {
-      /*
-       * Los dos momentos del agua, en gramos por gramo de café. Suman 11, que es el
-       * ratio de la ficha: 5 + 6. No es una coincidencia afortunada sino la razón por
-       * la que se eligió 1:5 para el concentrado y no 1:4,5, que es donde también lo
-       * ponen las guías: con 4,5 los números no sumaban limpio y la página habría
-       * dicho «echa 70 y luego 100» cuando el ratio dice 165.
-       */
-      frasco: 5,
-      alServir: 6,
+    // Sin hitos de vertido sueltos: aquí el agua entra de una vez o en los dos
+    // momentos que declara `waterSplit`, y esos dos se eligen.
+    waterMarks: {},
+    /*
+     * Las dos formas de repartir la misma agua, en gramos por gramo de café. Las dos
+     * suman 11, que es el ratio de la ficha, y esa suma no es una coincidencia
+     * afortunada: es la razón por la que se eligió 1:5 para el concentrado y no 1:4,5,
+     * que es donde también lo ponen las guías. Con 4,5 los números no sumaban limpio y
+     * la página habría dicho «echa 70 y luego 100» cuando el ratio dice 165.
+     *
+     * El orden importa, porque la primera es la que se ofrece al entrar: se entra por
+     * la sencilla. Quien no ha hecho nunca un cold brew no tiene por qué empezar
+     * decidiendo si lo quiere concentrado.
+     */
+    waterSplit: {
+      question: "Cómo entra el agua",
+      options: [
+        {
+          key: "listo",
+          label: "Listo para beber",
+          jarPerGram: 11,
+          atServingPerGram: 0,
+          note: "Toda el agua entra al frasco desde el principio, y lo que sale de ahí ya es café: del frasco al vaso con hielo, sin añadir nada. Es la forma más sencilla y la que más sitio ocupa en la nevera.",
+        },
+        {
+          key: "concentrado",
+          label: "Concentrado",
+          jarPerGram: 5,
+          atServingPerGram: 6,
+          note: "Al frasco entran solo {frasco} y los otros {alServir} los pones tú al servir, con agua o con leche. La taza que sale es la misma —{rendimiento}— porque el café retiene lo que retiene, unos {retenida}, entre cuando entre el agua: por el camino largo son {agua} menos esos {retenida}; por el corto, {frasco} menos los mismos {retenida}, y encima los {alServir} que añades limpios al final. Por eso la barra se acorta y el rendimiento no se mueve. Lo que ganas partiendo el agua es sitio: cuatro tazas ocupan poco más de medio litro listas para beber, y menos de un tercio de eso concentradas. Lo que pierdes es poder beberlo directo del frasco.",
+        },
+      ],
     },
     /*
      * Se mantiene el 2 aunque esperar catorce horas para dos vasos sea poco eficiente:
@@ -189,7 +221,7 @@ export const coldBrew: BrewMethod = {
        * que los dos momentos del agua sumen exacto.
        */
       value: "1:11",
-      note: "{cafe} de café por {agua} de agua. Es la proporción que este sitio elige dentro de lo que usan las guías, no un óptimo medido: nadie ha publicado cuál es el mejor. El estudio colombiano en el que se apoya esta ficha infusionó con 1:11,7, que viene a ser esta misma. Si lo prefieres concentrado, al frasco entra 1:5 y el resto del agua se añade al servir; abajo está explicado por qué sale la misma taza.",
+      note: "Es la proporción que este sitio elige dentro de lo que usan las guías, no un óptimo medido: nadie ha publicado cuál es el mejor. El estudio colombiano en el que se apoya esta ficha infusionó con 1:11,7, que viene a ser esta misma. Lo que eliges arriba no cambia esa proporción: cambia si toda esa agua entra en un momento o en dos.",
     },
     grind: {
       /*
@@ -234,7 +266,7 @@ export const coldBrew: BrewMethod = {
     },
     output: {
       value: "{rendimiento}",
-      note: "Lo que llega al vaso: el molido se queda con unos {retenida} de agua. Si lo haces concentrado sale lo mismo, aunque del frasco salgan solo unos 45 ml por taza: el resto del agua lo pones tú al servir.",
+      note: "Lo que llega al vaso, y es el mismo en las dos opciones de arriba: el molido se queda con unos {retenida} de agua, y eso no depende de cuándo entre. Hecho concentrado, del frasco sale bastante menos líquido —el resto del agua lo pones tú al servir— y el vaso acaba igual de lleno.",
     },
     cupProfile: {
       value: "Dulce",
@@ -286,17 +318,10 @@ export const coldBrew: BrewMethod = {
     },
     {
       time: "Al empezar",
-      title: "Échalo en el frasco y añade {agua} de agua",
+      title: "Échalo en el frasco y añade {frasco} de agua",
       description:
         "Agua del grifo, del tiempo, sin calentar. Échala encima del café de una vez y sin cuidado: aquí no hay vertido que controlar.",
       why: "Esta es la única diferencia real con los otros cinco métodos y es lo que conviene entender del cold brew: el agua fría disuelve las mismas cosas que la caliente, solo que mucho más despacio y no todas por igual. El calor no es imprescindible para hacer café; es un acelerador. Quitarlo y poner tiempo en su lugar da una taza distinta, no una taza mal hecha.",
-    },
-    {
-      time: "En el frasco",
-      title: "Si lo quieres concentrado, parte el agua en dos",
-      description:
-        "En vez de los {agua} de golpe, echa solo {frasco} al frasco y guarda los {alServir} restantes para el vaso: al servir, añades agua o leche hasta completar. El café es el mismo y la taza que sale es la misma; lo único que cambia es cuándo entra el agua.",
-      why: "Y sale la misma porque el café retiene lo que retiene —unos {retenida}— independientemente de cuándo entre el agua. Por el camino largo: {agua} menos {retenida} que se queda el molido. Por el corto: {frasco} menos esos mismos {retenida}, y encima los {alServir} que añades limpios al final. Los dos dan {rendimiento}. Lo que ganas partiéndola es sitio: cuatro tazas ocupan poco más de medio litro listas para beber, y menos de un tercio de eso concentradas. Lo que pierdes es poder beberlo directo del frasco.",
     },
     {
       time: "Antes de tapar",
@@ -323,7 +348,7 @@ export const coldBrew: BrewMethod = {
       time: "Al servir",
       title: "Sobre hielo, o con agua o leche si va concentrado",
       description:
-        "Listo para beber, va tal cual sobre hielo. Concentrado, se sirve con los {alServir} de agua o de leche encima. Lo que sobre, tapado y a la nevera.",
+        "Si lo hiciste listo para beber, va tal cual sobre hielo. Si lo hiciste concentrado, encima va el agua o la leche que guardaste, hasta llenar el vaso. Lo que sobre, tapado y a la nevera.",
       why: "Guardado en frío, lo primero que se va no es la seguridad sino el sabor: pierde aroma y se vuelve plano bastante antes de que haya ningún motivo para preocuparse. La respuesta honesta a cuántos días aguanta es que nadie lo ha medido en un frasco que se abre cada mañana; los «siete a diez días» que se leen por ahí no salen de ningún sitio. Pruébalo y tíralo cuando deje de gustarte.",
     },
   ],

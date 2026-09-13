@@ -115,6 +115,45 @@ export type FunFact = {
 };
 
 /**
+ * Una forma de repartir la misma agua entre dos momentos: la que entra al recipiente
+ * donde el café se infusiona y la que se añade al servir.
+ *
+ * La trae el cold brew, y es la primera vez que la ficha técnica deja **elegir** un
+ * dato en vez de enseñarlo. Se puede porque hacerlo concentrado no es otra receta: es
+ * la misma agua entrando en dos veces, así que la taza que sale es exactamente la
+ * misma. Eso es lo que la ficha tiene que dejar ver, y por eso el agua del segundo
+ * momento se declara aquí en vez de deducirse restando: `index.ts` comprueba al
+ * compilar que los dos tramos suman el ratio de la casilla, y si alguien toca uno sin
+ * tocar el otro, la compilación falla en vez de cambiar el rendimiento a escondidas.
+ */
+export type WaterSplitOption = {
+  /** Clave estable: es la que la página recuerda mientras alguien lee. */
+  key: string;
+  /** El nombre de la opción, el que se lee en el control. */
+  label: string;
+  /** Gramos de agua por gramo de café que entran al recipiente. */
+  jarPerGram: number;
+  /** Los que se añaden al servir. Cero cuando el agua entra toda de una vez. */
+  atServingPerGram: number;
+  /**
+   * Qué significa elegir esta. Solo se muestra la de la opción elegida, así que cada
+   * nota tiene que sostenerse sola: no puede empezar por «en cambio» ni por «la otra».
+   */
+  note: string;
+};
+
+export type WaterSplit = {
+  /**
+   * Lo que el control pregunta. No se ve en pantalla —el rótulo de la casilla y los
+   * nombres de las dos opciones ya lo dicen, y un rótulo más ahí arriba empezaría a
+   * parecer un formulario—, pero es lo que anuncia el lector de pantalla al llegar al
+   * grupo, y sin él serían dos botones sin pregunta.
+   */
+  question: string;
+  options: WaterSplitOption[];
+};
+
+/**
  * Cantidades base del método, siempre para UNA taza. La calculadora las
  * multiplica por el número de tazas y el resto del texto las recibe ya hechas.
  */
@@ -132,6 +171,12 @@ export type Recipe = {
    * que se usa en los textos: { floracion: 3 } se escribe como "{floracion}".
    */
   waterMarks: Record<string, number>;
+  /**
+   * Las formas de repartir el agua entre el recipiente y el vaso, cuando el método
+   * deja elegirlas. Sin esto el agua entra toda de una vez, que es lo que hacen los
+   * demás métodos del sitio.
+   */
+  waterSplit?: WaterSplit;
   /**
    * Números de tazas que el aparato hace bien, en orden; el primero es el que se
    * ofrece al entrar. Si no está, se ofrecen 1 a 4 como hasta ahora. Hay métodos

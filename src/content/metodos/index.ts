@@ -74,9 +74,70 @@ function assertBrewMethodsAreConsistent(methods: BrewMethod[]): void {
       );
     }
 
+    assertWaterSplitAddsUp(method);
     assertTimeNotationMatchesTimer(method);
     assertSourcesAreUsable(method.slug, method.grounding?.references ?? []);
     assertDifficultyIsArguable(method);
+  }
+}
+
+/**
+ * Comprueba que las formas de repartir el agua lleven todas a la misma taza.
+ *
+ * Un método puede dejar elegir cuándo entra el agua —el cold brew se hace listo para
+ * beber o concentrado— y eso solo es una elección honesta mientras las dos opciones
+ * den exactamente el mismo vaso. Si una sumara menos agua que la otra, la página
+ * enseñaría dos rendimientos distintos bajo el mismo ratio y elegir dejaría de ser
+ * repartir el agua para pasar a ser otra receta, sin que nadie lo hubiera decidido.
+ *
+ * El rendimiento se calcula sobre el agua total, que sale del ratio de la ficha, así
+ * que la suma de los dos tramos tiene que dar ese ratio. Se comprueba aquí porque el
+ * fallo contrario es mudo: cambiar el 5 del frasco y olvidarse del 6 del servir no
+ * rompe nada visible, solo mueve en silencio el agua que la ficha dice que lleva.
+ */
+function assertWaterSplitAddsUp(method: BrewMethod): void {
+  const split = method.recipe?.waterSplit;
+  if (!split) return;
+
+  // Si el ratio no se pudiera leer ya habría reventado arriba, y sin recipe no hay split.
+  const ratio = method.specs.ratio ? parseRatio(method.specs.ratio.value) : null;
+  if (!ratio) return;
+
+  const total = ratio.water / ratio.coffee;
+
+  if (split.options.length < 2) {
+    throw new Error(
+      `El método "${method.slug}" declara una sola forma de repartir el agua, así que no hay ` +
+        `nada que elegir: o son dos, o el agua entra de una vez y esto sobra.`,
+    );
+  }
+
+  const keys = new Set(split.options.map((option) => option.key));
+  if (keys.size !== split.options.length) {
+    throw new Error(
+      `El método "${method.slug}" repite la clave de alguna forma de repartir el agua: ` +
+        `son la memoria de lo que elige quien lee, así que tienen que ser distintas.`,
+    );
+  }
+
+  for (const option of split.options) {
+    if (option.jarPerGram <= 0) {
+      throw new Error(
+        `La opción "${option.key}" del método "${method.slug}" no echa nada de agua al ` +
+          `recipiente. Sin agua dentro no hay café que infusionar.`,
+      );
+    }
+
+    const sum = option.jarPerGram + option.atServingPerGram;
+    // Coma flotante: 5 + 6 da 11 exacto, pero un 4,5 + 6,5 podría no darlo.
+    if (Math.abs(sum - total) > 0.0001) {
+      throw new Error(
+        `La opción "${option.key}" del método "${method.slug}" reparte ${sum} g de agua por ` +
+          `gramo de café y el ratio de su ficha dice ${total}. Las dos opciones tienen que dar ` +
+          `la misma taza: si no suman lo mismo, elegir cambiaría el rendimiento y eso ya no ` +
+          `sería repartir el agua, sería otra receta.`,
+      );
+    }
   }
 }
 

@@ -6,7 +6,11 @@ import {
   computeAmounts,
   fillAmounts,
 } from "@/content/metodos/amounts";
-import type { Recipe } from "@/content/metodos/types";
+import type {
+  Recipe,
+  WaterSplit,
+  WaterSplitOption,
+} from "@/content/metodos/types";
 import type { TimedStep } from "@/content/metodos/timing";
 import { StepList } from "./step-list";
 
@@ -18,6 +22,11 @@ type RecipeAmountsValue = {
   setCups: (cups: number) => void;
   options: number[];
   variables: Record<string, string>;
+  /** Las formas de repartir el agua, o null si en este método entra de una vez. */
+  split: WaterSplit | null;
+  /** La elegida. Null cuando no hay nada que elegir. */
+  selected: WaterSplitOption | null;
+  setSplitKey: (key: string) => void;
 };
 
 const RecipeAmountsContext = createContext<RecipeAmountsValue | null>(null);
@@ -34,6 +43,16 @@ function useRecipeAmounts(): RecipeAmountsValue {
 /** Las cantidades ya calculadas, para componentes que arman su propio texto. */
 export function useAmountVariables(): Record<string, string> {
   return useRecipeAmounts().variables;
+}
+
+/** Cómo entra el agua y quién lo decide. Lo usa la casilla del ratio. */
+export function useWaterSplit(): Pick<
+  RecipeAmountsValue,
+  "split" | "selected" | "setSplitKey"
+> {
+  const { split, selected, setSplitKey } = useRecipeAmounts();
+
+  return { split, selected, setSplitKey };
 }
 
 /**
@@ -66,15 +85,42 @@ export function RecipeAmountsProvider({
   // Se arranca en la primera opción del método, que no siempre es una taza.
   const [cups, setCups] = useState(options[0] ?? 0);
 
+  /*
+   * Cómo entra el agua: de una vez, o partida en dos momentos. Casi ningún método lo
+   * deja elegir, así que aquí normalmente no hay nada. Se guarda la clave y no la
+   * opción entera para que el estado siga siendo un dato simple y la opción se busque
+   * siempre en el contenido, que es donde vive.
+   */
+  const split = recipe?.waterSplit ?? null;
+  const [splitKey, setSplitKey] = useState(split?.options[0]?.key ?? "");
+  // Si la clave guardada no existe se cae en la primera, que es la que se ofrece.
+  const selected =
+    split?.options.find((option) => option.key === splitKey) ??
+    split?.options[0] ??
+    null;
+
   const value = useMemo<RecipeAmountsValue>(() => {
+    const choice = { split, selected, setSplitKey };
+
     if (!recipe) {
-      return { cups, setCups, options, variables: {} };
+      return { cups, setCups, options, variables: {}, ...choice };
     }
 
-    const amounts = computeAmounts(recipe, waterPerCoffeeGram, cups);
+    const amounts = computeAmounts(
+      recipe,
+      waterPerCoffeeGram,
+      cups,
+      selected ?? undefined,
+    );
 
-    return { cups, setCups, options, variables: amountVariables(amounts) };
-  }, [recipe, waterPerCoffeeGram, cups, options]);
+    return {
+      cups,
+      setCups,
+      options,
+      variables: amountVariables(amounts),
+      ...choice,
+    };
+  }, [recipe, waterPerCoffeeGram, cups, options, split, selected]);
 
   return (
     <RecipeAmountsContext.Provider value={value}>

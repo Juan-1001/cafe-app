@@ -9,7 +9,6 @@ import {
   methodDifficulty,
 } from "@/content/metodos";
 import { parseRatio } from "@/content/metodos/ratio";
-import type { Ratio } from "@/content/metodos/ratio";
 import { parseEndSeconds, toTimedSteps } from "@/content/metodos/timing";
 import { ClockIcon, DifficultyMeter } from "../indicators";
 import {
@@ -18,6 +17,7 @@ import {
   PlainSteps,
   RecipeAmountsProvider,
 } from "./recipe-amounts";
+import { RatioField } from "./ratio-field";
 import { TimedSteps } from "./timed-steps";
 import type {
   BrewMethod,
@@ -59,54 +59,6 @@ const SPEC_FIELDS = [
   isTime: boolean;
   isRatio: boolean;
 }[];
-
-/**
- * Hace tangible el ratio: una casilla de café frente a las que pide de agua.
- * Se dibuja sobre la banda lavender de la ficha, así que el café va en `ink` y
- * el agua en `paper`; lavender sobre lavender no se vería.
- */
-function RatioBar({ ratio }: { ratio: Ratio }) {
-  // El gráfico cuenta casillas enteras; las cifras exactas quedan en el texto.
-  const waterCells = Math.max(1, Math.round(ratio.water / ratio.coffee));
-  const cells = waterCells + 1;
-  const cellWidth = 10;
-  const gap = 2;
-  const height = 14;
-  const width = cells * (cellWidth + gap) - gap;
-
-  return (
-    <div className="mt-4 max-w-prose">
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        width="100%"
-        height="auto"
-        role="img"
-        aria-label={`${ratio.coffee} de café por cada ${ratio.water} de agua`}
-        className="block"
-      >
-        {Array.from({ length: cells }, (_, index) => (
-          <rect
-            key={index}
-            x={index * (cellWidth + gap)}
-            y={0}
-            width={cellWidth}
-            height={height}
-            fill={index === 0 ? "var(--color-ink)" : "var(--color-paper)"}
-          />
-        ))}
-      </svg>
-
-      <div className="mt-2 flex justify-between font-mono text-xs uppercase tracking-widest text-ink">
-        <span>
-          <Amounts text="{cafe}" /> café
-        </span>
-        <span>
-          <Amounts text="{agua}" /> agua
-        </span>
-      </div>
-    </div>
-  );
-}
 
 /**
  * El título de los errores lleva el número escrito con letra, no en cifra, así que
@@ -268,16 +220,23 @@ export default async function BrewMethodPage({
                 <div key={key} className="border-t border-ink py-5 md:py-6">
                   <dt className="text-sm text-ink md:text-base">{label}</dt>
                   <dd>
-                    <p className="mt-2 flex items-center gap-2 font-mono text-2xl text-ink md:text-3xl">
-                      {isTime ? <ClockIcon className="h-5 w-5" /> : null}
-                      <Amounts text={spec.value} />
-                    </p>
-                    {specRatio ? <RatioBar ratio={specRatio} /> : null}
-                    {spec.note ? (
-                      <p className="mt-2 max-w-prose text-sm text-ink">
-                        <Amounts text={spec.note} />
-                      </p>
-                    ) : null}
+                    {/* La del ratio es la única casilla que puede llevar algo que
+                        elegir dentro, así que se pinta aparte. Ver `RatioField`. */}
+                    {isRatio ? (
+                      <RatioField spec={spec} ratio={specRatio} />
+                    ) : (
+                      <>
+                        <p className="mt-2 flex items-center gap-2 font-mono text-2xl text-ink md:text-3xl">
+                          {isTime ? <ClockIcon className="h-5 w-5" /> : null}
+                          <Amounts text={spec.value} />
+                        </p>
+                        {spec.note ? (
+                          <p className="mt-2 max-w-prose text-sm text-ink">
+                            <Amounts text={spec.note} />
+                          </p>
+                        ) : null}
+                      </>
+                    )}
                   </dd>
                 </div>
               );
