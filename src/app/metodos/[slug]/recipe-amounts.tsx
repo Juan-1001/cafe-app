@@ -44,15 +44,31 @@ export function RecipeAmountsProvider({
   waterPerCoffeeGram,
   children,
 }: {
-  recipe: Recipe;
+  /**
+   * Falta en los métodos que no calculan nada porque las cantidades las fija el
+   * aparato, como la moka. El envoltorio se pone igual: los textos de la ficha
+   * siguen pasando por `<Amounts>`, que sin receta los deja tal cual.
+   */
+  recipe?: Recipe;
   waterPerCoffeeGram: number;
   children: React.ReactNode;
 }) {
-  const options = recipe.cupOptions ?? DEFAULT_CUP_OPTIONS;
+  /*
+   * En memoria porque sin receta la lista es un array nuevo en cada pintada, y eso
+   * bastaría para recalcular las cantidades a cada rato sin que nada haya cambiado.
+   */
+  const options = useMemo(
+    () => (recipe ? (recipe.cupOptions ?? DEFAULT_CUP_OPTIONS) : []),
+    [recipe],
+  );
   // Se arranca en la primera opción del método, que no siempre es una taza.
-  const [cups, setCups] = useState(options[0]);
+  const [cups, setCups] = useState(options[0] ?? 0);
 
   const value = useMemo<RecipeAmountsValue>(() => {
+    if (!recipe) {
+      return { cups, setCups, options, variables: {} };
+    }
+
     const amounts = computeAmounts(recipe, waterPerCoffeeGram, cups);
 
     return { cups, setCups, options, variables: amountVariables(amounts) };
@@ -83,6 +99,13 @@ export function CupsControl() {
    * invita a pulsarlo y no responde. Por qué es fija lo cuenta el propio método en la
    * nota de su rendimiento, que es donde vive el contenido.
    */
+  /*
+   * Sin opciones no hay nada que decir aquí: es un método que no calcula cantidades
+   * y que en este mismo sitio de la página enseña, en su lugar, lo que el aparato
+   * fija. Ver `<DeviceAmounts>` en la página de la ficha.
+   */
+  if (options.length === 0) return null;
+
   if (options.length < 2) {
     return (
       <div>

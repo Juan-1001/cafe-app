@@ -32,12 +32,29 @@ export type Spec = {
   note?: string;
 };
 
+/**
+ * La ficha técnica. Tres de sus casillas son opcionales, y no por comodidad: hay
+ * métodos donde la respuesta no es «no la sabemos» sino «esa pregunta no existe
+ * aquí», y una casilla que dijera «lo fija el aparato» parecería un dato sin serlo.
+ *
+ * La moka es el caso que las abrió. No tiene `ratio` porque quien prepara no elige
+ * la proporción: el embudo y la válvula la fijan. No tiene `totalTime` porque su
+ * fabricante da un suceso y no un tiempo —se retira cuando el recolector está
+ * lleno—, y por eso es el único método del sitio sin cronómetro. Y no tiene
+ * `output` porque lo que sale depende del tamaño de olla que haya en esa cocina,
+ * que es justo lo que cuenta su bloque de `device`.
+ *
+ * Un método que declare `ratio` tiene que escribirlo con la forma «1:16»: si no,
+ * la compilación falla en `index.ts`. Ese control existe porque el agua de la
+ * calculadora se deduce leyendo este texto, y un ratio mal escrito la dejaba en
+ * cero sin que nada avisara.
+ */
 export type BrewSpecs = {
-  ratio: Spec;
+  ratio?: Spec;
   grind: Spec;
   waterTemperature: Spec;
-  totalTime: Spec;
-  output: Spec;
+  totalTime?: Spec;
+  output?: Spec;
   /** A qué sabe la taza que sale de aquí: es lo que hace elegir un método y no otro. */
   cupProfile: Spec;
 };
@@ -112,6 +129,50 @@ export type Recipe = {
   cupOptions?: number[];
 };
 
+/** Un tamaño de aparato, tal y como se compra: el nombre de la caja y lo que cabe. */
+export type DeviceSize = {
+  /** Lo que dice la caja: "3 tazas". */
+  label: string;
+  /** Lo que de verdad cabe, medido: "Caldera de 130 ml". */
+  capacity: string;
+};
+
+/** Algo que el aparato decide por ti y que en otros métodos se pesaría. */
+export type FixedAmount = {
+  label: string;
+  value: string;
+};
+
+/**
+ * Lo que ocupa el sitio de la calculadora en los métodos donde no se pesa nada.
+ *
+ * No es una calculadora con otros números: es lo contrario de una calculadora. En
+ * el V60 o la prensa, quien prepara decide cuánto café quiere y el sitio le hace
+ * las cuentas; en la moka el aparato fija la dosis, el agua y el final, y lo único
+ * que el visitante aporta es qué olla tiene en la cocina. Por eso la página
+ * pregunta «qué moka tienes» y no «cuántas tazas quieres»: lo primero es un hecho
+ * y lo segundo un deseo que aquí no se puede cumplir.
+ *
+ * Tampoco es un control: con dos tamaños, enseñarlos a la vez gana a esconder uno
+ * detrás de un clic, y un botón que solo cambia una cifra es el «botón que no
+ * cambia nada» contra el que ya avisa `CupsControl`.
+ *
+ * `note` es obligatorio y lleva el aviso que no puede faltar: que las «tazas» de
+ * estas cajas no son las tazas del resto del sitio, y que aquí no hay báscula ni
+ * cronómetro a propósito.
+ */
+export type DeviceSizes = {
+  /** El rótulo, en el hueco donde los demás métodos ponen «Cuántas tazas». */
+  question: string;
+  sizes: DeviceSize[];
+  /** Lo que el aparato fija: el agua, el café. */
+  fixed: FixedAmount[];
+  /** Uno o más párrafos cortos. Aquí va lo que la ausencia significa. */
+  note: string[];
+  /** De dónde salen las capacidades, con el nombre corto del documento. */
+  source?: string;
+};
+
 /**
  * Sobre qué está construida la ficha.
  *
@@ -153,7 +214,14 @@ export type BrewMethod = {
    */
   image: ContentImage;
   errorPenalty: ErrorPenalty;
-  recipe: Recipe;
+  /**
+   * Las cantidades que la página calcula. Un método trae esto **o** `device`, nunca
+   * los dos ni ninguno: o quien prepara elige cuánto café quiere, o lo elige el
+   * aparato. `index.ts` lo comprueba al compilar.
+   */
+  recipe?: Recipe;
+  /** Lo que el aparato fija, en los métodos que no calculan nada. Ver `recipe`. */
+  device?: DeviceSizes;
   specs: BrewSpecs;
   equipment: EquipmentItem[];
   steps: BrewStep[];

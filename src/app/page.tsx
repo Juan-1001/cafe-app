@@ -157,10 +157,15 @@ export default function Home() {
 
             <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-dust pt-5">
               <ErrorPenaltyMeter penalty={entryMethod.errorPenalty} />
-              <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-coffee">
-                <ClockIcon />
-                {entryMethod.specs.totalTime.value}
-              </span>
+              {/* Hay métodos sin tiempo total, como la moka, que se rige por un
+                  suceso y no por un reloj. Entonces no se pinta la casilla: un
+                  reloj junto a un texto que no es una hora diría que sí lo es. */}
+              {entryMethod.specs.totalTime ? (
+                <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-coffee">
+                  <ClockIcon />
+                  {entryMethod.specs.totalTime.value}
+                </span>
+              ) : null}
             </div>
 
             <div className="mt-6">
@@ -208,10 +213,16 @@ export default function Home() {
                     {method.name}
                   </h3>
 
+                  {/* Sin tiempo se cae también el punto que lo separaba del nivel,
+                      para que la línea no empiece por un separador suelto. */}
                   <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-coffee">
-                    <ClockIcon />
-                    {method.specs.totalTime.value}
-                    <span aria-hidden="true">·</span>
+                    {method.specs.totalTime ? (
+                      <>
+                        <ClockIcon />
+                        {method.specs.totalTime.value}
+                        <span aria-hidden="true">·</span>
+                      </>
+                    ) : null}
                     {method.errorPenalty.label}
                   </span>
                 </Link>

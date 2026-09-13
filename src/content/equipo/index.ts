@@ -65,6 +65,27 @@ export const EQUIPMENT = {
     photo: "/images/equipo/filtros-papel-aeropress.jpg",
     alt: "Un montón de filtros de papel redondos, blancos y del tamaño de una moneda grande, apilados uno sobre otro fuera de su caja.",
   },
+  moka: {
+    name: "Cafetera moka",
+    /*
+     * Foto pendiente. La ruta se declara desde ahora porque `resolveEquipmentImage`
+     * comprueba en la compilación si el archivo está: mientras no exista se pinta el
+     * bloque de color, y el día que se guarde aparece sola.
+     *
+     * Lo que hay que ir a buscar es la cafetera sola y **desmontada**, no puesta al
+     * fuego: sus tres piezas separadas son lo que explica el método de un vistazo
+     * —abajo el agua, en medio el café, arriba lo que sale— y eso no se ve en una
+     * moka cerrada sobre la hornilla, que además sería la foto del método y no la
+     * del objeto.
+     *
+     * La válvula tiene que verse. Es la pieza que marca hasta dónde llega el agua y
+     * sale nombrada en los pasos, en los errores comunes y en el bloque de
+     * cantidades; una foto donde quede de espaldas obliga a explicar con palabras lo
+     * que la foto tenía que enseñar.
+     */
+    photo: "/images/equipo/moka.jpg",
+    alt: "Una cafetera moka de aluminio desmontada en sus tres piezas sobre una mesa clara: abajo la caldera octogonal con su asa negra y, en un costado, el botoncito redondo de la válvula de seguridad; en medio el embudo con su filtro; arriba el recolector con la tapa abierta y el tubo por el que sube el café.",
+  },
   "molino-de-muelas": {
     name: "Molino de muelas",
     photo: "/images/equipo/molino-manual.jpg",

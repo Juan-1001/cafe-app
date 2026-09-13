@@ -9,6 +9,7 @@ import {
 } from "@/content/metodos/timing";
 import { useBrewSound } from "./brew-sound";
 import { useAmountVariables } from "./recipe-amounts";
+import { StepList } from "./step-list";
 import type { TimedStep } from "@/content/metodos/timing";
 
 /**
@@ -254,55 +255,11 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
         </div>
       </div>
 
-      <ol className="mt-12">
-        {steps.map((step) => {
-          const isActive = step.number === activeNumber;
-
-          return (
-            <li
-              key={step.title}
-              data-active={isActive ? "true" : undefined}
-              className="border-t border-dust py-8 md:grid md:grid-cols-[9rem_1fr] md:gap-x-12 md:py-10"
-            >
-              <div className="flex items-baseline gap-4 md:block">
-                <span
-                  className={
-                    isActive
-                      ? "bg-lavender-deep px-2 font-mono text-2xl text-paper"
-                      : "font-mono text-2xl text-lavender-deep"
-                  }
-                >
-                  {String(step.number).padStart(2, "0")}
-                </span>
-                <span className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-sage-deep md:mt-2">
-                  {step.startSeconds !== null ? <ClockIcon /> : null}
-                  {step.time}
-                </span>
-                {isActive ? (
-                  <span className="font-mono text-xs uppercase tracking-widest text-lavender-deep md:mt-2 md:block">
-                    Vas aquí
-                  </span>
-                ) : null}
-              </div>
-
-              <div className="mt-4 max-w-prose md:mt-0">
-                <h3 className="font-display text-2xl md:text-3xl">
-                  {fillAmounts(step.title, variables)}
-                </h3>
-                <p className="mt-3 text-base text-ink md:text-lg">
-                  {fillAmounts(step.description, variables)}
-                </p>
-                <p className="mt-4 text-base text-coffee">
-                  <span className="font-mono text-xs uppercase tracking-widest text-sage-deep">
-                    Por qué{" "}
-                  </span>
-                  {fillAmounts(step.why, variables)}
-                </p>
-              </div>
-            </li>
-          );
-        })}
-      </ol>
+      <StepList
+        steps={steps}
+        activeNumber={activeNumber}
+        variables={variables}
+      />
     </>
   );
 }
@@ -354,25 +311,6 @@ function SpeakerIcon({ muted }: { muted: boolean }) {
           <path d="M12.75 4.75a5 5 0 0 1 0 6.5" />
         </>
       )}
-    </svg>
-  );
-}
-
-/** Mismo reloj de trazo fino de la ficha técnica. */
-function ClockIcon() {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className="h-3.5 w-3.5 shrink-0"
-    >
-      <circle cx="8" cy="8" r="6.25" />
-      <path d="M8 4.5V8l2.4 1.7" />
     </svg>
   );
 }

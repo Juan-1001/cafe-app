@@ -9,8 +9,14 @@ import type { Ratio } from "@/content/metodos/ratio";
 import { parseEndSeconds, toTimedSteps } from "@/content/metodos/timing";
 import { ClockIcon, ErrorPenaltyMeter } from "../indicators";
 import { Amounts, CupsControl, RecipeAmountsProvider } from "./recipe-amounts";
+import { StepList } from "./step-list";
 import { TimedSteps } from "./timed-steps";
-import type { BrewMethod, ContentImage, Grounding } from "@/content/metodos";
+import type {
+  BrewMethod,
+  ContentImage,
+  DeviceSizes,
+  Grounding,
+} from "@/content/metodos";
 import { formatDate } from "@/app/date";
 
 export const dynamicParams = false;
@@ -141,16 +147,37 @@ export default async function BrewMethodPage({
   const method = getBrewMethod(slug);
   if (!method) notFound();
 
-  const ratio = parseRatio(method.specs.ratio.value);
+  /*
+   * El ratio puede faltar, y faltar significa algo: en la moka la proporción no la
+   * elige quien prepara. Si está, `index.ts` ya garantizó al compilar que se puede
+   * leer, así que aquí un null solo puede venir de que no haya ratio.
+   */
+  const ratio = method.specs.ratio
+    ? parseRatio(method.specs.ratio.value)
+    : null;
+
+  const timedSteps = toTimedSteps(
+    method.steps,
+    method.specs.totalTime ? parseEndSeconds(method.specs.totalTime.value) : null,
+  );
+
+  /*
+   * Hay cronómetro si hay algún paso que ocurra en él. La moka no tiene ninguno
+   * —sus pasos son sucesos, «al fuego», «al gorgoteo»— y su ficha sale sin panel:
+   * un cronómetro que no puede marcar nada sería un adorno que pide que lo pulses.
+   */
+  const hasTimer = timedSteps.some((step) => step.startSeconds !== null);
 
   return (
     <RecipeAmountsProvider
       recipe={method.recipe}
       waterPerCoffeeGram={ratio ? ratio.water / ratio.coffee : 0}
     >
-      {/* En móvil el panel del cronómetro va fijo abajo y ahora ocupa unos 180 px:
-          este hueco es el que evita que tape el final del artículo. */}
-      <article className="pb-52 md:pb-32">
+      {/* En móvil el panel del cronómetro va fijo abajo y ocupa unos 180 px: ese
+          hueco es el que evita que tape el final del artículo. Sin cronómetro no hay
+          nada que esquivar, y dejarlo abriría un vacío de 200 px al pie de la moka
+          que parecería un error de maquetación. */}
+      <article className={hasTimer ? "pb-52 md:pb-32" : "pb-24 md:pb-32"}>
         <header>
           {/*
             La fotografía de cabecera. En escritorio ocupa el 80 % derecho en una
@@ -205,9 +232,17 @@ export default async function BrewMethodPage({
             </div>
           </div>
 
+          {/* Lo que ocupa el sitio de la calculadora cuando el aparato manda. */}
+          {method.device ? <DeviceAmounts device={method.device} /> : null}
+
           <dl className="mt-8 md:grid md:grid-cols-2 md:gap-x-20">
             {SPEC_FIELDS.map(({ key, label, isTime, isRatio }) => {
               const spec = method.specs[key];
+              // Una casilla que el método no trae no se pinta vacía ni con un «no
+              // aplica»: desaparece, y lo que significa su ausencia se cuenta donde
+              // toca. Ver el comentario de `BrewSpecs`.
+              if (!spec) return null;
+
               const specRatio = isRatio ? parseRatio(spec.value) : null;
 
               return (
@@ -253,16 +288,19 @@ export default async function BrewMethodPage({
         <section className="mt-24 px-6 md:mt-36 md:px-16">
           <Eyebrow>Paso a paso</Eyebrow>
           <h2 className="mt-4 max-w-prose font-display text-3xl md:text-5xl">
-            {method.steps.length} pasos, de la jarra vacía a la taza servida
+            {/* «Del café molido» y no «de la jarra vacía»: la moka no tiene jarra,
+                y de los cinco métodos solo dos la usan. Lo que sí comparten los
+                cinco es que empiezan con el café ya molido. */}
+            {method.steps.length} pasos, del café molido a la taza servida
           </h2>
 
-          {/* El final del último paso sale del tiempo total de la ficha técnica. */}
-          <TimedSteps
-            steps={toTimedSteps(
-              method.steps,
-              parseEndSeconds(method.specs.totalTime.value),
-            )}
-          />
+          {/* El final del último paso sale del tiempo total de la ficha técnica. Sin
+              pasos que ocurran en el cronómetro, la misma lista se pinta sin él. */}
+          {hasTimer ? (
+            <TimedSteps steps={timedSteps} />
+          ) : (
+            <StepList steps={timedSteps} activeNumber={null} variables={{}} />
+          )}
         </section>
 
         <section className="mt-24 px-6 md:mt-36 md:ml-[20%] md:px-16">
@@ -318,6 +356,76 @@ export default async function BrewMethodPage({
         {method.grounding ? <GroundingBlock grounding={method.grounding} /> : null}
       </article>
     </RecipeAmountsProvider>
+  );
+}
+
+/**
+ * Lo que ocupa el sitio de la calculadora en los métodos que no calculan nada.
+ *
+ * No es un selector, y la razón está en el propio código de al lado: `CupsControl`
+ * ya advierte que un botón que no cambia nada invita a pulsarlo y no responde. Aquí
+ * elegir un tamaño no cambiaría ninguna otra cifra de la página —no hay gramos que
+ * recalcular—, así que esconder la mitad de la respuesta detrás de un clic solo
+ * quitaría información. Con dos ollas, verlas a la vez gana.
+ *
+ * Va dentro de la banda lavender, así que todo el texto es `ink`: los tonos claros de
+ * la paleta no llegan al contraste mínimo sobre ese fondo.
+ */
+function DeviceAmounts({ device }: { device: DeviceSizes }) {
+  return (
+    <div className="mt-10 border-t-2 border-ink pt-6 md:mt-12">
+      <h3 className="font-mono text-xs uppercase tracking-widest text-ink">
+        {device.question}
+      </h3>
+
+      {/* Los tamaños a la izquierda y lo que el aparato fija a la derecha: son dos
+          respuestas distintas a la misma pregunta y no una lista de cuatro cosas. */}
+      <div className="mt-6 md:flex md:items-start md:gap-16">
+        <ul className="md:w-72 md:shrink-0">
+          {device.sizes.map((size) => (
+            <li
+              key={size.label}
+              // Con `flex-wrap`, si un nombre de olla largo y su capacidad no caben
+              // en el ancho de un móvil, la capacidad baja a la línea siguiente en
+              // vez de apretar las dos.
+              className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-ink py-3"
+            >
+              <span className="font-display text-2xl leading-none text-ink">
+                {size.label}
+              </span>
+              <span className="font-mono text-sm text-ink">{size.capacity}</span>
+            </li>
+          ))}
+        </ul>
+
+        <dl className="mt-8 md:mt-0">
+          {device.fixed.map((item) => (
+            <div key={item.label} className="mt-4 first:mt-0">
+              <dt className="font-mono text-xs uppercase tracking-widest text-ink">
+                {item.label}
+              </dt>
+              <dd className="mt-1 max-w-prose text-base text-ink">
+                {item.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <div className="mt-8 max-w-prose">
+        {device.note.map((paragraph, index) => (
+          <p key={index} className="mt-4 text-sm text-ink first:mt-0">
+            {paragraph}
+          </p>
+        ))}
+      </div>
+
+      {device.source ? (
+        <p className="mt-6 font-mono text-xs text-ink">
+          Capacidades: {device.source}
+        </p>
+      ) : null}
+    </div>
   );
 }
 

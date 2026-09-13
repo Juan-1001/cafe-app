@@ -153,10 +153,17 @@ function MethodEntry({
           <div className="mt-8 flex flex-wrap items-end justify-between gap-x-10 gap-y-6 border-t border-dust pt-5 md:mt-auto">
             <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
               <ErrorPenaltyMeter penalty={method.errorPenalty} />
-              <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-coffee">
-                <ClockIcon />
-                {method.specs.totalTime.value}
-              </span>
+              {/* Un método puede no tener tiempo, y entonces no se pinta nada: la
+                  moka se rige por un suceso —se retira cuando el recolector está
+                  lleno— y poner un reloj al lado de un texto que no es una hora
+                  diría que sí lo es. Lo que su ausencia significa lo cuenta su
+                  ficha; aquí solo se calla. */}
+              {method.specs.totalTime ? (
+                <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-coffee">
+                  <ClockIcon />
+                  {method.specs.totalTime.value}
+                </span>
+              ) : null}
             </div>
 
             <div className="md:text-right">

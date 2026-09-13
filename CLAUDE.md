@@ -251,7 +251,17 @@ de entregar el cambio como terminado.
 ## Estado actual
 
 En pie: la **home**, **`/granos`** con tres artículos (uno por cada etapa del recorrido) y
-**`/metodos`** con cuatro métodos. `/recetas` y `/tiendas` están por construir.
+**`/metodos`** con cinco métodos. `/recetas` y `/tiendas` están por construir.
+
+La moka es el primer método que no calcula cantidades: las fija el aparato, así que su
+ficha pregunta **«qué moka tienes»** en vez de «cuántas tazas quieres» y en el sitio de
+la calculadora enseña lo que la olla impone. Por eso `recipe` y `specs.ratio` son
+opcionales en `BrewMethod`, y por eso existe la comprobación de
+`src/content/metodos/index.ts`, que revienta la compilación si un método declara un
+ratio que no se puede leer o si dice sus cantidades por los dos sitios a la vez. También
+es el primero sin cronómetro y sin báscula: su fabricante da un suceso y no un tiempo, y
+el embudo hace de báscula. Las tres ausencias están contadas en la página, no dejadas en
+blanco.
 
 Mientras una sección no exista, **nada enlaza a su ruta**: ni la cabecera ni la home.
 Un enlace a `/recetas` hoy es un 404. Cada sección nueva se añade a la navegación y a la
