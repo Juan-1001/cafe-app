@@ -64,6 +64,20 @@ No hay base de datos ni gestor de contenidos externo.
 - Al añadir contenido, respeta la forma de los archivos que ya existen en esa carpeta en
   lugar de inventar una estructura nueva.
 
+### Textos de la home
+
+La home no es una sección con elementos: no tiene índice ni fichas. Sus textos propios
+—el titular, la entradilla y los rótulos de cada bloque— viven en **`src/content/home.ts`**,
+un archivo suelto y no una carpeta, porque aquí el elemento es la página entera. Lo que
+la home muestra del resto del sitio (nombres de métodos, títulos de artículos, fotos,
+datos) **no se copia ahí**: se lee del contenido de su sección.
+
+En ese mismo archivo se fija **el método de entrada**, el que la portada enseña en
+grande. Se elige a mano en un campo y no se calcula del nivel de dificultad, porque es
+una decisión editorial: el día que haya ocho métodos puede convenir entrar por la moka
+aunque otro sea más fácil. Si el slug no existe, la compilación falla en lugar de dejar
+la portada sin su bloque principal.
+
 ### Imágenes
 
 - Las fotografías se descargan de **Unsplash o Pexels** y se guardan en el repositorio,
@@ -227,8 +241,12 @@ de entregar el cambio como terminado.
 
 ## Estado actual
 
-El proyecto está recién iniciado: solo existe la plantilla por defecto de Next.js en
-`src/app/`. Las secciones, el contenido y el diseño descritos arriba están por construir.
+En pie: la **home**, **`/granos`** con tres artículos (uno por cada etapa del recorrido) y
+**`/metodos`** con dos métodos. `/recetas` y `/tiendas` están por construir.
+
+Mientras una sección no exista, **nada enlaza a su ruta**: ni la cabecera ni la home.
+Un enlace a `/recetas` hoy es un 404. Cada sección nueva se añade a la navegación y a la
+portada el día que su ruta esté en pie.
 
 ## Pendientes conocidos
 
