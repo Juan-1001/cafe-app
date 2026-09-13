@@ -253,6 +253,30 @@ de entregar el cambio como terminado.
 En pie: la **home**, **`/granos`** con tres artículos (uno por cada etapa del recorrido) y
 **`/metodos`** con cinco métodos. `/recetas` y `/tiendas` están por construir.
 
+### La dificultad de un método se calcula, no se escribe
+
+Una ficha **no declara su nivel**. Declara cuatro notas del 1 al 5 —coste del error,
+margen para rectificar, complejidad del gesto y lo que deja ver— **cada una con la razón
+escrita al lado**, y de ahí salen el score, el nivel, el rótulo y el orden del índice.
+Todo eso vive en un solo sitio, `src/content/metodos/difficulty.ts`, que además explica
+por qué son esos cuatro ejes y no otros.
+
+Para añadir un método nuevo basta con puntuar esos cuatro ejes contra los anclajes del
+archivo: no hay que tocar ni la fórmula, ni los cortes, ni la página. **La razón de cada
+nota es obligatoria** y no compila sin ella: sin ella nadie puede discutir una
+clasificación dentro de unos meses ni puntuar el método siguiente con el mismo rasero.
+
+Dos reglas que salieron de construirlo y que conviene no repetir:
+
+- **Ningún eje puede medir lo que ya mide otro.** El sistema que se estudió primero
+  tenía siete dimensiones y cuatro de ellas eran la misma: entre todas daban el 60 % del
+  peso a un solo concepto sin que nadie lo hubiera decidido.
+- **Tener muchas palancas no es ser difícil.** El V60 es el método con más control del
+  sitio y no es el más exigente. El control no entra en el cálculo.
+
+Si un método cae en un nivel que sorprende, **no se mueve el corte**: se mira qué nota lo
+puso ahí y se discute esa nota. Los cortes son los tercios exactos de la escala.
+
 La moka es el primer método que no calcula cantidades: las fija el aparato, así que su
 ficha pregunta **«qué moka tienes»** en vez de «cuántas tazas quieres» y en el sitio de
 la calculadora enseña lo que la olla impone. Por eso `recipe` y `specs.ratio` son

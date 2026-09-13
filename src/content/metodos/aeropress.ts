@@ -54,14 +54,38 @@ export const aeropress: BrewMethod = {
   },
 
   /*
-   * Tolerante, aunque sea el método más corto del sitio. El tiempo engaña: aquí medio
-   * minuto de más es una parte grande del total, pero lo que cambia es la intensidad y
-   * no la taza entera. Sus errores comunes son estorbos del gesto —gotea antes de
-   * prensar, cuesta bajar el émbolo, queda café pegado arriba— y entre el papel y el
-   * remojo la taza sale limpia igual. Por eso se queda con la prensa francesa y no
-   * sube al nivel del V60, donde equivocarse se paga en el sabor.
+   * 45,0 sobre 100: nivel 2. **Sube de nivel respecto a como estaba clasificado antes**,
+   * y conviene saber por qué, porque es el único método al que el sistema le cambió el
+   * sitio.
+   *
+   * Sus errores siguen siendo baratos —eso no ha cambiado y es su nota de coste—, pero
+   * el coste del error no es lo único que hace difícil un método. De los cuatro que
+   * estaban en el nivel de entrada, este es el que menos deja ver (un cilindro opaco con
+   * el café sumergido) y el que antes cierra la puerta (metido el émbolo, solo queda
+   * prensar). Entre esas dos notas y algo más de gesto que los demás, cruza el corte.
+   *
+   * Se comprobó que no fuera un artefacto del corte: dejarlo en el nivel 1 pedía poner
+   * la raya en 46, entre su 45,0 y el 47,5 del V60. Eso habría sido dibujar la raya
+   * alrededor del resultado que ya se quería, así que sube.
    */
-  errorPenalty: { label: "Tolerante", level: 1 },
+  difficulty: {
+    cost: {
+      value: 2,
+      why: "Sus cuatro errores comunes son estorbos del gesto y no sabores —gotea antes de prensar, cuesta bajar el émbolo, queda café pegado arriba—, y entre el papel y el remojo la taza sale limpia igual.",
+    },
+    recovery: {
+      value: 3,
+      why: "Hay una ventana para remover o dejarlo medio minuto más, pero se cierra al meter el émbolo: a partir de ahí lo único que queda por decidir es a qué velocidad prensas.",
+    },
+    complexity: {
+      value: 3,
+      why: "Montar, enjuagar el papel, dosificar, verter, remover, tapar, esperar y prensar, en ese orden y sin pausas largas. Es el que más pasos encadena de los métodos cortos.",
+    },
+    observability: {
+      value: 2,
+      why: "El cilindro es opaco por dentro y el café está sumergido: no ves la extracción. Lo único que se puede leer es la resistencia del émbolo, y eso ya es el final.",
+    },
+  },
 
   recipe: {
     coffeeGramsPerCup: 15,

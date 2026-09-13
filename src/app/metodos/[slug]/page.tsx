@@ -3,11 +3,15 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Eyebrow } from "@/app/eyebrow";
 import { resolveEquipmentImage } from "@/content/equipo/photo";
-import { brewMethods, getBrewMethod } from "@/content/metodos";
+import {
+  brewMethods,
+  getBrewMethod,
+  methodDifficulty,
+} from "@/content/metodos";
 import { parseRatio } from "@/content/metodos/ratio";
 import type { Ratio } from "@/content/metodos/ratio";
 import { parseEndSeconds, toTimedSteps } from "@/content/metodos/timing";
-import { ClockIcon, ErrorPenaltyMeter } from "../indicators";
+import { ClockIcon, DifficultyMeter } from "../indicators";
 import { Amounts, CupsControl, RecipeAmountsProvider } from "./recipe-amounts";
 import { StepList } from "./step-list";
 import { TimedSteps } from "./timed-steps";
@@ -156,6 +160,8 @@ export default async function BrewMethodPage({
     ? parseRatio(method.specs.ratio.value)
     : null;
 
+  const difficulty = methodDifficulty(method);
+
   const timedSteps = toTimedSteps(
     method.steps,
     method.specs.totalTime ? parseEndSeconds(method.specs.totalTime.value) : null,
@@ -215,7 +221,10 @@ export default async function BrewMethodPage({
             </p>
 
             <div className="mt-8">
-              <ErrorPenaltyMeter penalty={method.errorPenalty} />
+              <DifficultyMeter
+                level={difficulty.level}
+                label={difficulty.levelInfo.chip}
+              />
             </div>
           </div>
         </header>

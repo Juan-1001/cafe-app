@@ -1,39 +1,23 @@
 import type { ContentImage, Source } from "../types";
 import type { EquipmentKey } from "../equipo";
+import type { DifficultyScores } from "./difficulty";
 
 /**
- * Cuánto castiga el método un error. Es el eje que ordena el índice y agrupa sus
- * capítulos, y el nivel crece con el castigo: 1 perdona un descuido, 3 no deja
- * rectificar una vez empezado.
+ * La dificultad ya no se escribe a mano en cada ficha: se calcula. Un método declara
+ * cuatro notas del 1 al 5 —coste del error, margen para rectificar, complejidad del
+ * gesto y lo que deja ver— cada una con su razón, y de ahí salen el score, el nivel y
+ * los rótulos.
  *
- * Mide solo eso. En la palabra «dificultad» que había aquí antes cabían tres cosas
- * distintas —cuántas decisiones tomas, cuánto te castiga equivocarte y cuánto equipo
- * necesitas— y estaban mezcladas: el nivel ordenaba por una y las notas de los
- * capítulos hablaban de otra. Se quedó el castigo por dos razones. Es la pregunta con
- * la que se llega al índice, «¿esto me va a salir bien la primera vez?». Y es la única
- * de las tres que reparte los métodos: por decisiones la moka sería de las fáciles
- * —el aparato fija la dosis, el agua y el final— y mandar ahí a alguien que empieza
- * sería un mal consejo, y por equipo casi todos caen en el mismo montón.
+ * La fórmula, los ejes, sus anclajes y los cortes viven en un solo sitio,
+ * `difficulty.ts`, y ahí está explicado por qué son esos cuatro ejes y no los siete
+ * que se estudiaron primero. Aquí no se decide nada de eso.
  *
- * Cuántas decisiones toma quien prepara no desaparece: describe mejor que ninguna otra
- * cosa lo que un método es, pero es un dato de la ficha y no un orden de entrada.
- *
- * Va como unión de pares y no como dos campos sueltos para que una etiqueta no pueda
- * acabar con el nivel de otra: `{ label: "Tolerante", level: 3 }` no compila.
+ * Lo que antes era `errorPenalty` —un par etiqueta/nivel escrito a mano— desapareció
+ * por el motivo de siempre en este proyecto: era un dato sin procedencia. Decía que la
+ * moka era «Implacable» y no había forma de discutirlo ni de puntuar un método nuevo
+ * con el mismo rasero. Ahora la etiqueta es consecuencia de las notas, así que no
+ * puede contradecirlas.
  */
-/*
- * El rótulo del nivel 3 se revisó al entrar la moka, porque «Implacable» suena a
- * difícil y la moka no lo es: son pocos pasos, sin báscula y sin cronómetro. Se
- * consideró cambiarlo por uno que nombrara la consecuencia y no la exigencia, y se
- * decidió dejarlo como está. El nivel en sí sí se comprobó, y cómo se comprobó está
- * escrito junto al `errorPenalty` de `moka.ts`: la prueba de los errores comunes sale
- * mezclada y el método entra en el nivel 3 por lo que cuestan los errores, no por su
- * clase.
- */
-export type ErrorPenalty =
-  | { label: "Tolerante"; level: 1 }
-  | { label: "Preciso"; level: 2 }
-  | { label: "Implacable"; level: 3 };
 
 /** Dato de la ficha técnica: el valor va en Space Mono, la nota lo explica. */
 export type Spec = {
@@ -222,7 +206,8 @@ export type BrewMethod = {
    * mano que sirve—, no en retrato estrecho.
    */
   image: ContentImage;
-  errorPenalty: ErrorPenalty;
+  /** Las cuatro notas de las que sale la dificultad. Ver . */
+  difficulty: DifficultyScores;
   /**
    * Las cantidades que la página calcula. Un método trae esto **o** `device`, nunca
    * los dos ni ninguno: o quien prepara elige cuánto café quiere, o lo elige el

@@ -66,30 +66,50 @@ export const moka: BrewMethod = {
   },
 
   /*
-   * Implacable. Es el primer método del sitio en este nivel y lo que lo pone aquí no es
-   * que sea difícil: es que no hay forma de rectificar. En el V60 un vertido flojo se
-   * arregla en el siguiente y en la prensa siempre puedes esperar medio minuto más.
-   * Aquí, entre que cierras la cafetera y la pones al fuego, todas las decisiones ya
-   * están tomadas: no puedes probar, no puedes corregir la molienda ni el agua, y no
-   * ves lo que pasa dentro. Cuando notas que algo va mal —el olor a quemado, la válvula
-   * soltando vapor— la taza ya está hecha.
+   * 72,5 sobre 100: nivel 3, y el único método del sitio que llega ahí. Lo que lo pone
+   * en este nivel no es que sea difícil de preparar —es de los que menos pasos y menos
+   * equipo pide—, sino que no deja rectificar. En el V60 un vertido flojo se arregla en
+   * el siguiente y en la prensa siempre puedes esperar medio minuto más. Aquí, cerrada
+   * la cafetera y puesta al fuego, todas las decisiones ya están tomadas.
    *
-   * Que tome pocas decisiones no es lo mismo que perdonar. Es justo lo que explica el
-   * comentario de `ErrorPenalty` en types.ts: por número de decisiones la moka sería de
-   * las fáciles, y mandar ahí a alguien que empieza sería un mal consejo.
+   * Que tome pocas decisiones no es lo mismo que perdonar, y separar los cuatro ejes es
+   * lo que permite decir las dos cosas a la vez: complejidad 2 y recuperabilidad 1 en la
+   * misma ficha. Con un solo número no se podía.
    *
-   * Sobre cómo se comprobó, porque el criterio de las otras fichas aquí da un resultado
-   * mezclado y conviene dejarlo escrito. La prueba del AeroPress —mirar si los errores
-   * comunes son sabores o estorbos del gesto— sale 2 y 2: quemado y frío son la taza,
-   * pero la válvula soltando vapor y «no sale nada» son estorbos. Lo que pasa es que
-   * esa prueba trae un supuesto escondido que solo valía allí: en el AeroPress los
-   * estorbos no costaban nada, «entre el papel y el remojo la taza sale limpia igual».
-   * Aquí sí cuestan: «no sale nada» es quedarte sin café. Contados por lo que cuestan y
-   * no por su clase, cuatro de los cinco se llevan la taza entera, y ninguno se puede
-   * arreglar mientras pasa. Por ahí es por donde entra en el nivel 3, no por la prueba
-   * literal.
+   * Sobre cómo se comprobó, porque el criterio de las otras fichas aquí daba un
+   * resultado mezclado y conviene dejarlo escrito. La prueba del AeroPress —mirar si los
+   * errores comunes son sabores o estorbos del gesto— sale 2 y 2: quemado y frío son la
+   * taza, pero la válvula soltando vapor y «no sale nada» son estorbos. Esa prueba traía
+   * un supuesto escondido que solo valía allí: en el AeroPress los estorbos no costaban
+   * nada, «entre el papel y el remojo la taza sale limpia igual». Aquí sí cuestan: «no
+   * sale nada» es quedarte sin café. Contados por lo que cuestan y no por su clase,
+   * cuatro de los cinco se llevan la taza entera. De ahí su nota de coste.
    */
-  errorPenalty: { label: "Implacable", level: 3 },
+  difficulty: {
+    cost: {
+      value: 4,
+      why: "Cuatro de sus cinco errores comunes se llevan la taza entera: sale quemada, sale fría, o directamente no sale café.",
+    },
+    recovery: {
+      value: 1,
+      why: "Cerrada y al fuego no queda ninguna decisión salvo cuándo apartarla. No puedes probar, ni corregir la molienda, ni ver lo que pasa dentro. Es la única nota de 1 del sitio.",
+    },
+    complexity: {
+      value: 2,
+      why: "Llenar la caldera, llenar el embudo, cerrar, calentar y apartar. Es de los métodos que menos pasos encadenan y ninguno pide coordinar dos cosas a la vez.",
+    },
+    observability: {
+      /*
+       * Esta nota estuvo en 2 y se corrigió. Estaba mal por una razón que vale la pena
+       * dejar escrita: metía la recuperabilidad dentro del feedback. La moka avisa de
+       * casi todo —solo que tarde—, y contar eso como «no avisa» era puntuar dos veces
+       * lo mismo en dos ejes distintos, que es el error que hundió el sistema de siete
+       * dimensiones. Que las señales lleguen tarde ya lo dice `recovery`.
+       */
+      value: 3,
+      why: "Da más señales de las que parece: el chorro oscuro, el chorro claro y espumoso, el gorgoteo, la válvula soltando vapor y el olor a quemado. Pero hay que saber leerlas y casi todas llegan al final.",
+    },
+  },
 
   /*
    * Sin `recipe`: esta ficha no calcula nada. Lo que iría aquí lo fija el aparato y se

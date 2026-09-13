@@ -10,9 +10,26 @@ export const prensaFrancesa: BrewMethod = {
     alt: "Una prensa francesa de vidrio y metal, con el café ya hecho y el émbolo bajado, sobre una mesa de madera clara. Delante, una taza blanca servida de café negro descansa en su plato, rodeada de granos de café sueltos. Una franja de luz de sol cruza la mesa en diagonal y el resto de la escena queda en penumbra.",
   },
 
-  // Ninguno de sus errores echa a perder la taza: el peor deja un dedo de poso en el
-  // fondo o una segunda taza amarga, y los dos se arreglan a la mañana siguiente.
-  errorPenalty: { label: "Tolerante", level: 1 },
+  // 27,5 sobre 100: nivel 1. El método más fácil del sitio junto con el colado en tela,
+  // y lo que lo pone ahí es que no cierra ninguna puerta hasta el final.
+  difficulty: {
+    cost: {
+      value: 2,
+      why: "Ninguno de sus errores echa a perder la taza: el peor deja un dedo de poso en el fondo o una segunda taza amarga, y los dos se arreglan a la mañana siguiente.",
+    },
+    recovery: {
+      value: 4,
+      why: "Mientras el café está en remojo todavía puedes alargarlo, remover o apartar la jarra. La única puerta que se cierra es el émbolo, y se baja al final.",
+    },
+    complexity: {
+      value: 2,
+      why: "Echar, esperar, prensar y servir. No hay vertidos por tandas ni ningún gesto que coordinar con otro.",
+    },
+    observability: {
+      value: 3,
+      why: "El vidrio deja ver el nivel y la costra de espuma, pero el café está sumergido: no hay caudal que leer ni un color que cambie para avisarte.",
+    },
+  },
 
   recipe: {
     coffeeGramsPerCup: 15,

@@ -1,4 +1,4 @@
-import type { ErrorPenalty } from "@/content/metodos";
+import type { DifficultyLevel } from "@/content/metodos";
 
 /**
  * Marcas que comparten la página índice y la ficha de cada método. Viven aquí para
@@ -16,33 +16,47 @@ export { ClockIcon } from "@/app/icons";
  * Dice la cosa y no el número. «Dificultad 3 de 3», que es lo que decía antes, obliga
  * a adivinar de qué escala se habla y hacia dónde crece; y la palabra suelta del
  * rótulo —«Implacable»— tampoco dice implacable con qué.
+ *
+ * Vive aquí y no en `difficulty.ts` a propósito: es texto de interfaz, de la misma
+ * clase que un `aria-label`, y no una de las cuatro palabras con las que el sistema
+ * nombra sus niveles.
  */
-const PENALTY_DESCRIPTION: Record<ErrorPenalty["level"], string> = {
+const LEVEL_DESCRIPTION: Record<DifficultyLevel, string> = {
   1: "Tolerante con el error",
   2: "Exigente con el error",
   3: "Implacable con el error",
 };
 
 /**
- * Cuánto castiga el método un error: tres cuadros que se llenan según el nivel.
+ * Cuánto exige el método: tres cuadros que se llenan según el nivel.
+ *
+ * Recibe el nivel ya calculado y no las cuatro notas, porque el cálculo no es asunto
+ * de un componente: vive entero en `difficulty.ts` y aquí solo se pinta lo que salga.
  *
  * El grupo entero es una sola imagen para el lector de pantalla. Si se etiquetaran los
  * cuadros por su lado y se dejara el rótulo suelto por el suyo, se oiría dos veces lo
  * mismo seguido.
  */
-export function ErrorPenaltyMeter({ penalty }: { penalty: ErrorPenalty }) {
+export function DifficultyMeter({
+  level,
+  label,
+}: {
+  level: DifficultyLevel;
+  /** La palabra del nivel, tal como la sirve `DIFFICULTY_LEVELS`. */
+  label: string;
+}) {
   return (
     <div
       className="flex items-center gap-3"
       role="img"
-      aria-label={PENALTY_DESCRIPTION[penalty.level]}
+      aria-label={LEVEL_DESCRIPTION[level]}
     >
       <span className="flex gap-1">
         {[1, 2, 3].map((step) => (
           <span
             key={step}
             className={
-              step <= penalty.level
+              step <= level
                 ? "h-3 w-3 bg-lavender-deep"
                 : "h-3 w-3 border border-dust"
             }
@@ -50,7 +64,7 @@ export function ErrorPenaltyMeter({ penalty }: { penalty: ErrorPenalty }) {
         ))}
       </span>
       <span className="font-mono text-xs uppercase tracking-widest text-coffee">
-        {penalty.label}
+        {label}
       </span>
     </div>
   );

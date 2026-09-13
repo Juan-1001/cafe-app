@@ -53,12 +53,28 @@ export const coladoEnTela: BrewMethod = {
   },
 
   /*
-   * Tolerante, y es el método que más perdona de los cuatro. Sus errores comunes son de
-   * mantenimiento —la tela guardada húmeda, el colador viejo— y no del gesto: el agua
-   * pasa cuando pasa, no hay émbolo que empujar ni ventana de tiempo que cerrar. Si te
-   * distraes, lo que cambia es la fuerza de la taza.
+   * 25,0 sobre 100, el más bajo de los cinco: nivel 1. No gana por ser simple —la
+   * prensa lo es igual— sino porque es el único que no esconde nada y no cierra ninguna
+   * puerta: el agua pasa cuando pasa, no hay émbolo que empujar ni ventana que cerrar.
    */
-  errorPenalty: { label: "Tolerante", level: 1 },
+  difficulty: {
+    cost: {
+      value: 2,
+      why: "Sus errores comunes son de mantenimiento —la tela guardada húmeda, el colador viejo— y no del gesto. Si te distraes, lo que cambia es la fuerza de la taza, no si hay taza.",
+    },
+    recovery: {
+      value: 4,
+      why: "Se vierte en tiempo real: si el agua baja demasiado deprisa o se queda parada, puedes cambiar el chorro a mitad de camino y el café todavía no está decidido.",
+    },
+    complexity: {
+      value: 2,
+      why: "Un remojo y después verter. No hay tiempos que cumplir ni dos manos que coordinar.",
+    },
+    observability: {
+      value: 4,
+      why: "Es el método más abierto del sitio: el lecho, el nivel del agua y la velocidad a la que pasa están a la vista todos a la vez, sin nada que los tape.",
+    },
+  },
 
   recipe: {
     coffeeGramsPerCup: 15,

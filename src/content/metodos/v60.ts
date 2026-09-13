@@ -11,13 +11,30 @@ export const v60: BrewMethod = {
   },
 
   /*
-   * Preciso: sus cuatro errores comunes son sabores y no estorbos. Un vertido desde muy
-   * alto o treinta segundos de más y la taza sale amarga o aguada, y no hay manera de
-   * saberlo hasta probarla. Lo que lo separa del nivel de arriba es que aquí el error
-   * se corrige en el vertido siguiente; en un método implacable, cuando lo notas la
-   * taza ya está hecha.
+   * 47,5 sobre 100: nivel 2. Es el método con más palancas del sitio y aun así no es el
+   * más difícil, que es justo lo que el sistema tenía que ser capaz de decir: tener
+   * mucho control no es lo mismo que ser exigente. Lo que lo sube del nivel de entrada
+   * es que sus errores cuestan de verdad y que hay gesto que sostener; lo que lo baja
+   * del nivel de la moka es que ve todo y perdona rectificar.
    */
-  errorPenalty: { label: "Preciso", level: 2 },
+  difficulty: {
+    cost: {
+      value: 4,
+      why: "Sus cuatro errores comunes son sabores y no estorbos. Un vertido desde muy alto o treinta segundos de más y la taza sale amarga o aguada, y no hay manera de saberlo hasta probarla.",
+    },
+    recovery: {
+      value: 4,
+      why: "Es el método que más deja rectificar: un vertido flojo se corrige en el siguiente, y siempre queda alguno por delante. El error se paga en esta taza, pero se ve venir.",
+    },
+    complexity: {
+      value: 4,
+      why: "Floración, dos vertidos en espiral con sus tiempos, un giro final para asentar el lecho, y un chorro que hay que sostener con la mano a la altura correcta.",
+    },
+    observability: {
+      value: 5,
+      why: "Se ve todo mientras pasa y da tiempo a reaccionar: la espuma de la floración, el nivel del agua, el lecho, la velocidad del goteo y el reloj, todo a la vez.",
+    },
+  },
 
   recipe: {
     coffeeGramsPerCup: 15,

@@ -3,11 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { articlesByJourney } from "@/content/granos";
 import { getEntryMethod, home } from "@/content/home";
-import { brewMethodsByPenalty } from "@/content/metodos";
+import {
+  brewMethodsByDifficulty,
+  methodDifficulty,
+} from "@/content/metodos";
 import type { ContentImage } from "@/content/metodos";
 import { Eyebrow } from "./eyebrow";
 import { ClockIcon } from "./icons";
-import { ErrorPenaltyMeter } from "./metodos/indicators";
+import { DifficultyMeter } from "./metodos/indicators";
 
 export const metadata: Metadata = {
   title: "Café · De dónde viene y cómo prepararlo",
@@ -82,7 +85,7 @@ export default function Home() {
 
   // Los demás, en el mismo orden que la página de métodos: del más accesible al que más
   // pide. El de entrada se quita porque ya está arriba, en grande.
-  const otherMethods = brewMethodsByPenalty().filter(
+  const otherMethods = brewMethodsByDifficulty().filter(
     (method) => method.slug !== entryMethod.slug,
   );
 
@@ -156,7 +159,10 @@ export default function Home() {
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-dust pt-5">
-              <ErrorPenaltyMeter penalty={entryMethod.errorPenalty} />
+              <DifficultyMeter
+                level={methodDifficulty(entryMethod).level}
+                label={methodDifficulty(entryMethod).levelInfo.chip}
+              />
               {/* Hay métodos sin tiempo total, como la moka, que se rige por un
                   suceso y no por un reloj. Entonces no se pinta la casilla: un
                   reloj junto a un texto que no es una hora diría que sí lo es. */}
@@ -223,7 +229,7 @@ export default function Home() {
                         <span aria-hidden="true">·</span>
                       </>
                     ) : null}
-                    {method.errorPenalty.label}
+                    {methodDifficulty(method).levelInfo.chip}
                   </span>
                 </Link>
               </li>

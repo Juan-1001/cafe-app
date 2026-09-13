@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { brewMethodsByPenalty } from "@/content/metodos";
+import {
+  DIFFICULTY_LEVELS,
+  brewMethodsByDifficulty,
+  methodDifficulty,
+} from "@/content/metodos";
 import type { BrewMethod, ContentImage } from "@/content/metodos";
 import { Eyebrow } from "@/app/eyebrow";
-import { ClockIcon, ErrorPenaltyMeter } from "./indicators";
+import { ClockIcon, DifficultyMeter } from "./indicators";
 
 export const metadata: Metadata = {
   title: "Métodos de preparación",
@@ -12,46 +16,21 @@ export const metadata: Metadata = {
     "Cada método de preparación explicado paso a paso: qué necesitas, cuánto tarda y a qué sabe la taza que sale.",
 };
 
-/**
- * Los capítulos de la página, uno por nivel de castigo del error. El nivel viene en
- * el contenido de cada método, así que un método nuevo cae en su capítulo sin tocar
- * este archivo; y un capítulo que se quede sin métodos no se pinta.
+/*
+ * Los capítulos ya no se escriben aquí: son los niveles de `DIFFICULTY_LEVELS`, que
+ * viven con la fórmula que los calcula. Antes esta lista repetía a mano el número, el
+ * título y la nota de cada nivel, y podía desincronizarse del contenido sin que nada
+ * avisara.
  *
- * Los títulos hablan del método y no del lector: antes decían «Para empezar» y «Para
- * exigentes», que clasifican a quien lee, y las tres notas estaban escritas cada una
- * sobre un eje distinto —una sobre el error, otra sobre el equipo, otra sobre las
- * decisiones que hay que tomar—. Ahora las tres dicen lo que de verdad ordena la
- * página: qué pasa si te equivocas.
+ * Lo que no cambió es el lenguaje: los tres rótulos —«Perdonan casi todo», «Piden que
+ * estés ahí», «No dan segunda oportunidad»— son los mismos de siempre. Al auditar el
+ * sistema resultó que mapean uno a uno sobre los tres ejes que mandan, así que el
+ * cálculo nuevo cabe debajo del copy viejo sin forzarlo.
  *
- * El número va escrito a mano en vez de calcularse de la posición porque tiene que
- * ser el mismo siempre: si algún día no hay ningún método intermedio, el capítulo
- * de los exigentes sigue siendo el 03 y no se convierte en el 02.
+ * El número sigue siendo fijo y no calculado de la posición: si algún día no hay ningún
+ * método intermedio, el capítulo de los exigentes sigue siendo el 03 y no pasa a ser el
+ * 02. Un capítulo sin métodos no se pinta.
  */
-const CHAPTERS = [
-  {
-    level: 1,
-    number: "01",
-    title: "Perdonan casi todo",
-    note: "Medio minuto de más o un molido desigual no arruinan la taza. Si te distraes a mitad, sigue saliendo café.",
-  },
-  {
-    level: 2,
-    number: "02",
-    title: "Piden que estés ahí",
-    note: "Hay un tramo corto donde lo que haces se nota entero: el vertido, el tiempo. El error se paga en el sabor, pero se corrige en la taza siguiente.",
-  },
-  {
-    level: 3,
-    number: "03",
-    title: "No dan segunda oportunidad",
-    note: "Cuando notas que algo va mal, la taza ya está hecha: no hay forma de rectificar a mitad de camino.",
-  },
-] as const satisfies readonly {
-  level: BrewMethod["errorPenalty"]["level"];
-  number: string;
-  title: string;
-  note: string;
-}[];
 
 /**
  * Rótulo de capítulo. Es una marca de sección, no un titular: va en mono pequeño, al
@@ -63,14 +42,18 @@ const CHAPTERS = [
  * La nota se va al extremo derecho en escritorio: ocupa el lado que la composición
  * deja libre, en lugar de amontonarse debajo del título.
  */
-function ChapterLabel({ chapter }: { chapter: (typeof CHAPTERS)[number] }) {
+function ChapterLabel({
+  chapter,
+}: {
+  chapter: (typeof DIFFICULTY_LEVELS)[number];
+}) {
   return (
     <div className="flex flex-wrap items-baseline gap-x-8 gap-y-3 border-t-2 border-lavender pt-4">
       <span className="font-mono text-xs tracking-widest text-lavender-deep">
         {chapter.number}
       </span>
       <h2 className="font-mono text-xs uppercase tracking-widest text-ink">
-        {chapter.title}
+        {chapter.category}
       </h2>
       <p className="text-sm text-coffee md:ml-auto md:max-w-[46ch] md:text-right">
         {chapter.note}
@@ -125,6 +108,8 @@ function MethodEntry({
    */
   mirrored: boolean;
 }) {
+  const difficulty = methodDifficulty(method);
+
   return (
     <li className="border-t border-dust">
       <Link
@@ -152,7 +137,10 @@ function MethodEntry({
               que la imagen de al lado. */}
           <div className="mt-8 flex flex-wrap items-end justify-between gap-x-10 gap-y-6 border-t border-dust pt-5 md:mt-auto">
             <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
-              <ErrorPenaltyMeter penalty={method.errorPenalty} />
+              <DifficultyMeter
+                level={difficulty.level}
+                label={difficulty.levelInfo.chip}
+              />
               {/* Un método puede no tener tiempo, y entonces no se pinta nada: la
                   moka se rige por un suceso —se retira cuando el recolector está
                   lleno— y poner un reloj al lado de un texto que no es una hora
@@ -187,9 +175,9 @@ function MethodEntry({
 function chapterSections(methods: BrewMethod[]) {
   let entryIndex = 0;
 
-  return CHAPTERS.map((chapter) => {
+  return DIFFICULTY_LEVELS.map((chapter) => {
     const chapterMethods = methods.filter(
-      (method) => method.errorPenalty.level === chapter.level,
+      (method) => methodDifficulty(method).level === chapter.level,
     );
     if (chapterMethods.length === 0) return null;
 
@@ -212,7 +200,7 @@ function chapterSections(methods: BrewMethod[]) {
 }
 
 export default function BrewMethodsPage() {
-  const methods = brewMethodsByPenalty();
+  const methods = brewMethodsByDifficulty();
 
   return (
     <div className="px-6 pb-24 md:px-16 md:pb-36">

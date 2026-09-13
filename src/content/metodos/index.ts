@@ -1,5 +1,6 @@
 import type { BrewMethod } from "./types";
-import { parseEndSeconds } from "./timing";
+import { computeDifficulty } from "./difficulty";
+import type { Difficulty } from "./difficulty";
 import { parseRatio } from "./ratio";
 import { aeropress } from "./aeropress";
 import { coladoEnTela } from "./colado-en-tela";
@@ -73,51 +74,50 @@ export function getBrewMethod(slug: string): BrewMethod | undefined {
   return brewMethods.find((method) => method.slug === slug);
 }
 
+/** La dificultad ya calculada de un método. Se pide aquí y no se recalcula por ahí. */
+export function methodDifficulty(method: BrewMethod): Difficulty {
+  return computeDifficulty(method.difficulty);
+}
+
 /**
- * Los métodos ordenados del que más perdona al que menos, que es como los presenta
- * la página índice. El orden sale de los datos de cada método, no de una lista
- * escrita a mano: al registrar uno nuevo arriba, cae solo en su sitio.
+ * Los métodos ordenados del más fácil al más exigente, que es como los presenta la
+ * página índice. El orden sale del score de cada método, así que al registrar uno nuevo
+ * arriba cae solo en su sitio y nadie tiene que decidir dónde va.
  *
- * Los criterios, en orden y con su porqué:
- *
- * 1. El castigo del error declarado. Es el criterio de fondo y el que agrupa la
- *    página en capítulos.
- * 2. A igual castigo, primero el más corto. El tiempo total es lo segundo que
- *    frena a alguien que está empezando: un método de tres minutos se prueba una
- *    mañana de entre semana y uno de diez, no.
- * 3. Después, el que pide menos equipo, por la misma razón: entrar cuesta menos.
- * 4. El nombre solo como último desempate, para que dos métodos idénticos en todo
- *    lo anterior no se intercambien de sitio entre una compilación y otra.
+ * Antes esto ordenaba por el nivel escrito a mano y desempataba por tiempo total y por
+ * número de piezas de equipo. Esos dos desempates ya no hacen falta y además decían algo
+ * que no era verdad: que un método más corto o con menos cacharros es más fácil. El
+ * score no empata casi nunca —son cuatro notas combinadas con pesos distintos—, y cuando
+ * empate, el nombre decide, solo para que dos compilaciones seguidas no intercambien las
+ * fichas de sitio.
  */
-export function brewMethodsByPenalty(): BrewMethod[] {
+export function brewMethodsByDifficulty(): BrewMethod[] {
   return [...brewMethods].sort((a, b) => {
-    if (a.errorPenalty.level !== b.errorPenalty.level) {
-      return a.errorPenalty.level - b.errorPenalty.level;
-    }
-
-    // Un método sin tiempo legible en la ficha —o sin tiempo ninguno, como la moka,
-    // que se rige por un suceso y no por un reloj— se va al final de su grupo en vez
-    // de colarse el primero, que es lo que pasaría tratándolo como cero.
-    const timeA =
-      (a.specs.totalTime && parseEndSeconds(a.specs.totalTime.value)) ??
-      Number.MAX_SAFE_INTEGER;
-    const timeB =
-      (b.specs.totalTime && parseEndSeconds(b.specs.totalTime.value)) ??
-      Number.MAX_SAFE_INTEGER;
-    if (timeA !== timeB) return timeA - timeB;
-
-    if (a.equipment.length !== b.equipment.length) {
-      return a.equipment.length - b.equipment.length;
-    }
+    const scoreA = methodDifficulty(a).score;
+    const scoreB = methodDifficulty(b).score;
+    if (scoreA !== scoreB) return scoreA - scoreB;
 
     return a.name.localeCompare(b.name, "es");
   });
 }
 
 export type {
+  AxisKey,
+  AxisScore,
+  Difficulty,
+  DifficultyLevel,
+  DifficultyScores,
+} from "./difficulty";
+export {
+  DIFFICULTY_AXES,
+  DIFFICULTY_LEVELS,
+  computeDifficulty,
+  difficultyBreakdown,
+} from "./difficulty";
+
+export type {
   BrewMethod,
   ContentImage,
   DeviceSizes,
-  ErrorPenalty,
   Grounding,
 } from "./types";
