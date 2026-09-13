@@ -76,6 +76,24 @@ export function Amounts({ text }: { text: string }) {
 export function CupsControl() {
   const { cups, setCups, options } = useRecipeAmounts();
 
+  /*
+   * Hay métodos de capacidad fija —el AeroPress hace una taza y no caben dos— y ahí no
+   * hay nada que elegir. Se enseña la cifra igual, porque dice para cuántas tazas son
+   * las cantidades de la ficha, pero no como un control: un botón que no cambia nada
+   * invita a pulsarlo y no responde. Por qué es fija lo cuenta el propio método en la
+   * nota de su rendimiento, que es donde vive el contenido.
+   */
+  if (options.length < 2) {
+    return (
+      <div>
+        <p className="font-mono text-xs uppercase tracking-widest text-ink">
+          Cuántas tazas
+        </p>
+        <p className="mt-3 font-mono text-sm text-ink">{options[0]}</p>
+      </div>
+    );
+  }
+
   return (
     <fieldset>
       <legend className="font-mono text-xs uppercase tracking-widest text-ink">

@@ -45,6 +45,26 @@ export const EQUIPMENT = {
     photo: "/images/equipo/filtro-v60.jpg",
     alt: "Una mano sostiene un filtro de papel de color crudo, todavía sin abrir, con forma de abanico y un borde cosido en uno de sus lados. Debajo espera un cono de filtrado de vidrio apoyado en una mesa clara.",
   },
+  aeropress: {
+    name: "AeroPress",
+    /*
+     * Foto pendiente. La ruta se declara desde ahora porque `resolveEquipmentImage`
+     * comprueba en la compilación si el archivo está: mientras no exista se pinta el
+     * bloque de color, y el día que se guarde aparece sola sin tocar nada.
+     *
+     * El alt describe el objeto tal y como es, que es lo que dice qué fotografía hay
+     * que ir a buscar. Cuando la foto esté, hay que comprobar que lo que se ve es
+     * esto y corregirlo si no.
+     */
+    photo: "/images/equipo/aeropress.jpg",
+    alt: "Un AeroPress desmontado: un cilindro de plástico translúcido con números marcados en un costado, un émbolo rematado en un disco de goma gris oscuro y una tapa redonda y perforada que se enrosca en la base del cilindro.",
+  },
+  "filtros-papel-aeropress": {
+    name: "Filtros de papel redondos",
+    // Foto pendiente, igual que la pieza de arriba.
+    photo: "/images/equipo/filtros-papel-aeropress.jpg",
+    alt: "Un montón de filtros de papel redondos, blancos y del tamaño de una moneda grande, apilados uno sobre otro fuera de su caja.",
+  },
   "molino-de-muelas": {
     name: "Molino de muelas",
     photo: "/images/equipo/molino-manual.jpg",

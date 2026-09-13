@@ -45,6 +45,11 @@ veces. Los artículos se leen sueltos: cada uno se entiende por su cuenta.
 Los orígenes y las variedades vuelven más adelante como artículo (por ejemplo, «las
 variedades que vas a ver en Colombia»), nunca como catálogo con una ficha por país.
 
+Otro artículo pendiente es **la acidez**: qué es la que se prueba en una taza y por qué no
+es el pH. Salió al escribir el AeroPress, cuyo fabricante afirma sin citar ningún estudio
+que su café tiene «un quinto de la acidez» del de goteo; esa cifra se quedó fuera de la
+ficha porque ahí solo cabría afirmarla, y es justo el material de un artículo.
+
 Cada tienda debe incluir un campo con la **fecha de la última verificación de sus datos**
 (dirección, horario, si sigue abierta) y esa fecha se muestra en la página. Los datos de
 locales caducan: sin fecha visible no se puede saber si la información sigue sirviendo.
@@ -63,6 +68,10 @@ No hay base de datos ni gestor de contenidos externo.
 - El `slug` de la URL sale del nombre del archivo.
 - Al añadir contenido, respeta la forma de los archivos que ya existen en esa carpeta en
   lugar de inventar una estructura nueva.
+
+**Ningún dato comprobable —cifra, porcentaje, fecha, temperatura, récord— se escribe sin
+fuente primaria y sin aprobarlo antes, aunque parezca sólido.** El procedimiento completo
+está en la Skill `verificar-datos` (`.claude/skills/verificar-datos/SKILL.md`).
 
 ### Textos de la home
 
