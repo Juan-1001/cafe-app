@@ -3,6 +3,7 @@ import { JOURNEY_STAGES, type JourneyStageInfo } from "./journey";
 import { arabicaVsRobusta } from "./arabica-vs-robusta";
 import { nivelesDeTueste } from "./niveles-de-tueste";
 import { procesosEnOrigen } from "./procesos-en-origen";
+import { assertSourcesAreUsable } from "../sources";
 
 /**
  * Un archivo por artículo en esta carpeta; aquí se registran para las rutas.
@@ -16,6 +17,15 @@ export const articles: Article[] = [
   procesosEnOrigen,
   nivelesDeTueste,
 ];
+
+/*
+ * Las fuentes de los artículos pasan la misma comprobación automática que las de los
+ * métodos. Corre al importar el módulo, o sea al generar el sitio: una fuente sin fecha
+ * o con el enlace a medias rompe la compilación en vez de llegar a la página.
+ */
+for (const article of articles) {
+  assertSourcesAreUsable(article.slug, article.sources);
+}
 
 export function getArticle(slug: string): Article | undefined {
   return articles.find((article) => article.slug === slug);

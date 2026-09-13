@@ -130,6 +130,37 @@ export const EQUIPMENT = {
     photo: "/images/equipo/cuchara-de-madera.webp",
     alt: "Cuchara de madera vista desde arriba sobre un fondo liso y claro. Tiene el mango largo y recto y la pala redonda y poco honda.",
   },
+  chemex: {
+    name: "Chemex",
+    photo: "/images/equipo/chemex.jpg",
+    alt: "Una jarra de vidrio de una sola pieza con forma de reloj de arena: el cuerpo inferior se ensancha como un matraz de laboratorio y la boca superior se abre en embudo. A la altura del cuello lleva un collar de madera clara sujeto con una tira de cuero atada en lazo, y en el vidrio, justo debajo, sobresale un pico vertedor. Está vacía sobre una superficie lisa.",
+  },
+  /*
+   * Los filtros de la Chemex son pieza aparte y no un detalle de la jarra, igual que
+   * los del V60: se compran por separado, se acaban, y son lo único que distingue de
+   * verdad a este método del V60 —aunque, como cuenta la ficha, esa distinción esté
+   * mucho menos medida de lo que las tiendas dan a entender.
+   */
+  "filtros-chemex": {
+    name: "Filtros Chemex",
+    photo: "/images/equipo/filtros-chemex.jpg",
+    alt: "Un filtro de papel grueso de color crudo, cuadrado y doblado en cuatro, apoyado junto a otro ya abierto en forma de cono. En el abierto se ve que uno de sus lados tiene tres capas de papel superpuestas y el otro una sola.",
+  },
+  sifon: {
+    name: "Sifón de café",
+    photo: "/images/equipo/sifon.jpg",
+    alt: "Un aparato de vidrio de dos cuerpos montado sobre un soporte metálico: abajo una esfera de vidrio con un cuello estrecho, y encajado encima un vaso cilíndrico también de vidrio del que baja un tubo largo hasta el fondo de la esfera. Entre los dos hay un tapón de goma. Dentro del vaso de arriba se ve un disco metálico con una tela sujeta y una cadenita colgando.",
+  },
+  "mechero-de-alcohol": {
+    name: "Mechero de alcohol",
+    photo: "/images/equipo/mechero-de-alcohol.jpg",
+    alt: "Un mechero pequeño de metal, redondo y bajo, con una mecha blanca de algodón asomando por el centro de la tapa y una tapita suelta al lado para apagarlo.",
+  },
+  "varilla-de-bambu": {
+    name: "Varilla de bambú",
+    photo: "/images/equipo/varilla-de-bambu.jpg",
+    alt: "Una paleta de bambú fina y plana, de mango recto y punta redondeada, apoyada sobre una superficie clara.",
+  },
   /*
    * Un frasco con tapa no es la «jarra de vidrio» de aquí abajo, por la misma razón por
    * la que hay dos hervidores. La jarra está abierta y sirve para servir; este cierra, y

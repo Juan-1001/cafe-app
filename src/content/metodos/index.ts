@@ -3,11 +3,14 @@ import { computeDifficulty } from "./difficulty";
 import type { Difficulty } from "./difficulty";
 import { parseRatio } from "./ratio";
 import { parseEndSeconds, parseStartSeconds } from "./timing";
+import { assertSourcesAreUsable } from "../sources";
 import { aeropress } from "./aeropress";
+import { chemex } from "./chemex";
 import { coladoEnTela } from "./colado-en-tela";
 import { coldBrew } from "./cold-brew";
 import { moka } from "./moka";
 import { prensaFrancesa } from "./prensa-francesa";
+import { sifon } from "./sifon";
 import { v60 } from "./v60";
 
 /** Un archivo por método en esta carpeta; aquí se registran para las rutas. */
@@ -18,6 +21,8 @@ export const brewMethods: BrewMethod[] = [
   coladoEnTela,
   moka,
   coldBrew,
+  chemex,
+  sifon,
 ];
 
 /**
@@ -70,6 +75,36 @@ function assertBrewMethodsAreConsistent(methods: BrewMethod[]): void {
     }
 
     assertTimeNotationMatchesTimer(method);
+    assertSourcesAreUsable(method.slug, method.grounding?.references ?? []);
+    assertDifficultyIsArguable(method);
+  }
+}
+
+/**
+ * Una razón por debajo de esto no es una razón: es la nota escrita con letras.
+ * El valor sale de medir las que ya están escritas —la más corta ronda los 120
+ * caracteres— y se deja holgura por debajo para no pelearse con una que sea buena y
+ * breve.
+ */
+const MIN_WHY_LENGTH = 60;
+
+/**
+ * Comprueba que las cuatro notas de dificultad se puedan discutir dentro de un año.
+ *
+ * El sistema de `difficulty.ts` se sostiene sobre que cada nota traiga escrito por qué
+ * es esa y no otra: sin eso nadie puede rebatir una clasificación ni puntuar el método
+ * siguiente con el mismo rasero, y vuelve a haber un número que nadie sabe de dónde
+ * salió, que es exactamente lo que se quitó de en medio. TypeScript ya obliga a que el
+ * campo esté; lo que no puede es obligar a que diga algo.
+ */
+function assertDifficultyIsArguable(method: BrewMethod): void {
+  for (const [axis, score] of Object.entries(method.difficulty)) {
+    if (score.why.trim().length < MIN_WHY_LENGTH) {
+      throw new Error(
+        `El método "${method.slug}" puntúa "${axis}" con un ${score.value} y no explica por qué: ` +
+          `"${score.why}". La razón es obligatoria y tiene que poder discutirse.`,
+      );
+    }
   }
 }
 
