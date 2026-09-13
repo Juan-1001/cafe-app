@@ -28,6 +28,18 @@ function blockText(block: ArticleBlock): string {
       return block.caption ?? "";
     case "pullquote":
       return [block.text, block.attribution ?? ""].join(" ");
+    // Del deslizador cuentan los textos de los cinco niveles, porque los cinco están
+    // en la página y se leen. No cuentan las cifras: ni la pérdida de peso ni los
+    // pesos de las barras, que son un dato suelto que se mira, no una frase que se
+    // lee. Contarlos inflaría el tiempo con algo que nadie recorre palabra a palabra.
+    case "roastScale":
+      return [
+        block.intro,
+        ...block.axes,
+        ...block.levels.flatMap((level) => [level.name, ...level.notes]),
+        block.beanNote,
+        block.note,
+      ].join(" ");
   }
 }
 

@@ -1,6 +1,7 @@
 import type { Article } from "./types";
 import { JOURNEY_STAGES, type JourneyStageInfo } from "./journey";
 import { arabicaVsRobusta } from "./arabica-vs-robusta";
+import { nivelesDeTueste } from "./niveles-de-tueste";
 
 /**
  * Un archivo por artículo en esta carpeta; aquí se registran para las rutas.
@@ -9,7 +10,7 @@ import { arabicaVsRobusta } from "./arabica-vs-robusta";
  * editorial: si dos artículos de una misma etapa se leen mejor en un orden concreto,
  * se ponen en ese orden aquí.
  */
-export const articles: Article[] = [arabicaVsRobusta];
+export const articles: Article[] = [arabicaVsRobusta, nivelesDeTueste];
 
 export function getArticle(slug: string): Article | undefined {
   return articles.find((article) => article.slug === slug);
@@ -33,6 +34,12 @@ export function articlesByJourney(): {
   })).filter((group) => group.articles.length > 0);
 }
 
-export type { Article, ArticleBlock, ArticleLevel, Source } from "./types";
+export type {
+  Article,
+  ArticleBlock,
+  ArticleLevel,
+  RoastLevel,
+  Source,
+} from "./types";
 export { JOURNEY_STAGES } from "./journey";
 export type { JourneyStage, JourneyStageInfo } from "./journey";

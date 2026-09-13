@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { ArticleBlock, ComparisonRow } from "@/content/granos/types";
+import { RoastScale } from "./roast-scale";
 
 /**
  * Convierte los tramos entre asteriscos en itálica. Es el único marcado que admite el
@@ -270,5 +271,11 @@ export function Block({ block }: { block: ArticleBlock }) {
 
     case "pullquote":
       return <PullQuote block={block} />;
+
+    // El único bloque que se dibuja en el navegador. Todo lo demás de esta página
+    // sigue siendo estático: aquí solo se entra a `"use client"` porque hay un
+    // deslizador que hay que poder mover.
+    case "roastScale":
+      return <RoastScale {...block} />;
   }
 }
