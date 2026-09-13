@@ -54,21 +54,32 @@ export type RoastWeight = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export const ROAST_WEIGHT_MAX = 6;
 
 /**
+ * Lo que comparten los peldaños de las dos variantes del bloque `scale`.
+ *
+ * `figure` lleva la frase entera ya escrita —"pierde 12,6 %", "23 días con fruta"— y no
+ * solo el número. El componente no pone ninguna palabra suya alrededor, y eso es a
+ * propósito: cuando el texto vivía dentro del componente, el verbo «pierde» estaba
+ * escrito en el JSX y no servía para nada que no fuera el tueste.
+ */
+export type ScaleStep = {
+  /** Como se lee en una bolsa, en español: "Claro", "Medio-oscuro", "Lavado"… */
+  name: string;
+  /** El otro nombre que también circula, cuando lo tiene: "City", "Honey"… */
+  alias?: string;
+  /** El dato medido del peldaño, con su unidad y su verbo: "pierde 16,3 %". */
+  figure: string;
+  /** Las dos notas del peldaño, en el orden de `axes`. */
+  notes: [string, string];
+};
+
+/**
  * Un peldaño de la escala de tueste.
  *
- * `weightLoss` es el único dato medido de la fila y sale del estudio que el artículo
- * cita en `sources`; los dos `weights` son el diagrama. Esa diferencia es importante y
- * se nota a la vista: la cifra se escribe con su número y las barras no llevan ninguno.
+ * `figure` es el único dato medido de la fila y sale del estudio que el artículo cita
+ * en `sources`; los dos `weights` son el diagrama. Esa diferencia es importante y se
+ * nota a la vista: la cifra se escribe con su número y las barras no llevan ninguno.
  */
-export type RoastLevel = {
-  /** Como se lee en la bolsa, en español: "Claro", "Medio-oscuro"… */
-  name: string;
-  /** El nombre inglés que también circula por las tostadurías, cuando lo tiene. */
-  alias?: string;
-  /** Pérdida de peso medida, ya formateada para leerse: "16,3 %". */
-  weightLoss: string;
-  /** Qué se sigue notando del grano y qué ha puesto el fuego, en el orden de `axes`. */
-  notes: [string, string];
+export type RoastStep = ScaleStep & {
   /** Cuánto pesa cada lado del intercambio, en el mismo orden que `axes`. */
   weights: [RoastWeight, RoastWeight];
   /** Cómo se ve el grano a este nivel. */
@@ -102,6 +113,54 @@ export type RoastBean = {
    * aceites salen a la superficie. De ahí que solo los dos niveles más oscuros lo tengan.
    */
   sheen: 0 | 1 | 2;
+};
+
+/**
+ * Qué sigue puesto sobre el grano mientras se seca, en un carril de la línea del
+ * beneficio.
+ *
+ * Son dos materiales distintos y no dos cantidades del mismo: la cereza entera —piel y
+ * pulpa incluidas— o solo el mucílago, esa capa pegajosa y azucarada que queda pegada
+ * al pergamino cuando se le quita la fruta. De aquí sale el color de la barra y su
+ * altura, y por eso son un tipo cerrado y no un número: no hay una escala medida de
+ * «cuánta fruta», hay dos cosas que o están o no están.
+ */
+export type LaneMaterial = "cherry" | "mucilage";
+
+/**
+ * Un carril de la línea del beneficio: cuánto tiempo la fruta sigue sobre el grano.
+ *
+ * Los dos números son días **medidos**, no redondeos de blog, y salen del estudio que
+ * el artículo cita. Aun así son de una variedad, una región y una cosecha, y el secado
+ * depende del clima de esa semana: el bloque obliga a declararlo en \`diagramNote\`
+ * porque sirven para ver la proporción entre los tres procesos, no como constantes.
+ *
+ * El eje del dibujo no se escribe en ninguna parte: sale del \`totalDays\` más largo de
+ * los carriles que haya. Si algún día entra un cuarto proceso más lento, el eje se
+ * estira solo y no hay ningún máximo escrito a mano que se quede desfasado.
+ */
+export type Lane = {
+  /** Días con la fruta encima. Admite fracciones: las 15 h del lavado son 15/24. */
+  contactDays: number;
+  /** Días que dura el proceso completo, hasta que el grano está seco. */
+  totalDays: number;
+  /** Qué es lo que sigue puesto durante esos `contactDays`. */
+  material: LaneMaterial;
+  /**
+   * Si cuánto queda encima es un rango y no un valor.
+   *
+   * Lo lleva el honey y solo el honey: que se deje más o menos mucílago es una decisión
+   * del productor, y de ahí salen los honey de distinto color. Se dibuja como una banda
+   * con el techo de trazos en vez de una barra cerrada, que es la única forma honesta de
+   * contarlo sin inventarse los porcentajes de mucílago que circulan sin respaldo.
+   */
+  range: boolean;
+};
+
+/** Un peldaño de la línea del beneficio. */
+export type ProcessStep = ScaleStep & {
+  /** Su carril en el dibujo. */
+  lane: Lane;
 };
 
 /**
@@ -193,29 +252,69 @@ export type ArticleBlock =
    * el deslizador destaca uno, no hace aparecer el contenido. Así el bloque se lee
    * entero aunque el JavaScript no llegue nunca.
    */
+  /**
+   * Una escala: un puñado de peldaños ordenados, uno elegido, y un dibujo que cambia
+   * con él. Es el único bloque interactivo de un artículo.
+   *
+   * Tiene dos variantes porque dos artículos pidieron la misma mecánica con distinta
+   * cara, y montar dos bloques habría significado mantener dos veces las tarjetas, el
+   * foco, el estado activo y todo el aparato de accesibilidad. Lo que de verdad cambia
+   * entre las dos es poco y está aquí declarado:
+   *
+   * - `"roast"` tiene **deslizador**, porque entre un tueste medio y uno medio-oscuro
+   *   hay un continuo de verdad: las posiciones intermedias existen. Dibuja granos que
+   *   cambian de color, y lleva las dos barras del intercambio.
+   * - `"process"` **no tiene deslizador**, y no es por ahorrar: entre el lavado y el
+   *   honey no hay nada que comprar, así que arrastrar a medio camino mentiría. Dibuja
+   *   la línea del beneficio con los tres carriles a la vez, y no lleva barras, porque
+   *   los procesos no son un intercambio entre dos cosas opuestas —el coste del lavado
+   *   es agua y el del natural es tiempo, y eso no son dos extremos de un mismo eje—.
+   *
+   * En las dos, los peldaños están **todos** en la página con sus textos completos: lo
+   * elegido se destaca, no aparece. Así el bloque se lee entero aunque el JavaScript no
+   * llegue nunca.
+   */
   | {
-      kind: "roastScale";
-      /** Qué hacer con el deslizador. Encabeza el bloque. */
+      kind: "scale";
+      variant: "roast";
+      /** Qué hacer con el mando. Encabeza el bloque. */
       intro: string;
       /**
        * Los dos lados del intercambio. Nombran las barras y también cada nota de cada
-       * nivel, así que salen de un solo sitio y no pueden decir cosas distintas en la
+       * peldaño, así que salen de un solo sitio y no pueden decir cosas distintas en la
        * misma página.
        */
       axes: [string, string];
       /** De más claro a más oscuro. El orden es el recorrido del deslizador. */
-      levels: RoastLevel[];
+      steps: RoastStep[];
       /**
-       * Qué son las barras y qué no son. Va sin `?` porque un diagrama sin números
-       * que no avisa de que es un diagrama se lee como una medición, y aquí no lo es.
+       * Qué son las barras y qué no son. Va sin `?` porque un diagrama sin números que
+       * no avisa de que es un diagrama se lee como una medición, y aquí no lo es.
        */
       note: string;
       /**
-       * Qué se está viendo en el dibujo de los granos. Va aparte de `note` porque
-       * dice otra cosa: `note` avisa de que las barras no son una medición, y esto
-       * explica de dónde sale el brillo de los dos últimos granos.
+       * Qué se está viendo en el dibujo. Va aparte de `note` porque dice otra cosa:
+       * `note` avisa de que las barras no son una medición, y esto explica de dónde
+       * sale el brillo de los dos granos más oscuros.
        */
-      beanNote: string;
+      diagramNote: string;
+    }
+  | {
+      kind: "scale";
+      variant: "process";
+      /** Qué hacer con los botones. Encabeza el bloque. */
+      intro: string;
+      /** Los rótulos de las dos notas de cada peldaño. Aquí no hay barras que nombrar. */
+      axes: [string, string];
+      /** De menos contacto con la fruta a más. El orden es el del eje del dibujo. */
+      steps: ProcessStep[];
+      /** Lo que el dibujo no puede decir por sí solo. */
+      note: string;
+      /**
+       * Qué es el dibujo y qué no es: que los días están medidos pero en un solo
+       * estudio, y que el alto de las barras es un diagrama y no una medición.
+       */
+      diagramNote: string;
     };
 
 export type Article = {

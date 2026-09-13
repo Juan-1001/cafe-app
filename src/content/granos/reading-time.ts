@@ -28,16 +28,20 @@ function blockText(block: ArticleBlock): string {
       return block.caption ?? "";
     case "pullquote":
       return [block.text, block.attribution ?? ""].join(" ");
-    // Del deslizador cuentan los textos de los cinco niveles, porque los cinco están
-    // en la página y se leen. No cuentan las cifras: ni la pérdida de peso ni los
-    // pesos de las barras, que son un dato suelto que se mira, no una frase que se
-    // lee. Contarlos inflaría el tiempo con algo que nadie recorre palabra a palabra.
-    case "roastScale":
+    // De la escala cuentan los textos de todos los peldaños, porque están todos en la
+    // página y se leen. No cuentan las cifras: ni `figure` ni los pesos de las barras
+    // ni los días de los carriles, que son un dato suelto que se mira y no una frase
+    // que se lee. Contarlos inflaría el tiempo con algo que nadie recorre palabra a
+    // palabra.
+    //
+    // Las dos variantes cuentan igual, así que no hace falta ramificar: lo que cambia
+    // entre ellas es el dibujo, y un dibujo no se lee.
+    case "scale":
       return [
         block.intro,
         ...block.axes,
-        ...block.levels.flatMap((level) => [level.name, ...level.notes]),
-        block.beanNote,
+        ...block.steps.flatMap((step) => [step.name, ...step.notes]),
+        block.diagramNote,
         block.note,
       ].join(" ");
   }

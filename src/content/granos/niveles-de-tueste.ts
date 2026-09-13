@@ -225,14 +225,15 @@ export const nivelesDeTueste: Article = {
        * 2023 encontró que el origen sigue siendo detectable incluso en tueste oscuro. Una
        * barra vacía afirmaría que no queda nada, y eso sería pasarse de lo que se sabe.
        */
-      kind: "roastScale",
+      kind: "scale",
+      variant: "roast",
       intro: "Mueve el deslizador y mira qué se cambia por qué",
       axes: ["Lo que viene del grano", "Lo que pone el tueste"],
-      levels: [
+      steps: [
         {
           name: "Claro",
           alias: "Light",
-          weightLoss: "12,6 %",
+          figure: "pierde 12,6 %",
           notes: [
             "La acidez está entera, y con ella lo que distingue a este café de cualquier otro: fruta, flores, la ladera donde creció.",
             "Apenas un fondo de cereal y de pan tostado. El fuego todavía no ha puesto sabor propio.",
@@ -253,7 +254,7 @@ export const nivelesDeTueste: Article = {
         {
           name: "Medio",
           alias: "Medium",
-          weightLoss: "16,3 %",
+          figure: "pierde 16,3 %",
           notes: [
             "Se sigue reconociendo de dónde viene, pero la acidez ha bajado y la fruta se lee más como fruta madura que como fruta fresca.",
             "Aparecen el caramelo y el chocolate con leche. Eso no estaba en el grano: lo ha puesto el calor.",
@@ -265,7 +266,7 @@ export const nivelesDeTueste: Article = {
         {
           name: "Medio-oscuro",
           alias: "City",
-          weightLoss: "21,5 %",
+          figure: "pierde 21,5 %",
           notes: [
             "Queda el cuerpo y una insinuación del origen. Los aromas más delicados, los florales, ya no están.",
             "Manda el tueste: chocolate oscuro, frutos secos, y un amargor que antes no estaba ahí.",
@@ -277,7 +278,7 @@ export const nivelesDeTueste: Article = {
         {
           name: "Oscuro",
           alias: "French",
-          weightLoss: "25,1 %",
+          figure: "pierde 25,1 %",
           notes: [
             "Muy poco llega a la taza por encima del tueste. A ciegas, acertar de dónde viene deja de ser realista.",
             "Ahumado, amargo, espeso. Es el sabor del fuego, y se parece bastante venga el café de donde venga.",
@@ -290,7 +291,7 @@ export const nivelesDeTueste: Article = {
         {
           name: "Muy oscuro",
           alias: "Italian",
-          weightLoss: "25,6 %",
+          figure: "pierde 25,6 %",
           notes: [
             "Lo que traía el grano queda debajo de todo lo demás. Sigue estando, y los instrumentos lo detectan, pero bebiendo no se encuentra.",
             "Carbón y ceniza, y el aceite ya asomando en la superficie del grano.",
@@ -300,7 +301,7 @@ export const nivelesDeTueste: Article = {
           bean: { body: "#2A150E", crease: "#8A6547", sheen: 2 },
         },
       ],
-      beanNote:
+      diagramNote:
         "Los granos son un dibujo, pero su color no: es el del café tostado a cada nivel. El brillo de los dos últimos es el de los aceites que salen a la superficie después del segundo crack.",
       note: "Las barras son un diagrama, no una medición: no existe una escala de «cuánta fruta» que se pueda pesar en miligramos. Lo que está medido, y por eso se dibuja, es la dirección del intercambio. La pérdida de peso de cada peldaño sí es un dato, pero sale de un estudio con una tostadora y un café: sirve para ver el orden de magnitud, no como una constante del café.",
     },
