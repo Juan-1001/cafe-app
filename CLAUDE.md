@@ -105,10 +105,18 @@ la portada sin su bloque principal.
 - Por eso el contenido declara **`file`** y las páginas reciben **`src`**. Son nombres
   distintos a propósito: así una imagen sin resolver no encaja donde se espera una resuelta
   y saltarse el resolutor es un error de compilación, no un hueco que aparece en la web.
-- **Nombres de archivo**: `<slug>.jpg` para la portada de un método, `<slug>-<qué-es>.jpg`
+- **Nombres de archivo**: `<slug>.jfif` para la portada de un método, `<slug>-<qué-es>.jpg`
   para las fotos dentro de un artículo, y el nombre que diga el catálogo para las piezas de
   equipo. Si se cambia la convención, se renombra también lo que ya existía: una convención
   que solo gobierna lo nuevo son dos formatos conviviendo.
+- **Las portadas de método van en `.jfif`** porque es lo que escupe el generador de
+  imágenes, y así el archivo se deja en la carpeta sin renombrar nada. Funciona porque el
+  sitio las pinta con `next/image`: el optimizador decodifica el JFIF —que es un JPEG— y
+  sirve `image/jpeg`. Comprobado. **Lo que no funciona es enlazar un `.jfif` en crudo**: el
+  servidor de archivos estáticos no reconoce esa extensión y lo sirve como
+  `application/octet-stream`, así que el navegador se lo descarga en vez de pintarlo. Si
+  algún día una de estas rutas se usa fuera de `next/image` —una etiqueta `og:image`, un
+  `<img>` a pelo—, hay que pasarla a `.jpg`.
 
 ### Autoría de las fotografías
 
@@ -122,6 +130,14 @@ fuente. **Va sin `?`**: dejarlo en `null` tiene que ser un acto escrito, y `null
 —«autoría no registrada»— en vez de callarse. Hoy lo son las seis fotos descargadas a mano
 antes de que existiera el campo: Pexels y Unsplash quitan los metadatos al servir el archivo
 y los originales ya no están. **Un crédito a ojo sería peor que el hueco.**
+
+**Las imágenes generadas con IA se declaran como tales y son siempre provisionales.**
+Llevan `credit: { source: "IA" }` y la página dice que no son una fotografía. No es una
+formalidad: estas imágenes enseñan qué objeto comprar, y una imagen sintética puede
+dibujar mal el objeto sin que se note. Ya ha pasado —la de los filtros del AeroPress
+dibuja la tapa perforada como un panal en relieve cuando la real es un disco liso con
+agujeros—, así que **el texto alternativo describe lo dibujado y no el objeto real**, y en
+el catálogo queda anotado qué tiene mal cada una.
 
 Dónde se ve, en una frase: **el crédito acompaña a la foto cuando la foto se mira, y se
 agrupa al pie de la página cuando la foto solo sirve para reconocer algo.** En la práctica,

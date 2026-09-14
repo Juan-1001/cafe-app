@@ -84,10 +84,19 @@ export const EQUIPMENT = {
   },
   "filtros-papel-aeropress": {
     name: "Filtros de papel redondos",
-    // Foto pendiente, igual que la pieza de arriba.
+    /*
+     * IMAGEN GENERADA CON IA, provisional. Y la más urgente de sustituir de las cuatro,
+     * por un motivo concreto: **dibuja mal la pieza que esta entrada existe para
+     * enseñar**. La tapa del AeroPress es un disco negro liso con muchos agujeros
+     * redondos; aquí aparece como un panal hexagonal en relieve con un botón en el
+     * centro, que no es ninguna tapa real. El filtro redondo sí está bien.
+     *
+     * El alt describe lo dibujado y no el objeto real, que es la única forma honesta de
+     * escribirlo mientras la imagen sea esta.
+     */
     photo: "/images/equipo/filtros-papel-aeropress.jpg",
-    alt: "Un montón de filtros de papel redondos, blancos y del tamaño de una moneda grande, apilados uno sobre otro fuera de su caja.",
-    credit: null,
+    alt: "Dos manos sostienen, sobre una encimera de mármol blanco, un filtro de papel redondo y blanco del tamaño de una moneda grande junto a la tapa negra que lo aloja. Al fondo, a la derecha, un AeroPress montado con los números marcados en el costado.",
+    credit: { source: "IA" },
   },
   moka: {
     name: "Cafetera moka",
@@ -200,9 +209,19 @@ export const EQUIPMENT = {
    */
   "filtros-chemex": {
     name: "Filtros Chemex",
+    /*
+     * IMAGEN GENERADA CON IA, provisional. El filtro llena el encuadre y de la jarra
+     * solo asoma el borde, así que la pieza es la protagonista y no repite la miniatura
+     * de `chemex`.
+     *
+     * Lo que sigue sin enseñarse es lo que se había pedido y es el contenido de verdad
+     * de esta entrada: **el lado de tres capas**. Aquí el filtro está ya abierto y
+     * puesto, así que no se ve por dónde va el grueso. Mientras siga así, eso solo se
+     * cuenta con palabras en el paso a paso.
+     */
     photo: "/images/equipo/filtros-chemex.jpg",
-    alt: "Un filtro de papel grueso de color crudo, cuadrado y doblado en cuatro, apoyado junto a otro ya abierto en forma de cono. En el abierto se ve que uno de sus lados tiene tres capas de papel superpuestas y el otro una sola.",
-    credit: null,
+    alt: "Un filtro de papel grueso de color crudo, abierto en forma de cono y puesto dentro de la boca de una jarra Chemex, sobre fondo blanco. Del vidrio solo se ve el borde superior y, más abajo, el collar de madera clara con su tira de cuero y una cuenta.",
+    credit: { source: "IA" },
   },
   sifon: {
     name: "Sifón de café",
@@ -223,15 +242,37 @@ export const EQUIPMENT = {
   },
   "mechero-de-alcohol": {
     name: "Mechero de alcohol",
+    /*
+     * IMAGEN GENERADA CON IA, provisional. Es la más fiel de las cuatro: el objeto está
+     * bien dibujado y se le ven las tres cosas que importan —la mecha, el collar de
+     * rosca y la tapita para apagarlo—. Corrige además el alt que se había escrito a
+     * ciegas, que lo daba por metálico: el depósito es de vidrio, y eso es mejor, porque
+     * se ve cuánto alcohol queda.
+     *
+     * Su pega es de composición y no de contenido: el fondo azul de ciclorama es el
+     * único cuadro frío en una rejilla de miniaturas cálidas.
+     */
     photo: "/images/equipo/mechero-de-alcohol.jpg",
-    alt: "Un mechero pequeño de metal, redondo y bajo, con una mecha blanca de algodón asomando por el centro de la tapa y una tapita suelta al lado para apagarlo.",
-    credit: null,
+    alt: "Un mechero de alcohol sobre fondo azul liso: un depósito de vidrio transparente, bajo y panzudo, cerrado con un collar metálico de rosca por el que asoma un tubito con la mecha blanca de algodón. La mecha se ve por dentro del vidrio, sumergida. Al lado, tumbada, la tapita metálica que sirve para apagarlo.",
+    credit: { source: "IA" },
   },
   "varilla-de-bambu": {
     name: "Varilla de bambú",
-    photo: "/images/equipo/varilla-de-bambu.jpg",
-    alt: "Una paleta de bambú fina y plana, de mango recto y punta redondeada, apoyada sobre una superficie clara.",
-    credit: null,
+    /*
+     * IMAGEN GENERADA CON IA, provisional. No es la paleta sola sino la paleta en uso
+     * dentro del vaso de un sifón, que es lo mismo que le pasa a `cono-v60`: se acepta
+     * porque esta pieza es del sifón y de ningún otro método, así que no puede
+     * desentonar en ninguna otra receta.
+     *
+     * Es la más floja del catálogo como retrato del objeto: la varilla se ve solo a
+     * medias, entrando en el líquido, y de su forma —plana, de punta redondeada— apenas
+     * se distingue el ancho. Va en PNG y pesa casi un mega, diez veces lo que ocuparía
+     * en JPEG; no rompe nada porque Next la reprocesa al servirla, pero cuando se
+     * sustituya conviene guardarla en JPEG.
+     */
+    photo: "/images/equipo/varilla-de-bambu.png",
+    alt: "Una mano remueve con una paleta plana de bambú dentro del vaso de vidrio de un sifón, donde el café ya está oscuro y cubierto de espuma. La otra mano sujeta el vaso por el borde. Al fondo, desenfocado, el resto del aparato.",
+    credit: { source: "IA" },
   },
   /*
    * Un frasco con tapa no es la «jarra de vidrio» de aquí abajo, por la misma razón por

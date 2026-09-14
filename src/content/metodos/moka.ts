@@ -62,12 +62,19 @@ export const moka: BrewMethod = {
   tagline:
     "La cafetera italiana de toda la vida: aluminio, fuego y un gorgoteo que avisa. Es el único método del sitio donde tú no decides casi nada, y el único que no perdona haberte distraído.",
   image: {
-    // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que se
-    // guarde, `resolveContentImage` deja el bloque de color en su sitio. El alt se
-    // escribe igual desde ahora: es lo que dice qué fotografía hay que ir a buscar.
-    file: "/images/metodos/moka.jpg",
-    alt: "Una cafetera moka de aluminio sobre la hornilla encendida de una estufa de gas, con la llama baja y recogida bajo la base. La tapa está abierta y por el tubo central asoma el café, oscuro y espeso, que empieza a llenar el recolector. Al lado, sobre la encimera, dos tacitas blancas esperan.",
-    credit: null,
+    /*
+     * IMAGEN GENERADA CON IA, provisional, de la misma serie que el resto de portadas.
+     *
+     * Con una ventaja que conviene aprovechar: **aquí sí se ve la válvula de
+     * seguridad**, el botoncito redondo en el costado de la caldera. Es la pieza que
+     * marca hasta dónde llega el agua y que sale nombrada en los pasos, en los errores
+     * comunes y en el bloque de cantidades, y la miniatura del catálogo de equipo no
+     * llega a enseñarla. Va nombrada en el alt para que quien no ve la imagen tampoco
+     * se quede sin ese dato.
+     */
+    file: "/images/metodos/moka.jfif",
+    alt: "Una cafetera moka de aluminio sobre la hornilla de una cocina de gas, con la llama azul baja y recogida bajo la base. En el costado de la caldera se distingue el botón redondo de la válvula de seguridad. La tapa está abierta y por el tubo central asoma el café, oscuro, mientras sube un hilo de vapor. A la derecha, tres tacitas de cerámica clara sobre la encimera; a la izquierda, la ventana con una planta.",
+    credit: { source: "IA" },
   },
 
   /*

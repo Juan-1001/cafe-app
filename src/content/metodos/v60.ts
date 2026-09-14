@@ -6,9 +6,20 @@ export const v60: BrewMethod = {
   tagline:
     "Un cono acanalado y un filtro de papel para una taza limpia, aromática y fácil de repetir todas las mañanas.",
   image: {
-    file: "/images/metodos/v60.jpg",
-    alt: "Alguien vierte agua caliente desde una tetera de cuello fino y curvo sobre un cono V60 con filtro de papel. El cono está encajado en una jarra de vidrio que ya tiene café hecho, y el conjunto se apoya sobre una báscula digital, encima de una mesa de madera. A los lados hay dos tazas de cerámica y, a la derecha, un molino eléctrico negro.",
-    credit: null,
+    /*
+     * IMAGEN GENERADA CON IA, provisional, de la serie de portadas: la misma cocina, la
+     * misma ventana y la misma luz que las otras siete. Sustituye a una fotografía real
+     * de Pexels, que sigue en el historial de git.
+     *
+     * Hubo en medio una versión que dibujaba un goteador de cerámica de cuerpo
+     * redondeado en vez del cono acanalado, y se descartó por eso: la entradilla de esta
+     * ficha empieza con «Un cono acanalado», así que el lector habría leído eso y visto
+     * otra cosa al lado. Esta sí enseña el cono cónico, que es lo que da nombre al
+     * método y lo que lo separa de un goteador cualquiera.
+     */
+    file: "/images/metodos/v60.jfif",
+    alt: "Una mano vierte agua caliente desde un hervidor de acero de cuello fino y curvo sobre un cono V60 con su filtro de papel, del que sube vapor. El cono está encajado en una jarra de vidrio que ya tiene café hecho, y el conjunto se apoya sobre una báscula digital, encima de una mesa de madera gastada. A la derecha, dos tazas de cerámica clara; a la izquierda, la ventana de la cocina con una planta en el alféizar.",
+    credit: { source: "IA" },
   },
 
   /*

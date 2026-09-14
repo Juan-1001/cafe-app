@@ -16,13 +16,28 @@
  * guía de Pexels pone de ejemplo y porque es el enlace que sirve para comprobar el
  * crédito.
  */
-export type PhotoCredit = {
-  /** Cómo lo firma quien la hizo, tal y como aparece en la fuente. */
-  photographer: string;
-  /** La página de la foto, no la del perfil. Es la que se enlaza. */
-  photoUrl: string;
-  source: "Pexels" | "Unsplash";
-};
+export type PhotoCredit =
+  | {
+      /** Cómo lo firma quien la hizo, tal y como aparece en la fuente. */
+      photographer: string;
+      /** La página de la foto, no la del perfil. Es la que se enlaza. */
+      photoUrl: string;
+      source: "Pexels" | "Unsplash";
+    }
+  /**
+   * Imagen generada con IA, puesta como provisional mientras no haya una fotografía.
+   *
+   * No lleva autor ni enlace porque no hay a quién acreditar, y por eso es una variante
+   * aparte en vez de un `source` más: pedirle un `photographer` obligaría a inventarlo.
+   *
+   * Lo que sí hay que declarar es que **no es una fotografía**, y la página lo dice. No
+   * es una formalidad: estas imágenes se usan para enseñar qué objeto comprar, y una
+   * imagen sintética puede dibujar mal el objeto sin que se note. Ha pasado ya: la de
+   * los filtros del AeroPress dibuja la tapa perforada como un panal en relieve cuando
+   * la real es un disco liso con agujeros redondos. Quien la mire tiene que saber que
+   * lo que ve puede no ser el objeto.
+   */
+  | { source: "IA" };
 
 /**
  * La imagen tal y como la escribe el contenido: la ruta donde la foto **va a estar**,

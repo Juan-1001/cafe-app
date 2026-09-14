@@ -50,11 +50,20 @@ export const chemex: BrewMethod = {
   tagline:
     "La jarra de vidrio con collar de madera que has visto en media Bogotá. Por dentro es el mismo método que el V60 —agua caliente cayendo sobre papel— pero hace café para tres y se sirve en la misma jarra en la que se cuela, y por eso es la que te llevan a la mesa.",
   image: {
-    // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que se
-    // guarde, `resolveContentImage` deja el bloque de color en su sitio.
-    file: "/images/metodos/chemex.jpg",
-    alt: "Una Chemex sobre una mesa de madera, con el filtro de papel puesto y una mano vertiendo agua desde un hervidor de cuello de cisne en círculos sobre el café molido. En el cuerpo de abajo ya hay café hecho, y el vapor sube entre la mano y la boca de la jarra. Al lado, dos tazas vacías y una báscula.",
-    credit: null,
+    /*
+     * IMAGEN GENERADA CON IA, provisional, de la misma serie que el resto de portadas.
+     * El aparato está bien dibujado, que en esta ficha importa más que en otras: se ve
+     * la jarra de una sola pieza en reloj de arena, el collar de madera con su correa de
+     * cuero anudada y el filtro grueso abierto, que es de lo que habla el texto.
+     *
+     * Difiere de lo que se había escrito a ciegas en que nadie está vertiendo: el café
+     * ya está colando solo. Y hay un vaso con hielo al lado que la ficha no menciona,
+     * porque esta ficha es de café caliente; no estorba, pero si algún día se regenera,
+     * sobra.
+     */
+    file: "/images/metodos/chemex.jfif",
+    alt: "Una Chemex sobre una mesa de madera gastada: una jarra de vidrio de una sola pieza con forma de reloj de arena, con el collar de madera clara ceñido por una correa de cuero anudada con una cuenta. Arriba lleva puesto el filtro de papel blanco y grueso con el café molido dentro, y por el cuello cae un hilo de café al cuerpo de abajo, que ya tiene una capa hecha. Al lado, un vaso con hielo y café, dos tazas claras y la tapa metálica de un frasco. A la izquierda, la ventana de la cocina con una planta.",
+    credit: { source: "IA" },
   },
 
   /*

@@ -83,12 +83,17 @@ export const coldBrew: BrewMethod = {
   tagline:
     "Café hecho sin una sola gota de agua caliente. Lo que en los demás métodos hace el calor en tres minutos, aquí lo hace el tiempo en catorce horas: se deja el café en agua del tiempo, se olvida uno de él y al día siguiente está hecho.",
   image: {
-    // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que se
-    // guarde, `resolveContentImage` deja el bloque de color en su sitio. El alt se
-    // escribe ya: es lo que dice qué fotografía hay que ir a buscar.
-    file: "/images/metodos/cold-brew.jpg",
-    alt: "Un frasco de vidrio alto sobre una encimera clara, lleno hasta la mitad de agua que ya se ha vuelto marrón oscura, con el café molido grueso suspendido y una capa de posos flotando en la superficie. Al lado, un vaso con hielo en el que alguien está sirviendo café frío desde otro frasco, y la tapa metálica apoyada boca arriba.",
-    credit: null,
+    /*
+     * IMAGEN GENERADA CON IA, provisional, de la misma serie que el resto de portadas.
+     * El archivo venía como `coldbrew.jfif` y se renombró al slug del método.
+     *
+     * Tiene un fallo típico de imagen sintética que el alt no oculta: el chorro de café
+     * entra en el frasco **sin que se vea de dónde sale**, no hay ni mano ni recipiente
+     * arriba. Se describe tal cual en vez de inventarle un origen.
+     */
+    file: "/images/metodos/cold-brew.jfif",
+    alt: "Un frasco de vidrio alto sobre una mesa de madera, lleno de café ya oscuro con el molido grueso suspendido y una capa de posos flotando arriba. Cae dentro un chorro de café desde fuera del encuadre, sin que se vea quién lo vierte. Al lado, un vaso corto con hielo y café servido, y la tapa metálica del frasco apoyada boca arriba. Al fondo, dos tazas claras y la ventana de la cocina con una planta.",
+    credit: { source: "IA" },
   },
 
   /*

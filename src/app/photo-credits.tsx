@@ -65,6 +65,14 @@ const SOURCE_HOME = {
  * se confunde con que no hiciera falta acreditar.
  */
 export function PhotoCreditLine({ credit }: { credit: PhotoCredit | null }) {
+  if (credit?.source === "IA") {
+    return (
+      <span className="mt-2 block font-mono text-xs text-coffee">
+        Imagen generada con IA, provisional
+      </span>
+    );
+  }
+
   return (
     <span className="mt-2 block font-mono text-xs text-coffee">
       {credit ? (
@@ -112,12 +120,21 @@ export function PhotoCredits({ images }: { images: ContentImage[] }) {
    * enumeración en vez de repetirlo detrás de cada nombre. Hoy son todas de Pexels,
    * pero el sitio admite las dos y una página podría mezclarlas.
    */
-  const bySource = new Map<PhotoCredit["source"], PhotoCredit[]>();
+  type Attributed = Extract<PhotoCredit, { photographer: string }>;
+  const bySource = new Map<Attributed["source"], Attributed[]>();
   let unknown = 0;
+  let generated = 0;
 
   for (const image of shown) {
     if (!image.credit) {
       unknown += 1;
+      continue;
+    }
+
+    // Las generadas con IA no tienen a quién acreditar: se cuentan aparte y se declaran
+    // como lo que son, que es lo que de verdad hay que decirle a quien mira.
+    if (image.credit.source === "IA") {
+      generated += 1;
       continue;
     }
 
@@ -169,8 +186,21 @@ export function PhotoCredits({ images }: { images: ContentImage[] }) {
           los archivos originales ya no están, así que no hay de dónde sacarla. Escribir
           un nombre a ojo sería peor que decir que no se sabe.
         */}
-        {unknown > 0 ? (
+        {/*
+          Las sintéticas se declaran antes que el hueco de autoría, porque es lo más
+          importante de este bloque: no son fotos del objeto, son un dibujo de él, y
+          están puestas mientras no haya foto.
+        */}
+        {generated > 0 ? (
           <p className={bySource.size > 0 ? "mt-2" : undefined}>
+            {countWord(generated)}{" "}
+            {generated === 1 ? "imagen generada" : "imágenes generadas"} con IA, de
+            forma provisional hasta que haya fotografía.
+          </p>
+        ) : null}
+
+        {unknown > 0 ? (
+          <p className={bySource.size > 0 || generated > 0 ? "mt-2" : undefined}>
             {countWord(unknown)}{" "}
             {unknown === 1 ? "fotografía" : "fotografías"} sin autoría registrada.
           </p>

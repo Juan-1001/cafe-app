@@ -55,11 +55,18 @@ export const sifon: BrewMethod = {
   tagline:
     "Dos bulbos de vidrio, un mechero de alcohol y el café subiendo solo por un tubo. Es el método más aparatoso que existe y el único donde se ve la extracción entera mientras ocurre: por eso te lo preparan delante en la barra y no en la cocina de tu casa.",
   image: {
-    // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que se
-    // guarde, `resolveContentImage` deja el bloque de color en su sitio.
-    file: "/images/metodos/sifon.jpg",
-    alt: "Un sifón de café encendido sobre la barra de una cafetería: abajo la esfera de vidrio con la llama azul del mechero debajo, y arriba el vaso cilíndrico lleno de agua oscura con el café removiéndose en remolino. Una mano sostiene una varilla de bambú dentro del vaso de arriba. El vapor empaña el vidrio y al fondo se adivina la cafetería desenfocada.",
-    credit: null,
+    /*
+     * IMAGEN GENERADA CON IA, provisional, de la misma serie que el resto de portadas.
+     *
+     * Cambia el escenario respecto a lo que se había escrito a ciegas: no es la barra de
+     * una cafetería sino la misma cocina que las demás portadas, y eso está bien, porque
+     * lo que la serie gana en conjunto vale más que el guiño al sitio donde uno suele
+     * ver un sifón. Tampoco hay nadie removiendo con la varilla: la varilla está en la
+     * mesa, al lado, y es de vidrio y no de bambú. El alt lo dice tal cual.
+     */
+    file: "/images/metodos/sifon.jfif",
+    alt: "Un sifón de café en marcha sobre una mesa de madera gastada: abajo la esfera de vidrio con agua y la llama azul del mechero debajo, sujeta por un soporte de latón con mango de madera, y arriba el vaso cilíndrico donde el café ya está oscuro y espumoso, soltando vapor. Al lado hay un vaso corto con café servido, una varilla de vidrio sobre la mesa, dos tazas claras y la tapa metálica de un frasco. A la izquierda, la ventana de la cocina con una planta.",
+    credit: { source: "IA" },
   },
 
   /*

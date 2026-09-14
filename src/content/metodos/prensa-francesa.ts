@@ -6,9 +6,19 @@ export const prensaFrancesa: BrewMethod = {
   tagline:
     "Un cilindro de vidrio, una malla de metal y cuatro minutos de espera. Es el método que más perdona y el que más cuerpo le deja a la taza.",
   image: {
-    file: "/images/metodos/prensa-francesa.jpg",
-    alt: "Una prensa francesa de vidrio y metal, con el café ya hecho y el émbolo bajado, sobre una mesa de madera clara. Delante, una taza blanca servida de café negro descansa en su plato, rodeada de granos de café sueltos. Una franja de luz de sol cruza la mesa en diagonal y el resto de la escena queda en penumbra.",
-    credit: null,
+    /*
+     * IMAGEN GENERADA CON IA, provisional, y la más visible del sitio: esta es la
+     * portada del método de entrada, o sea la única foto de la home. Sustituye a una
+     * fotografía real de Pexels, que sigue en el historial de git; se cambió para que
+     * las ocho portadas sean una serie con la misma cocina y la misma luz.
+     *
+     * Tiene un defecto que el alt no disimula: **la mano no agarra el pomo**, se queda
+     * plana por encima. Se lee como «a punto de bajar» y no como el gesto de prensar,
+     * que es lo que la ficha cuenta. Es la primera que yo regeneraría.
+     */
+    file: "/images/metodos/prensa-francesa.jfif",
+    alt: "Una prensa francesa de vidrio con armazón y tapa de madera, llena de café ya hecho, sobre una mesa de madera gastada. Una mano se acerca al pomo del émbolo, con la palma plana justo encima, sin llegar a agarrarlo. Al lado hay una taza clara servida, una bolsa de café de papel abierta y una cuchara de madera. Al fondo, la ventana de la cocina y una planta.",
+    credit: { source: "IA" },
   },
 
   // 27,5 sobre 100: nivel 1. El método más fácil del sitio junto con el colado en tela,

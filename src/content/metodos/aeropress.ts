@@ -46,12 +46,12 @@ export const aeropress: BrewMethod = {
   tagline:
     "Dos cilindros de plástico, un filtro de papel del tamaño de una moneda y un empujón. Es el método más rápido del sitio y el que menos margen de error deja abierto.",
   image: {
-    // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que se
-    // guarde, `resolveContentImage` deja el bloque de color en su sitio. El alt se
-    // escribe igual desde ahora: es lo que dice qué fotografía hay que ir a buscar.
-    file: "/images/metodos/aeropress.jpg",
-    alt: "Un AeroPress montado sobre una taza blanca, en una mesa de madera: el cilindro de plástico translúcido lleno de café y agua, y dos manos empujando el émbolo hacia abajo con calma. Al lado, la bolsa de café abierta y una báscula pequeña.",
-    credit: null,
+    // IMAGEN GENERADA CON IA, provisional, de la misma serie que el resto de portadas.
+    // Es de las más fieles: el gesto de prensar se lee bien y las dos manos están donde
+    // tienen que estar, una arriba y otra sujetando el cuerpo.
+    file: "/images/metodos/aeropress.jfif",
+    alt: "Dos manos empujan hacia abajo el émbolo de un AeroPress montado sobre una taza de cerámica clara, en una mesa de madera gastada: una mano apoyada en el extremo del émbolo y la otra rodeando el cilindro. Al lado, una bolsa de café de papel abierta con granos derramados y una báscula digital negra. Al fondo, la ventana de la cocina y una planta.",
+    credit: { source: "IA" },
   },
 
   /*
