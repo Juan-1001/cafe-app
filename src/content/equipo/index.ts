@@ -31,23 +31,27 @@ export const EQUIPMENT = {
   "cono-v60": {
     name: "Cono V60",
     /*
-     * Esta foto es la escena entera de un V60 en marcha, no el cono solo, y además
-     * salen dentro otras cuatro piezas de esta misma lista: el filtro, la jarra, la
-     * báscula y el hervidor. Como miniatura junto a «Cono V60» cumple, pero es la única
-     * del catálogo que no señala una pieza concreta, así que conviene cambiarla por un
-     * cono aislado en cuanto haya uno. El texto alternativo dice lo que de verdad se
-     * ve, no lo que nos gustaría que se viera.
+     * Foto cambiada. La anterior era la escena entera de un V60 en marcha con otras
+     * CUATRO piezas de este catálogo dentro —filtro, jarra, báscula y hervidor— y estaba
+     * anotada para sustituir. Esta mejora eso a medias y conviene dejar dicho hasta
+     * dónde: el cono manda en el encuadre y se reconoce de un vistazo, pero siguen
+     * saliendo otras dos piezas de la lista, el filtro de papel y la jarra.
+     *
+     * Lo que esta foto NO enseña, y la anterior sí: las paredes acanaladas en espiral,
+     * porque este cono es de cerámica opaca y las acanaladuras van por dentro. Como esas
+     * acanaladuras son justo lo que distingue a un V60 de cualquier otro cono, sigue
+     * mereciendo la pena cambiarla el día que aparezca un cono aislado y de vidrio.
      *
      * Se puede compartir aunque sea una escena de método porque esta pieza es del V60 y
      * de ningún otro: no hay ninguna otra receta a la que pudiera desentonar.
-     *
-     * OJO: que el archivo ya se llame como la clave no arregla nada de lo de arriba. Lo
-     * que sigue pendiente es **la foto**, no su nombre. Cuando aparezca un cono aislado,
-     * se sustituye el archivo y se reescribe el `alt` con lo que se vea entonces.
      */
-    photo: "/images/equipo/cono-v60.webp",
-    alt: "Un cono de filtrado V60, de vidrio y con las paredes acanaladas en espiral, lleva dentro un filtro de papel con café y recibe un chorro de agua desde un hervidor de cuello de cisne. El cono se apoya sobre una jarra de vidrio que ya tiene café, y esta sobre una báscula negra, en una mesa de madera. Al fondo, en penumbra, dos tazas y una cafetera moka.",
-    credit: null,
+    photo: "/images/equipo/cono-v60.jpg",
+    alt: "Un cono de filtrado de cerámica roja brillante, con asa, apoyado sobre una jarra de vidrio que ya tiene café hecho. Dentro del cono hay un filtro de papel de color crudo con el café molido usado en el fondo. El conjunto está sobre una peana blanca en el suelo de cemento, a pleno sol, y proyecta una sombra dura y recortada.",
+    credit: {
+      photographer: "Q. Hưng Phạm",
+      photoUrl: "https://www.pexels.com/photo/coffee-brewing-in-a-ceramic-dripper-6775603/",
+      source: "Pexels",
+    },
   },
   "filtros-papel-v60": {
     name: "Filtros de papel cónicos",
@@ -58,17 +62,25 @@ export const EQUIPMENT = {
   aeropress: {
     name: "AeroPress",
     /*
-     * Foto pendiente. La ruta se declara desde ahora porque `resolveEquipmentImage`
-     * comprueba en la compilación si el archivo está: mientras no exista se pinta el
-     * bloque de color, y el día que se guarde aparece sola sin tocar nada.
+     * Se buscó el AeroPress desmontado y en Pexels no existe: de 33 fotos con el
+     * aparato, ninguna lo enseña por piezas. Esta es el aparato montado y en marcha.
      *
-     * El alt describe el objeto tal y como es, que es lo que dice qué fotografía hay
-     * que ir a buscar. Cuando la foto esté, hay que comprobar que lo que se ve es
-     * esto y corregirlo si no.
+     * Hay un desajuste que conviene tener presente y que no se puede arreglar con
+     * palabras: **el émbolo no sale en la foto**, solo la cámara encajada en su tapa
+     * sobre una jarra. Justo al lado, en la ficha del AeroPress, la nota de esta pieza
+     * dice «Cilindro, émbolo y tapa». La nota sigue siendo cierta y la foto no la
+     * desmiente, pero enseña dos de las tres cosas que nombra. Es la razón principal
+     * para sustituirla si alguna vez hay una del aparato por piezas.
+     *
+     * Lo que sí se ve, y era la mitad del encargo, son los números del costado.
      */
     photo: "/images/equipo/aeropress.jpg",
-    alt: "Un AeroPress desmontado: un cilindro de plástico translúcido con números marcados en un costado, un émbolo rematado en un disco de goma gris oscuro y una tapa redonda y perforada que se enrosca en la base del cilindro.",
-    credit: null,
+    alt: "Un AeroPress montado y con el café ya hecho: un cilindro de plástico translúcido, con los números del 1 al 4 marcados en azul en un costado, encajado en su tapa negra sobre una jarrita de vidrio que recoge el café. Está sobre un libro, en un estante de madera clara, y al lado hay una planta de hojas verdes en una maceta blanca.",
+    credit: {
+      photographer: "Marta Dzedyshko",
+      photoUrl: "https://www.pexels.com/photo/aeropress-coffee-maker-placed-on-wooden-shelf-7451858/",
+      source: "Pexels",
+    },
   },
   "filtros-papel-aeropress": {
     name: "Filtros de papel redondos",
@@ -90,14 +102,23 @@ export const EQUIPMENT = {
      * moka cerrada sobre la hornilla, que además sería la foto del método y no la
      * del objeto.
      *
-     * La válvula tiene que verse. Es la pieza que marca hasta dónde llega el agua y
-     * sale nombrada en los pasos, en los errores comunes y en el bloque de
-     * cantidades; una foto donde quede de espaldas obliga a explicar con palabras lo
-     * que la foto tenía que enseñar.
+     * La válvula tenía que verse. Es la pieza que marca hasta dónde llega el agua y
+     * sale nombrada en los pasos, en los errores comunes y en el bloque de cantidades.
+     *
+     * **En esta foto no se ve**, y se aceptó a sabiendas: se revisaron una a una las
+     * candidatas que Pexels tiene de una moka desmontada y en ninguna aparece, porque
+     * en todas la caldera está de cara a su boca y la válvula queda en el costado
+     * oculto. Tampoco sale el embudo. Así que el alt describe lo que hay y no lo que se
+     * quería, y la válvula sigue explicándose solo con palabras en la ficha. Si algún
+     * día se fotografía la moka a propósito, es lo primero que hay que encuadrar.
      */
     photo: "/images/equipo/moka.jpg",
-    alt: "Una cafetera moka de aluminio desmontada en sus tres piezas sobre una mesa clara: abajo la caldera octogonal con su asa negra y, en un costado, el botoncito redondo de la válvula de seguridad; en medio el embudo con su filtro; arriba el recolector con la tapa abierta y el tubo por el que sube el café.",
-    credit: null,
+    alt: "Una cafetera moka de aluminio desmontada sobre una tela blanca: a la izquierda el recolector octogonal con la tapa abierta, a la derecha la caldera vista desde su boca, y entre las dos, de pie, la placa redonda del filtro con sus perforaciones. Delante hay granos de café tostado esparcidos.",
+    credit: {
+      photographer: "Ilona Jurtschenko-Roelofs",
+      photoUrl: "https://www.pexels.com/photo/coffee-beans-on-the-table-7825922/",
+      source: "Pexels",
+    },
   },
   "molino-de-muelas": {
     name: "Molino de muelas",
@@ -132,17 +153,26 @@ export const EQUIPMENT = {
   "colador-de-tela": {
     name: "Colador de tela",
     /*
-     * Foto pendiente. La ruta se declara desde ahora porque `resolveEquipmentImage`
-     * comprueba en la compilación si el archivo está: mientras no exista se pinta el
-     * bloque de color.
+     * Es una escena de colado y no el objeto aislado, que es lo que se había pedido; se
+     * aceptó porque en Pexels no existe el colador solo y porque aquí el colador ocupa
+     * el centro, enfocado y a tamaño grande, con la olla y la taza claramente de reparto.
      *
-     * Lo que hay que ir a buscar es el colador solo, no una escena de alguien colando:
-     * el aro con la tela y el mango, apoyado o sostenido, con la tela bien visible.
-     * Una foto del colador sobre la olla en pleno vertido sería la foto del método.
+     * Tres cosas que esta foto corrigió del alt que se había escrito a ciegas, y que
+     * conviene no volver a escribir mal: la tela **no** es clara —está teñida de marrón
+     * oscuro, casi negro en el borde—, el cono es **hondo** y no poco profundo, y no hay
+     * mango de alambre: el aro se apoya en un soporte de tres patas que lo deja colgando
+     * sobre la taza. Ese último punto importa porque los dos métodos que usan esta pieza
+     * la describen sostenida por su aro; el soporte es otra forma del mismo aparato y no
+     * los contradice, pero si algún día se escribe un paso que diga «sujeta el mango»,
+     * esta foto no lo respalda.
      */
     photo: "/images/equipo/colador-de-tela.jpg",
-    alt: "Un colador de café de tela: una bolsa de tela clara, con forma de cono poco profundo, cosida al borde de un aro de metal del que sale un mango largo y recto de alambre. La tela está teñida de marrón por el uso.",
-    credit: null,
+    alt: "Un colador de café de tela colgado de un soporte de alambre sobre una taza: una bolsa de tela en forma de cono hondo, teñida de un marrón muy oscuro por el uso y cosida al borde de un aro metálico. Dentro tiene el café molido mojado, cubierto de espuma, y recibe un chorro de agua caliente desde una olla roja. Por la punta cae un hilo de café a una taza de peltre verde puesta en su plato negro, sobre una mesa de madera anaranjada.",
+    credit: {
+      photographer: "Magali Guimarães",
+      photoUrl: "https://www.pexels.com/photo/pouring-coffee-through-paper-filter-6307235/",
+      source: "Pexels",
+    },
   },
   "cuchara-de-madera": {
     name: "Cuchara larga de madera",
@@ -153,8 +183,14 @@ export const EQUIPMENT = {
   chemex: {
     name: "Chemex",
     photo: "/images/equipo/chemex.jpg",
-    alt: "Una jarra de vidrio de una sola pieza con forma de reloj de arena: el cuerpo inferior se ensancha como un matraz de laboratorio y la boca superior se abre en embudo. A la altura del cuello lleva un collar de madera clara sujeto con una tira de cuero atada en lazo, y en el vidrio, justo debajo, sobresale un pico vertedor. Está vacía sobre una superficie lisa.",
-    credit: null,
+    // El alt se reescribió contra la foto. Lo que cambió respecto a lo que se buscaba:
+    // el pico vertedor no se le ve desde este ángulo, así que no se nombra.
+    alt: "Una jarra de vidrio de una sola pieza con forma de reloj de arena, vacía y vista desde arriba en escorzo: el cuerpo inferior se ensancha como un matraz de laboratorio y la boca superior se abre en embudo. A la altura del cuello lleva un collar de dos anillos de madera clara ceñido por una tira de cuero. Está sobre una mesa redonda cubierta con un mantel blanco que cruza en diagonal una banda de tela granate. Al fondo, desenfocadas, las patas de un taburete de madera y una vela encendida.",
+    credit: {
+      photographer: "Amirho3in tavkoli",
+      photoUrl: "https://www.pexels.com/photo/chemex-coffee-maker-10794851/",
+      source: "Pexels",
+    },
   },
   /*
    * Los filtros de la Chemex son pieza aparte y no un detalle de la jarra, igual que
@@ -171,8 +207,19 @@ export const EQUIPMENT = {
   sifon: {
     name: "Sifón de café",
     photo: "/images/equipo/sifon.jpg",
-    alt: "Un aparato de vidrio de dos cuerpos montado sobre un soporte metálico: abajo una esfera de vidrio con un cuello estrecho, y encajado encima un vaso cilíndrico también de vidrio del que baja un tubo largo hasta el fondo de la esfera. Entre los dos hay un tapón de goma. Dentro del vaso de arriba se ve un disco metálico con una tela sujeta y una cadenita colgando.",
-    credit: null,
+    /*
+     * El alt se reescribió contra la foto. Es una barra de cafetería y no el objeto
+     * sobre fondo liso, pero el sifón es el protagonista sin discusión: ocupa el centro,
+     * está enfocado y es lo único nítido. Se deja constancia de que detrás asoman otras
+     * dos piezas de este mismo catálogo —un cono de goteo blanco y su jarra— porque es
+     * el mismo defecto que tiene anotado `cono-v60`, aunque aquí en mucha menor medida.
+     */
+    alt: "Un aparato de vidrio de dos cuerpos montado sobre un soporte metálico, vacío: abajo una esfera de vidrio, y encajado encima un vaso cilíndrico también de vidrio del que baja un tubo largo hasta el fondo de la esfera. Entre los dos hay un tapón de goma negro. Dentro del vaso de arriba cuelga el filtro, un disco con su tela y una cadenita. Bajo la esfera, un quemador dorado con la tapa perforada. Está en la barra de una cafetería: al fondo desenfocado se distinguen un cono de goteo blanco con su jarra, un cuenco con granos de café y unos frascos.",
+    credit: {
+      photographer: "Omar Rodriguez",
+      photoUrl: "https://www.pexels.com/photo/clear-glass-bong-1436310/",
+      source: "Pexels",
+    },
   },
   "mechero-de-alcohol": {
     name: "Mechero de alcohol",
@@ -196,8 +243,15 @@ export const EQUIPMENT = {
   "frasco-con-tapa": {
     name: "Frasco de vidrio con tapa",
     photo: "/images/equipo/frasco-con-tapa.jpg",
-    alt: "Un frasco de vidrio transparente, alto y de boca ancha, vacío y cerrado con una tapa metálica de rosca. Está de pie sobre una superficie clara y lisa.",
-    credit: null,
+    // El alt se reescribió contra la foto: no es un frasco sino cuatro, y son anchos y
+    // panzudos en vez de altos. Lo que importaba de la pieza —boca ancha, vacío y con
+    // tapa metálica de rosca— se ve en todos.
+    alt: "Cuatro frascos grandes de vidrio transparente, panzudos y de boca ancha, vacíos y cerrados con tapas metálicas de rosca de distintos colores: amarilla el de delante, verde oscuro y roja los de detrás. Están alineados sobre un tablero de madera clara contra una pared pálida y descascarillada. El vidrio está algo empañado.",
+    credit: {
+      photographer: "Yana Bulgak",
+      photoUrl: "https://www.pexels.com/photo/glass-bottles-with-lid-on-table-8970996/",
+      source: "Pexels",
+    },
   },
   "jarra-de-vidrio": {
     name: "Jarra de vidrio",
