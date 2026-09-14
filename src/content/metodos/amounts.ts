@@ -1,4 +1,4 @@
-import type { Recipe, WaterSplitOption } from "./types";
+import type { Recipe, ShotRecipe, WaterSplitOption } from "./types";
 
 /** Cantidades ya calculadas para un número concreto de tazas. */
 export type Amounts = {
@@ -113,6 +113,34 @@ export function fillAmounts(
   return text.replace(/\{(\w+)\}/g, (original, name: string) => {
     return variables[name] ?? original;
   });
+}
+
+/**
+ * Las dos cifras de un espresso: lo que entra en la cesta y lo que tiene que caer en la
+ * taza. Es todo lo que hay que calcular aquí, y por eso no se parece a `Amounts`: no hay
+ * agua que repartir ni rendimiento que deducir, porque el peso de bebida **es** el
+ * resultado y no una consecuencia de restarle nada a nada.
+ */
+export type ShotAmounts = {
+  doseGrams: number;
+  beverageGrams: number;
+};
+
+export function computeShot(shot: ShotRecipe, doseGrams: number): ShotAmounts {
+  return {
+    doseGrams,
+    // Al medio gramo, como el café del resto del sitio: con las proporciones de la ficha
+    // los resultados caen en cifras redondas, pero una proporción con decimales no.
+    beverageGrams: roundTo(doseGrams * shot.beveragePerGram, COFFEE_STEP),
+  };
+}
+
+/** Los nombres que los textos del espresso pueden usar entre llaves. */
+export function shotVariables(amounts: ShotAmounts): Record<string, string> {
+  return {
+    dosis: `${formatNumber(amounts.doseGrams)} g`,
+    bebida: `${formatNumber(amounts.beverageGrams)} g`,
+  };
 }
 
 /**

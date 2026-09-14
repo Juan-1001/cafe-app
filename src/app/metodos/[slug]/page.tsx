@@ -20,12 +20,15 @@ import {
   RecipeAmountsProvider,
 } from "./recipe-amounts";
 import { RatioField } from "./ratio-field";
+import { ShotAmounts } from "./shot-amounts";
 import { TimedSteps } from "./timed-steps";
 import type {
   BrewMethod,
   ContentImage,
   DeviceSizes,
+  EquipmentNote,
   Grounding,
+  ShotReading,
 } from "@/content/metodos";
 import { formatDate } from "@/app/date";
 
@@ -52,6 +55,7 @@ const SPEC_FIELDS = [
   { key: "ratio", label: "Ratio café / agua", isTime: false, isRatio: true },
   { key: "grind", label: "Molienda", isTime: false, isRatio: false },
   { key: "waterTemperature", label: "Temperatura del agua", isTime: false, isRatio: false },
+  { key: "pressure", label: "Presión", isTime: false, isRatio: false },
   { key: "totalTime", label: "Tiempo total", isTime: true, isRatio: false },
   { key: "output", label: "Rendimiento", isTime: false, isRatio: false },
   { key: "cupProfile", label: "Perfil de taza", isTime: false, isRatio: false },
@@ -151,6 +155,7 @@ export default async function BrewMethodPage({
   return (
     <RecipeAmountsProvider
       recipe={method.recipe}
+      shot={method.shot}
       waterPerCoffeeGram={ratio ? ratio.water / ratio.coffee : 0}
     >
       {/* En móvil el panel del cronómetro va fijo abajo y ocupa unos 180 px: ese
@@ -218,6 +223,9 @@ export default async function BrewMethodPage({
           {/* Lo que ocupa el sitio de la calculadora cuando el aparato manda. */}
           {method.device ? <DeviceAmounts device={method.device} /> : null}
 
+          {/* Y cuando lo que manda es la cesta: se elige la dosis y sale el peso de bebida. */}
+          {method.shot ? <ShotAmounts shot={method.shot} /> : null}
+
           <dl className="mt-8 md:grid md:grid-cols-2 md:gap-x-20">
             {SPEC_FIELDS.map(({ key, label, isTime, isRatio }) => {
               const spec = method.specs[key];
@@ -262,6 +270,11 @@ export default async function BrewMethodPage({
             El equipo mínimo para que salga igual cada vez
           </h2>
 
+          {/* Solo en los métodos donde el equipo es la decisión y no una lista. */}
+          {method.equipmentNote ? (
+            <EquipmentIntro note={method.equipmentNote} />
+          ) : null}
+
           <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-10 md:mt-14 md:grid-cols-3 md:gap-x-10 md:gap-y-14">
             {method.equipment.map((item, index) => (
               <li key={item.name}>
@@ -292,6 +305,9 @@ export default async function BrewMethodPage({
             <PlainSteps steps={timedSteps} />
           )}
         </section>
+
+        {/* Solo el espresso: leer lo que sale es su método, no el remedio de un fallo. */}
+        {method.reading ? <ReadingBlock reading={method.reading} /> : null}
 
         <section className="mt-24 px-6 md:mt-36 md:ml-[20%] md:px-16">
           <Eyebrow>Errores comunes</Eyebrow>
@@ -423,6 +439,102 @@ function DeviceAmounts({ device }: { device: DeviceSizes }) {
         </p>
       ) : null}
     </div>
+  );
+}
+
+/**
+ * La entradilla de la lista de equipo, en los métodos donde el equipo es la decisión.
+ *
+ * Hoy solo la trae el espresso, que es el único cuya barrera no es la técnica sino el
+ * aparato. Va antes de la rejilla y no después: quien llega aquí necesita saber para
+ * quién es esa lista antes de leerla, no cuando ya la ha leído entera.
+ *
+ * La comprobación va en su propio recuadro, con filete grueso y sin fondo de color, y es
+ * lo único destacado de la sección. Se lo ha ganado por lo que es: la primera información
+ * de este sitio que el lector no tiene que creerse, porque la resuelve él en su cocina en
+ * cinco segundos. Sin fondo lavender a propósito, para no competir con el dato curioso ni
+ * con la banda de la ficha técnica.
+ */
+function EquipmentIntro({ note }: { note: EquipmentNote }) {
+  return (
+    <div className="mt-8">
+      <div className="max-w-prose">
+        {note.body.map((paragraph, index) => (
+          <p key={index} className="mt-5 text-base text-coffee first:mt-0 md:text-lg">
+            {paragraph}
+          </p>
+        ))}
+      </div>
+
+      {note.check ? (
+        <div className="mt-10 max-w-prose border-2 border-ink px-6 py-8 md:px-10 md:py-10">
+          <h3 className="font-display text-2xl leading-tight md:text-3xl">
+            {note.check.title}
+          </h3>
+
+          {note.check.body.map((paragraph, index) => (
+            <p key={index} className="mt-4 text-base text-ink">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * Cómo leer lo que sale: qué ves, qué está pasando y qué cambias en la siguiente.
+ *
+ * Tiene forma propia y no la de los errores comunes, y la diferencia es deliberada: dos
+ * bloques que se parecen afirman que dicen lo mismo, y aquí lo que se cuenta no son
+ * fallos que corregir sino el método en sí. Por eso cada señal parte en dos columnas —lo
+ * que ves y lo que está pasando a la izquierda, lo que se cambia recuadrado a la
+ * derecha—, mientras que los errores comunes van en una sola columna con sus dos rótulos
+ * seguidos.
+ *
+ * En móvil las dos columnas se apilan y el recuadro queda debajo, que es además el orden
+ * en el que se leen: primero lo que pasó, después qué tocar.
+ */
+function ReadingBlock({ reading }: { reading: ShotReading }) {
+  return (
+    <section className="mt-24 px-6 md:mt-36 md:px-16">
+      <Eyebrow>Leer la extracción</Eyebrow>
+      <h2 className="mt-4 max-w-prose font-display text-3xl md:text-5xl">
+        Lo que ves salir te dice qué corregir en la siguiente
+      </h2>
+
+      <div className="mt-8 max-w-prose">
+        {reading.intro.map((paragraph, index) => (
+          <p key={index} className="mt-5 text-base text-coffee first:mt-0 md:text-lg">
+            {paragraph}
+          </p>
+        ))}
+      </div>
+
+      <ul className="mt-14">
+        {reading.signals.map((signal) => (
+          <li
+            key={signal.observation}
+            className="border-t border-ink py-8 md:flex md:gap-12"
+          >
+            <div className="md:w-1/2">
+              <h3 className="font-display text-2xl leading-tight md:text-3xl">
+                {signal.observation}
+              </h3>
+              <p className="mt-3 text-base text-coffee">{signal.meaning}</p>
+            </div>
+
+            <div className="mt-5 border border-ink px-5 py-4 md:mt-0 md:w-1/2 md:self-start">
+              <p className="font-mono text-xs uppercase tracking-widest text-sage-deep">
+                Qué cambias
+              </p>
+              <p className="mt-2 text-base text-ink">{signal.change}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

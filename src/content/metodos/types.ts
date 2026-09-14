@@ -65,6 +65,18 @@ export type BrewSpecs = {
   ratio?: Spec;
   grind: Spec;
   waterTemperature: Spec;
+  /**
+   * La presión a la que se empuja el agua. La trae **solo el espresso**, y es la única
+   * casilla del sitio que existe porque un método tiene una cifra que los demás no
+   * tienen en absoluto.
+   *
+   * Es opcional por la misma razón que `ratio` y `output`, y aquí la ausencia dice algo
+   * muy concreto: la moka y el AeroPress también empujan el agua con presión, y los dos
+   * decidieron a conciencia **no escribir ningún número** porque nadie ha publicado una
+   * medición de ninguno de los dos. Que el campo sea opcional deja esa decisión a la
+   * vista en vez de contradecirla: quien la declara es quien tiene un documento detrás.
+   */
+  pressure?: Spec;
   totalTime: Spec;
   output?: Spec;
   /** A qué sabe la taza que sale de aquí: es lo que hace elegir un método y no otro. */
@@ -230,6 +242,116 @@ export type DeviceSizes = {
   source?: string;
 };
 
+/** Una dosis de café molido, de las que caben en una cesta que se vende de verdad. */
+export type DoseOption = {
+  /** Gramos de café molido seco. */
+  grams: number;
+  /** Qué cesta es esa y de dónde sale esa cifra. Una línea. */
+  note: string;
+};
+
+/**
+ * La tercera forma de decir las cantidades, y la trae el espresso.
+ *
+ * No es `recipe` con otros números ni un `device` con menos cosas: es una pregunta
+ * distinta. En el V60 quien prepara elige **cuánto café quiere** y el sitio calcula el
+ * agua; en la moka el aparato lo fija todo y el visitante solo aporta qué olla tiene. En
+ * el espresso lo que el visitante aporta es **cuánto café le cabe en la cesta**, que es
+ * un hecho de su equipo, y lo que el sitio calcula es **el peso de bebida** que tiene
+ * que caer en la taza.
+ *
+ * ## Por qué no se puede reutilizar `recipe`
+ *
+ * Por dos choques de vocabulario, y el segundo es de los que rompen en silencio.
+ *
+ * 1. **«Taza» ya significa otra cosa en este sitio**: unos 195 ml. Un espresso son unos
+ *    36 g de bebida, y el estándar italiano llama «taza» a 25 ml servidos en una taza de
+ *    50 a 100 ml de capacidad. Tres cosas distintas con la misma palabra. Aquí no se
+ *    cuenta en tazas: se cuenta en dosis y en peso de bebida.
+ * 2. **El `ratio` del sitio significa café : agua que entra**, y de ese texto se deduce
+ *    el agua de la calculadora, a la que luego se le resta lo que retiene el molido. El
+ *    1:2 del espresso es café : **bebida que sale**: su segundo número ya es el
+ *    resultado. Escribirlo en la casilla del ratio habría hecho que la página calculara
+ *    36 g de agua y después le restara la retención, enseñando un rendimiento de unos
+ *    18 ml. Mal, y mal sin que nada avisara.
+ *
+ * Por eso un método con `shot` **no puede declarar `ratio`**, y lo comprueba `index.ts`.
+ * La proporción vive aquí, que es el único sitio donde su segundo número se puede llamar
+ * por su nombre.
+ */
+export type ShotRecipe = {
+  /** El rótulo, en el hueco donde los demás métodos ponen «Cuántas tazas». */
+  question: string;
+  /** Las dosis que se ofrecen, de menos a más. */
+  doses: DoseOption[];
+  /**
+   * La dosis que se enseña al entrar, en gramos. **Se elige a mano y no es la primera
+   * de la lista**, igual que el método de entrada de la portada: la lista va ordenada de
+   * menos a más porque así se lee, y cuál conviene ofrecer es una decisión editorial
+   * aparte. Si no coincide con ninguna de las dosis, la compilación falla.
+   */
+  entryGrams: number;
+  /** Gramos de bebida por gramo de café. Un 2 es el 1:2 de la práctica de hoy. */
+  beveragePerGram: number;
+  /** Uno o más párrafos cortos: de dónde sale la proporción y qué significa la palabra «taza». */
+  note: string[];
+  /** De dónde salen las dosis y la proporción, con el nombre corto del documento. */
+  source?: string;
+};
+
+/**
+ * Lo que hay que decir **antes** de la lista de equipo, en los métodos donde el equipo
+ * es la decisión y no una lista de la compra.
+ *
+ * Lo trae el espresso, que es el primer método del sitio cuya barrera no es la técnica
+ * sino el aparato. No va en `grounding` a propósito: ese bloque dice sobre qué está
+ * construida la ficha, y mezclarle «para quién es esto» debilitaría el único sitio donde
+ * el lector ve de dónde salen los datos.
+ */
+export type EquipmentNote = {
+  body: string[];
+  /**
+   * Una comprobación que el lector puede hacer **él mismo**, destacada aparte del texto.
+   *
+   * Es la primera información de este sitio que no hay que creerle a nadie: se resuelve
+   * en la propia cocina en cinco segundos. Por eso tiene su propio recuadro y no es un
+   * párrafo más, y por eso el texto empieza pidiendo justamente que no te lo creas.
+   */
+  check?: {
+    title: string;
+    body: string[];
+  };
+};
+
+/** Una señal de la extracción: lo que ves, qué está pasando y qué cambias. */
+export type ShotSignal = {
+  /** Lo que se ve o se prueba: «cae la primera gota enseguida y acaba en 15 s». */
+  observation: string;
+  /** Qué está pasando dentro del lecho para que se vea eso. */
+  meaning: string;
+  /** Qué se cambia en la siguiente. Una sola cosa, siempre. */
+  change: string;
+};
+
+/**
+ * Cómo se lee lo que sale, que es lo único que este método tiene y ningún otro.
+ *
+ * En los nueve métodos anteriores, lo que se aprende de una taza mal salida cabía en
+ * `commonMistakes`: un problema, su causa y su arreglo. En el espresso no, y por una
+ * razón que conviene dejar escrita: aquí **leer la extracción no es el remedio de un
+ * error, es el método**. La molienda no se escribe en la ficha como un valor, se ajusta
+ * cada día según cómo corrió la anterior, y eso no es una lista de fallos: es un bucle.
+ *
+ * Meterlo en `commonMistakes` habría dicho, con el peso de un titular, que calibrar es
+ * equivocarse. De ahí que sea un bloque aparte y con otra forma visual: dos cosas que se
+ * parecen afirman que dicen lo mismo.
+ */
+export type ShotReading = {
+  /** Uno o más párrafos: la regla de cambiar una cosa a la vez y qué es el tiempo aquí. */
+  intro: string[];
+  signals: ShotSignal[];
+};
+
 /**
  * Sobre qué está construida la ficha.
  *
@@ -278,16 +400,23 @@ export type BrewMethod = {
   /** Las cuatro notas de las que sale la dificultad. Ver . */
   difficulty: DifficultyScores;
   /**
-   * Las cantidades que la página calcula. Un método trae esto **o** `device`, nunca
-   * los dos ni ninguno: o quien prepara elige cuánto café quiere, o lo elige el
-   * aparato. `index.ts` lo comprueba al compilar.
+   * Las cantidades que la página calcula. Un método trae esto **o** `device` **o**
+   * `shot`, exactamente una de las tres: o quien prepara elige cuánto café quiere, o lo
+   * fija el aparato, o lo fija la cesta y lo que se elige es el peso de bebida.
+   * `index.ts` lo comprueba al compilar.
    */
   recipe?: Recipe;
   /** Lo que el aparato fija, en los métodos que no calculan nada. Ver `recipe`. */
   device?: DeviceSizes;
+  /** La dosis de la cesta y el peso de bebida, en el espresso. Ver `ShotRecipe`. */
+  shot?: ShotRecipe;
   specs: BrewSpecs;
+  /** Lo que se dice antes de la lista de equipo, cuando el equipo es la decisión. */
+  equipmentNote?: EquipmentNote;
   equipment: EquipmentItem[];
   steps: BrewStep[];
+  /** Cómo se lee lo que sale. Solo lo trae el espresso. Ver `ShotReading`. */
+  reading?: ShotReading;
   commonMistakes: CommonMistake[];
   funFact?: FunFact;
   grounding?: Grounding;

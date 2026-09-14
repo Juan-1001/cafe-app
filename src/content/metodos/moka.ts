@@ -78,7 +78,9 @@ export const moka: BrewMethod = {
   },
 
   /*
-   * 72,5 sobre 100: nivel 3, y el único método del sitio que llega ahí. Lo que lo pone
+   * 72,5 sobre 100: nivel 3. Fue el primer método del sitio que llegó ahí y estuvo solo
+   * hasta que entró el espresso, que saca 77,5 y le quita el puesto de más exigente. Sigue
+   * siendo suya la única nota de 1 del sitio, que es la de aquí abajo. Lo que lo pone
    * en este nivel no es que sea difícil de preparar —es de los que menos pasos y menos
    * equipo pide—, sino que no deja rectificar. En el V60 un vertido flojo se arregla en
    * el siguiente y en la prensa siempre puedes esperar medio minuto más. Aquí, cerrada

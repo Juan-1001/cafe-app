@@ -4,10 +4,13 @@ import { createContext, useContext, useMemo, useState } from "react";
 import {
   amountVariables,
   computeAmounts,
+  computeShot,
   fillAmounts,
+  shotVariables,
 } from "@/content/metodos/amounts";
 import type {
   Recipe,
+  ShotRecipe,
   WaterSplit,
   WaterSplitOption,
 } from "@/content/metodos/types";
@@ -27,6 +30,11 @@ type RecipeAmountsValue = {
   /** La elegida. Null cuando no hay nada que elegir. */
   selected: WaterSplitOption | null;
   setSplitKey: (key: string) => void;
+  /** La dosis elegida en los métodos que se miden por cesta. Cero en los demás. */
+  doseGrams: number;
+  setDoseGrams: (grams: number) => void;
+  /** Lo que tiene que caer en la taza con esa dosis. Cero en los demás. */
+  beverageGrams: number;
 };
 
 const RecipeAmountsContext = createContext<RecipeAmountsValue | null>(null);
@@ -43,6 +51,16 @@ function useRecipeAmounts(): RecipeAmountsValue {
 /** Las cantidades ya calculadas, para componentes que arman su propio texto. */
 export function useAmountVariables(): Record<string, string> {
   return useRecipeAmounts().variables;
+}
+
+/** La dosis elegida y lo que hay que cortar con ella. Lo usa el bloque del espresso. */
+export function useShot(): Pick<
+  RecipeAmountsValue,
+  "doseGrams" | "setDoseGrams" | "beverageGrams"
+> {
+  const { doseGrams, setDoseGrams, beverageGrams } = useRecipeAmounts();
+
+  return { doseGrams, setDoseGrams, beverageGrams };
 }
 
 /** Cómo entra el agua y quién lo decide. Lo usa la casilla del ratio. */
@@ -62,6 +80,7 @@ export function useWaterSplit(): Pick<
  */
 export function RecipeAmountsProvider({
   recipe,
+  shot,
   waterPerCoffeeGram,
   children,
 }: {
@@ -71,6 +90,14 @@ export function RecipeAmountsProvider({
    * siguen pasando por `<Amounts>`, que sin receta los deja tal cual.
    */
   recipe?: Recipe;
+  /**
+   * La otra forma de calcular, la del espresso: en vez de tazas se elige la dosis que
+   * cabe en la cesta y de ahí sale el peso de bebida. Vive en el mismo proveedor y no
+   * en uno aparte a propósito, porque produce lo mismo que la receta —las cantidades
+   * que los textos de la ficha piden entre llaves— y dos contextos distintos para eso
+   * habrían obligado a cada componente a saber cuál de los dos mirar.
+   */
+  shot?: ShotRecipe;
   waterPerCoffeeGram: number;
   children: React.ReactNode;
 }) {
@@ -99,11 +126,33 @@ export function RecipeAmountsProvider({
     split?.options[0] ??
     null;
 
+  /*
+   * La dosis del espresso. Arranca en la que la ficha marca como dosis de entrada, que se
+   * elige a mano y no tiene por qué ser la primera de la lista; `index.ts` ya comprobó al
+   * compilar que ese valor está entre las que se ofrecen.
+   */
+  const [doseGrams, setDoseGrams] = useState(shot?.entryGrams ?? 0);
+
   const value = useMemo<RecipeAmountsValue>(() => {
     const choice = { split, selected, setSplitKey };
+    const shotAmounts = shot ? computeShot(shot, doseGrams) : null;
+    const dose = {
+      doseGrams: shotAmounts?.doseGrams ?? 0,
+      beverageGrams: shotAmounts?.beverageGrams ?? 0,
+      setDoseGrams,
+    };
 
     if (!recipe) {
-      return { cups, setCups, options, variables: {}, ...choice };
+      return {
+        cups,
+        setCups,
+        options,
+        // Sin receta, las cantidades que haya son las del espresso; y si tampoco las hay
+        // —la moka—, no hay ninguna y los textos se quedan tal cual.
+        variables: shotAmounts ? shotVariables(shotAmounts) : {},
+        ...choice,
+        ...dose,
+      };
     }
 
     const amounts = computeAmounts(
@@ -119,8 +168,9 @@ export function RecipeAmountsProvider({
       options,
       variables: amountVariables(amounts),
       ...choice,
+      ...dose,
     };
-  }, [recipe, waterPerCoffeeGram, cups, options, split, selected]);
+  }, [recipe, shot, doseGrams, waterPerCoffeeGram, cups, options, split, selected]);
 
   return (
     <RecipeAmountsContext.Provider value={value}>

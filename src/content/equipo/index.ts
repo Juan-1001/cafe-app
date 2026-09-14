@@ -258,16 +258,19 @@ export const EQUIPMENT = {
      * las distingue, así que la miniatura habría desaparecido solo en producción y sin
      * que nada fallara al compilar.
      *
-     * ORIGEN SIN CONFIRMAR. Parece una foto de catálogo de producto —fondo blanco, sin
-     * escena— y no tiene las marcas de una imagen generada, pero no consta de dónde
-     * salió, así que el crédito se queda en `null`, que es lo que significa: la autoría
-     * no se pudo recuperar. Si resulta ser de un banco de imágenes hay que escribir su
-     * autor, y si es sintética tiene que decir `{ source: "IA" }` para que la página
-     * avise de que no es una fotografía.
+     * IMAGEN GENERADA CON IA. Estuvo un tiempo con el crédito en `null` y la nota «origen
+     * sin confirmar», porque parecía una foto de catálogo de producto —fondo blanco, sin
+     * escena— y no tenía las marcas típicas de una imagen sintética. Resultó que sí lo era.
+     * Queda anotado porque es el aviso que va con el caso: **una imagen generada puede no
+     * parecerlo**, y por eso `null` significa «no se pudo recuperar la autoría» y no «no
+     * hace falta mirarlo».
+     *
+     * Lo que dibuja está bien: los pliegues rectos y el fondo plano son los de un filtro
+     * Wave y no los de un cono. El alt ya estaba escrito contra la imagen y se conserva.
      */
     photo: "/images/equipo/filtros-kalita-wave-155.jpg",
     alt: "Una pila de filtros de papel blancos vistos de frente sobre fondo blanco liso: tienen el fondo plano y la pared plisada en acordeón, que se abre hacia arriba como una corona de pliegues rectos. Se distinguen tres o cuatro filtros encajados uno dentro de otro.",
-    credit: null,
+    credit: { source: "IA" },
   },
   sifon: {
     name: "Sifón de café",
@@ -339,6 +342,84 @@ export const EQUIPMENT = {
       photoUrl: "https://www.pexels.com/photo/glass-bottles-with-lid-on-table-8970996/",
       source: "Pexels",
     },
+  },
+  /*
+   * Las tres piezas del espresso. Los tres `alt` están reescritos contra la imagen que de
+   * verdad se guardó, no contra el objeto que se había imaginado al declararlas: las tres
+   * enseñan algo distinto de lo que decía el texto provisional, que es lo de siempre.
+   */
+  "maquina-de-espresso": {
+    name: "Máquina de espresso",
+    /*
+     * Dos cosas que esta imagen trae de más y conviene tener anotadas.
+     *
+     * La primera es que **la máquina lleva molino incorporado**: el depósito de granos de
+     * arriba es parte del aparato. En la lista de equipo del espresso, el molino es una
+     * pieza aparte a propósito, porque la inmensa mayoría de las máquinas no lo llevan y
+     * porque es la pieza que decide si se puede calibrar. Que aquí salgan fundidos es de
+     * esta foto, no del método.
+     *
+     * La segunda es que en la encimera salen otras dos piezas de este mismo catálogo, dos
+     * cestas de filtro sueltas y un tamper. Es el mismo defecto anotado en `cono-v60`,
+     * aunque aquí en menor medida: la máquina manda en el encuadre sin discusión.
+     */
+    photo: "/images/equipo/maquina-de-espresso.jpg",
+    alt: "Una máquina de espresso de acero inoxidable sobre una encimera clara, junto a una pared color crema. Arriba lleva un depósito de granos con su molino; en el frente, una pantallita, varios mandos redondos y un manómetro; y encajado en el grupo, un portafiltro de mango de madera. Debajo, sobre la rejilla, dos vasitos de vidrio con café recién hecho. Alrededor hay una botella de leche, una jarrita metálica, dos cestas de filtro sueltas, un tamper tumbado y un plato con dos trozos de bizcocho. Del techo cuelga una lámpara blanca.",
+    credit: { source: "IA" },
+  },
+  "cesta-de-filtro": {
+    name: "Cesta de filtro",
+    /*
+     * **Esta imagen no enseña lo que esta entrada existe para enseñar**, y hay que decirlo
+     * porque es justo el punto de la ficha del espresso: la cesta sale vista desde arriba
+     * y con el interior a la vista, que es exactamente la vista con la que **no** se puede
+     * distinguir una cesta normal de una presurizada. Las dos se ven igual por dentro. Lo
+     * que hace falta es el fondo, por fuera, y aquí no está.
+     *
+     * No invalida nada de lo escrito —la comprobación de la ficha se hace con la cesta en
+     * la mano, no mirando una foto—, pero es la primera candidata a sustituir del catálogo,
+     * y lo que tiene que enseñar la que venga es el culo de la cesta.
+     *
+     * De paso: lo que se ve es la cesta puesta dentro del portafiltro, y el mango de madera
+     * ocupa media imagen. Sí sirve para reconocer el campo de agujeros de una cesta normal,
+     * que ya es algo.
+     */
+    photo: "/images/equipo/cesta-de-filtro.jpg",
+    alt: "Un portafiltro de espresso apoyado en una encimera blanca y visto desde arriba en diagonal: un aro de acero brillante con dos orejas laterales y un mango largo de madera veteada que cruza toda la imagen. Dentro está encajada la cesta de filtro, con el interior entero a la vista: un disco de acero cubierto de agujeros finísimos y regulares. A la derecha hay granos de café tostados desparramados y, al fondo y en penumbra, las piezas oscuras de una máquina.",
+    credit: { source: "IA" },
+  },
+  wdt: {
+    name: "Herramienta WDT",
+    /*
+     * Es una escena de uso y no el objeto aislado, y se acepta por el mismo motivo que en
+     * `cono-v60`: esta pieza es del espresso y de ningún otro método, así que no hay ninguna
+     * receta a la que pudiera desentonar. La herramienta manda en el encuadre —la sostiene
+     * una mano, está enfocada y en el centro— y las agujas se distinguen una a una, que es
+     * lo único que hay que reconocer.
+     *
+     * Salen otras dos piezas de este catálogo, el portafiltro con su cesta y, al fondo, lo
+     * que parece un tamper. Y sale una tercera cosa que **no** está en el catálogo ni en la
+     * lista de ningún método: el aro dosificador negro encajado sobre la cesta. Es un
+     * accesorio más, no hace falta para nada de lo que cuenta la ficha, y por eso se
+     * describe en el alt como lo que se ve y no se le da nombre de pieza necesaria.
+     */
+    photo: "/images/equipo/wdt.jpg",
+    alt: "Una mano sostiene por su mango negro y corto una herramienta de la que salen hacia abajo varias agujas finísimas, y las hunde en el café molido que hay dentro de un aro negro encajado sobre un portafiltro de mango de madera. El café molido se ve suelto y en montoncitos. Alrededor, sobre una bandeja de madera, hay otras dos piezas cilíndricas de acero y madera y, al fondo, un cajón de madera para golpear los posos.",
+    credit: { source: "IA" },
+  },
+  /*
+   * `tamper` y no `apisonador`. La palabra que se oye en una barra es esta, y el sitio
+   * prefiere enseñar la que el lector va a escuchar antes que fingir que no existe. El
+   * verbo sí se queda en español —se apisona— porque ahí no hay nada que traducir.
+   */
+  tamper: {
+    name: "Tamper",
+    // Son tres y no uno, como en el frasco: lo que la pieza tiene que enseñar —la base
+    // circular pulida y plana— se ve igual en los tres, y de paso queda claro que lo único
+    // que cambia entre modelos es el mango.
+    photo: "/images/equipo/tamper.jpg",
+    alt: "Tres tampers de pie, uno al lado del otro, sobre una base de goma negra. Los tres tienen la misma base circular de acero pulido, ancha y plana por debajo, y se diferencian solo en el mango: negro mate el primero, de madera oscura veteada el segundo y de aluminio cepillado el tercero. Al fondo, desenfocada, una máquina blanca con un interruptor rojo encendido.",
+    credit: { source: "IA" },
   },
   "jarra-de-vidrio": {
     name: "Jarra de vidrio",

@@ -8,6 +8,7 @@ import { aeropress } from "./aeropress";
 import { chemex } from "./chemex";
 import { coladoEnTela } from "./colado-en-tela";
 import { coldBrew } from "./cold-brew";
+import { espresso } from "./espresso";
 import { moka } from "./moka";
 import { prensaFrancesa } from "./prensa-francesa";
 import { sifon } from "./sifon";
@@ -25,6 +26,7 @@ export const brewMethods: BrewMethod[] = [
   chemex,
   sifon,
   totem,
+  espresso,
 ];
 
 /**
@@ -41,10 +43,10 @@ export const brewMethods: BrewMethod[] = [
  * ser opcional. Esto corre al importar el módulo, que es al generar el sitio: el error
  * aparece en `npm run build` con el nombre del método y el valor que lo rompió.
  *
- * También ata las dos formas de decir las cantidades. Un método calcula (`recipe` y su
- * `ratio`) o las fija el aparato (`device`), nunca las dos ni ninguna: con las dos, la
- * página enseñaría una calculadora y una tabla que se contradicen; sin ninguna, se
- * quedaría muda sobre cuánto café echar.
+ * También ata las tres formas de decir las cantidades. Un método calcula (`recipe` y su
+ * `ratio`), o las fija el aparato (`device`), o las fija la cesta y lo que se elige es el
+ * peso de bebida (`shot`): exactamente una de las tres. Con dos, la página enseñaría dos
+ * respuestas que se contradicen; sin ninguna, se quedaría muda sobre cuánto café echar.
  */
 function assertBrewMethodsAreConsistent(methods: BrewMethod[]): void {
   for (const method of methods) {
@@ -63,23 +65,107 @@ function assertBrewMethodsAreConsistent(methods: BrewMethod[]): void {
       );
     }
 
-    if (method.recipe && method.device) {
-      throw new Error(
-        `El método "${method.slug}" declara "recipe" y "device" a la vez. Son las dos formas de decir ` +
-          `las cantidades y se contradicen: o las calcula quien prepara, o las fija el aparato.`,
-      );
-    }
-
-    if (!method.recipe && !method.device) {
-      throw new Error(
-        `El método "${method.slug}" no dice sus cantidades por ningún lado: le falta "recipe" o "device".`,
-      );
-    }
-
+    assertOneWayOfSayingAmounts(method);
+    assertShotIsCoherent(method);
     assertWaterSplitAddsUp(method);
     assertTimeNotationMatchesTimer(method);
     assertSourcesAreUsable(method.slug, method.grounding?.references ?? []);
     assertDifficultyIsArguable(method);
+  }
+}
+
+/**
+ * Comprueba que cada método diga sus cantidades por un solo sitio.
+ *
+ * Son tres formas y son excluyentes: `recipe` cuando quien prepara elige cuánto café
+ * quiere, `device` cuando lo fija el aparato y `shot` cuando lo fija la cesta y lo que se
+ * elige es el peso de bebida. Con dos a la vez, la página enseñaría dos respuestas que se
+ * contradicen a la misma pregunta; con ninguna, se quedaría muda sobre cuánto café echar.
+ *
+ * El mensaje nombra las tres para que quien añada la cuarta forma dentro de dos años
+ * encuentre aquí la lista y no en tres condiciones repartidas.
+ */
+function assertOneWayOfSayingAmounts(method: BrewMethod): void {
+  const declared = [
+    method.recipe ? "recipe" : null,
+    method.device ? "device" : null,
+    method.shot ? "shot" : null,
+  ].filter((name) => name !== null);
+
+  if (declared.length === 0) {
+    throw new Error(
+      `El método "${method.slug}" no dice sus cantidades por ningún lado: le falta "recipe", ` +
+        `"device" o "shot".`,
+    );
+  }
+
+  if (declared.length > 1) {
+    throw new Error(
+      `El método "${method.slug}" declara ${declared.join(" y ")} a la vez. Son formas distintas ` +
+        `de decir las cantidades y se contradicen: o las calcula quien prepara, o las fija el ` +
+        `aparato, o las fija la cesta.`,
+    );
+  }
+}
+
+/**
+ * Comprueba la dosis y el peso de bebida del espresso.
+ *
+ * El control que de verdad importa es el primero, y es el mismo tipo de fallo mudo que el
+ * del ratio mal escrito: **un método con `shot` no puede declarar `ratio`**. La casilla
+ * del ratio se pinta con el rótulo «Ratio café / agua» y de su texto se deduce el agua de
+ * la calculadora; el 1:2 de un espresso es café contra bebida que sale, no contra agua
+ * que entra. Con las dos cosas a la vez, la misma página contaría el café contra dos
+ * denominadores distintos y llamaría agua a la bebida.
+ *
+ * Lo demás son ceros: una dosis en cero no muele nada y una proporción en cero deja el
+ * peso de bebida en 0 g, que es justo el «0 g» silencioso que este archivo existe para
+ * que no llegue a la página.
+ */
+function assertShotIsCoherent(method: BrewMethod): void {
+  const { shot } = method;
+  if (!shot) return;
+
+  if (method.specs.ratio) {
+    throw new Error(
+      `El método "${method.slug}" dice sus cantidades con "shot" y además declara un ratio ` +
+        `("${method.specs.ratio.value}"). El ratio del sitio es café contra agua que entra y el de ` +
+        `un espresso es café contra bebida que sale: con los dos, la página llamaría agua a la ` +
+        `bebida. La proporción va en "shot.beveragePerGram".`,
+    );
+  }
+
+  if (shot.beveragePerGram <= 0) {
+    throw new Error(
+      `El método "${method.slug}" no saca nada de bebida por gramo de café, así que la taza ` +
+        `saldría en 0 g.`,
+    );
+  }
+
+  if (shot.doses.length === 0) {
+    throw new Error(
+      `El método "${method.slug}" no ofrece ninguna dosis, así que no hay nada que calcular.`,
+    );
+  }
+
+  for (const dose of shot.doses) {
+    if (dose.grams <= 0) {
+      throw new Error(
+        `El método "${method.slug}" ofrece una dosis de ${dose.grams} g, que no es una dosis.`,
+      );
+    }
+  }
+
+  /*
+   * La dosis de entrada se elige a mano, igual que el método de entrada de la portada, y
+   * por el mismo motivo se comprueba igual: si el valor no existe, la compilación falla en
+   * vez de dejar la calculadora arrancando en una dosis que la ficha no ofrece.
+   */
+  if (!shot.doses.some((dose) => dose.grams === shot.entryGrams)) {
+    throw new Error(
+      `El método "${method.slug}" arranca en una dosis de ${shot.entryGrams} g que no está entre ` +
+        `las que ofrece (${shot.doses.map((dose) => `${dose.grams} g`).join(", ")}).`,
+    );
   }
 }
 
@@ -282,5 +368,8 @@ export type {
   BrewMethod,
   ContentImage,
   DeviceSizes,
+  EquipmentNote,
   Grounding,
+  ShotReading,
+  ShotRecipe,
 } from "./types";
