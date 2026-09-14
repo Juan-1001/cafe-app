@@ -125,6 +125,43 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
   const labelColor = alerting ? "text-ink" : "text-sage-deep";
   const bodyColor = alerting ? "text-ink" : "text-coffee";
 
+  /**
+   * El panel se mide a sí mismo y publica su alto en `--brew-timer-height`, igual que
+   * la cabecera publica el suyo. Lo lee el botón «Volver al inicio» para apoyarse en el
+   * borde de arriba de la barra en lugar de flotar sobre ella.
+   *
+   * Se mide en el navegador y no se escribe a mano porque ese alto cambia: con el ancho
+   * de la ventana, con el texto del paso actual, y el día que el panel gane o pierda un
+   * botón. Un número copiado sería una distancia que se desajusta sin que nada falle.
+   *
+   * Al desmontarse se borra la propiedad para que vuelva a valer el cero de globals.css:
+   * si no, al navegar del V60 a la moka —que no tiene cronómetro— el botón se quedaría
+   * flotando a 180 px del suelo sin nada debajo.
+   */
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    const publishHeight = () => {
+      document.documentElement.style.setProperty(
+        "--brew-timer-height",
+        `${panel.getBoundingClientRect().height}px`,
+      );
+    };
+
+    publishHeight();
+
+    const observer = new ResizeObserver(publishHeight);
+    observer.observe(panel);
+
+    return () => {
+      observer.disconnect();
+      document.documentElement.style.removeProperty("--brew-timer-height");
+    };
+  }, []);
+
   const previousActiveRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -175,6 +212,7 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
         se deja pulsar con normalidad.
       */}
       <div
+        ref={panelRef}
         className={`fixed inset-x-0 bottom-0 z-10 border-t border-ink px-6 py-4 transition-colors duration-200 motion-reduce:transition-none md:inset-x-auto md:top-(--brew-timer-top) md:right-6 md:bottom-auto md:w-80 md:border md:p-5 ${
           alerting ? "bg-lavender" : "bg-paper"
         }`}

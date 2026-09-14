@@ -43,6 +43,20 @@
    * partida y no el valor con el que funciona la página.
    */
   --brew-timer-top: calc(var(--site-header-height, 88px) + 32px);
+
+  /*
+   * Cuánto alto ocupa el panel del cronómetro, o cero si la página no lo tiene. Lo
+   * escribe TimedSteps (src/app/metodos/[slug]/timed-steps.tsx) midiéndose en el
+   * navegador, igual que la cabecera escribe el suyo, y lo lee el botón «Volver al
+   * inicio» para apoyarse justo encima de la barra en vez de taparla.
+   *
+   * El cero de aquí no es un valor de reserva a la espera de la medida de verdad: es
+   * el valor correcto para casi todo el sitio, porque solo las fichas de método con
+   * pasos cronometrados montan ese panel. Por eso TimedSteps borra la propiedad al
+   * desmontarse: al pasar de la ficha del V60 a la de la moka, que no tiene
+   * cronómetro, el botón tiene que volver a pegarse al borde de la pantalla.
+   */
+  --brew-timer-height: 0px;
 }
 
 body {

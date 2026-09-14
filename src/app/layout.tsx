@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Sans, Space_Mono } from "next/font/google";
+import { BackToTop, PAGE_TOP_ID } from "./back-to-top";
 import { SiteHeader } from "./site-header";
 import "./globals.css";
 
@@ -43,8 +44,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${fraunces.variable} ${ibmPlexSans.variable} ${spaceMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        {/*
+          El principio de la página como destino con nombre. No se ve ni ocupa alto:
+          es adonde se manda el foco al pulsar «Volver al inicio», para que quien lee
+          con lector de pantalla vuelva de verdad al principio y no solo vea subir la
+          página. El `tabIndex={-1}` es lo que lo hace enfocable desde el código sin
+          meterlo en el recorrido del tabulador de todo el mundo.
+        */}
+        <div id={PAGE_TOP_ID} tabIndex={-1} />
         <SiteHeader />
         {children}
+        <BackToTop />
       </body>
     </html>
   );
