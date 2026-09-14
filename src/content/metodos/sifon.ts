@@ -64,7 +64,7 @@ export const sifon: BrewMethod = {
      * ver un sifón. Tampoco hay nadie removiendo con la varilla: la varilla está en la
      * mesa, al lado, y es de vidrio y no de bambú. El alt lo dice tal cual.
      */
-    file: "/images/metodos/sifon.jfif",
+    file: "/images/metodos/sifon.png",
     alt: "Un sifón de café en marcha sobre una mesa de madera gastada: abajo la esfera de vidrio con agua y la llama azul del mechero debajo, sujeta por un soporte de latón con mango de madera, y arriba el vaso cilíndrico donde el café ya está oscuro y espumoso, soltando vapor. Al lado hay un vaso corto con café servido, una varilla de vidrio sobre la mesa, dos tazas claras y la tapa metálica de un frasco. A la izquierda, la ventana de la cocina con una planta.",
     credit: { source: "IA" },
   },

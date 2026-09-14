@@ -85,13 +85,13 @@ export const coldBrew: BrewMethod = {
   image: {
     /*
      * IMAGEN GENERADA CON IA, provisional, de la misma serie que el resto de portadas.
-     * El archivo venía como `coldbrew.jfif` y se renombró al slug del método.
+     * El archivo venía como `coldbrew` y se renombró al slug del método.
      *
      * Tiene un fallo típico de imagen sintética que el alt no oculta: el chorro de café
      * entra en el frasco **sin que se vea de dónde sale**, no hay ni mano ni recipiente
      * arriba. Se describe tal cual en vez de inventarle un origen.
      */
-    file: "/images/metodos/cold-brew.jfif",
+    file: "/images/metodos/cold-brew.png",
     alt: "Un frasco de vidrio alto sobre una mesa de madera, lleno de café ya oscuro con el molido grueso suspendido y una capa de posos flotando arriba. Cae dentro un chorro de café desde fuera del encuadre, sin que se vea quién lo vierte. Al lado, un vaso corto con hielo y café servido, y la tapa metálica del frasco apoyada boca arriba. Al fondo, dos tazas claras y la ventana de la cocina con una planta.",
     credit: { source: "IA" },
   },

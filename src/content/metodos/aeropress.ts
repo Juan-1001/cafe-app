@@ -49,7 +49,7 @@ export const aeropress: BrewMethod = {
     // IMAGEN GENERADA CON IA, provisional, de la misma serie que el resto de portadas.
     // Es de las más fieles: el gesto de prensar se lee bien y las dos manos están donde
     // tienen que estar, una arriba y otra sujetando el cuerpo.
-    file: "/images/metodos/aeropress.jfif",
+    file: "/images/metodos/aeropress.png",
     alt: "Dos manos empujan hacia abajo el émbolo de un AeroPress montado sobre una taza de cerámica clara, en una mesa de madera gastada: una mano apoyada en el extremo del émbolo y la otra rodeando el cilindro. Al lado, una bolsa de café de papel abierta con granos derramados y una báscula digital negra. Al fondo, la ventana de la cocina y una planta.",
     credit: { source: "IA" },
   },

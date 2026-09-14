@@ -17,7 +17,7 @@ export const v60: BrewMethod = {
      * otra cosa al lado. Esta sí enseña el cono cónico, que es lo que da nombre al
      * método y lo que lo separa de un goteador cualquiera.
      */
-    file: "/images/metodos/v60.jfif",
+    file: "/images/metodos/v60.png",
     alt: "Una mano vierte agua caliente desde un hervidor de acero de cuello fino y curvo sobre un cono V60 con su filtro de papel, del que sube vapor. El cono está encajado en una jarra de vidrio que ya tiene café hecho, y el conjunto se apoya sobre una báscula digital, encima de una mesa de madera gastada. A la derecha, dos tazas de cerámica clara; a la izquierda, la ventana de la cocina con una planta en el alféizar.",
     credit: { source: "IA" },
   },

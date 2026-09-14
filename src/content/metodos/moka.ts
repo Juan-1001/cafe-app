@@ -72,7 +72,7 @@ export const moka: BrewMethod = {
      * llega a enseñarla. Va nombrada en el alt para que quien no ve la imagen tampoco
      * se quede sin ese dato.
      */
-    file: "/images/metodos/moka.jfif",
+    file: "/images/metodos/moka.png",
     alt: "Una cafetera moka de aluminio sobre la hornilla de una cocina de gas, con la llama azul baja y recogida bajo la base. En el costado de la caldera se distingue el botón redondo de la válvula de seguridad. La tapa está abierta y por el tubo central asoma el café, oscuro, mientras sube un hilo de vapor. A la derecha, tres tacitas de cerámica clara sobre la encimera; a la izquierda, la ventana con una planta.",
     credit: { source: "IA" },
   },

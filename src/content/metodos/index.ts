@@ -11,6 +11,7 @@ import { coldBrew } from "./cold-brew";
 import { moka } from "./moka";
 import { prensaFrancesa } from "./prensa-francesa";
 import { sifon } from "./sifon";
+import { totem } from "./totem";
 import { v60 } from "./v60";
 
 /** Un archivo por método en esta carpeta; aquí se registran para las rutas. */
@@ -23,6 +24,7 @@ export const brewMethods: BrewMethod[] = [
   coldBrew,
   chemex,
   sifon,
+  totem,
 ];
 
 /**

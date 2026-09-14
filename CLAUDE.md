@@ -105,18 +105,24 @@ la portada sin su bloque principal.
 - Por eso el contenido declara **`file`** y las páginas reciben **`src`**. Son nombres
   distintos a propósito: así una imagen sin resolver no encaja donde se espera una resuelta
   y saltarse el resolutor es un error de compilación, no un hueco que aparece en la web.
-- **Nombres de archivo**: `<slug>.jfif` para la portada de un método, `<slug>-<qué-es>.jpg`
+- **Nombres de archivo**: `<slug>.png` para la portada de un método, `<slug>-<qué-es>.jpg`
   para las fotos dentro de un artículo, y el nombre que diga el catálogo para las piezas de
   equipo. Si se cambia la convención, se renombra también lo que ya existía: una convención
   que solo gobierna lo nuevo son dos formatos conviviendo.
-- **Las portadas de método van en `.jfif`** porque es lo que escupe el generador de
-  imágenes, y así el archivo se deja en la carpeta sin renombrar nada. Funciona porque el
-  sitio las pinta con `next/image`: el optimizador decodifica el JFIF —que es un JPEG— y
-  sirve `image/jpeg`. Comprobado. **Lo que no funciona es enlazar un `.jfif` en crudo**: el
-  servidor de archivos estáticos no reconoce esa extensión y lo sirve como
-  `application/octet-stream`, así que el navegador se lo descarga en vez de pintarlo. Si
-  algún día una de estas rutas se usa fuera de `next/image` —una etiqueta `og:image`, un
-  `<img>` a pelo—, hay que pasarla a `.jpg`.
+- **El nombre se escribe siempre en minúsculas**, con guiones y sin acentos, exactamente
+  igual que el slug o la clave del catálogo. Windows no distingue mayúsculas de minúsculas
+  y el servidor donde esto se publica sí, así que un `Kalita-Wave` guardado tal cual se ve
+  perfecto en local y desaparece en producción sin que nada falle al compilar. Ya pasó una
+  vez, con los filtros del Tótem.
+- **Las portadas de método van en `.png`.** Antes iban en `.jfif` porque era lo que escupía
+  el generador de imágenes y así se dejaba el archivo sin renombrar; el generador ahora da
+  `.png` y las nueve portadas se migraron de una vez. El cambio además quita de en medio
+  una advertencia que ya no hace falta: el `.jfif` solo funcionaba porque `next/image` lo
+  decodifica y sirve `image/jpeg`, y **enlazarlo en crudo no funcionaba** —el servidor de
+  archivos estáticos no reconocía la extensión, la servía como `application/octet-stream` y
+  el navegador se la descargaba en vez de pintarla—. Con `.png` eso deja de ser un riesgo y
+  estas rutas se pueden usar fuera de `next/image`, en una etiqueta `og:image` o en un
+  `<img>` a pelo.
 
 ### Autoría de las fotografías
 

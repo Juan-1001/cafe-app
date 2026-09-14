@@ -61,7 +61,7 @@ export const chemex: BrewMethod = {
      * porque esta ficha es de café caliente; no estorba, pero si algún día se regenera,
      * sobra.
      */
-    file: "/images/metodos/chemex.jfif",
+    file: "/images/metodos/chemex.png",
     alt: "Una Chemex sobre una mesa de madera gastada: una jarra de vidrio de una sola pieza con forma de reloj de arena, con el collar de madera clara ceñido por una correa de cuero anudada con una cuenta. Arriba lleva puesto el filtro de papel blanco y grueso con el café molido dentro, y por el cuello cae un hilo de café al cuerpo de abajo, que ya tiene una capa hecha. Al lado, un vaso con hielo y café, dos tazas claras y la tapa metálica de un frasco. A la izquierda, la ventana de la cocina con una planta.",
     credit: { source: "IA" },
   },

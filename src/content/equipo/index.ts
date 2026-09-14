@@ -223,6 +223,52 @@ export const EQUIPMENT = {
     alt: "Un filtro de papel grueso de color crudo, abierto en forma de cono y puesto dentro de la boca de una jarra Chemex, sobre fondo blanco. Del vidrio solo se ve el borde superior y, más abajo, el collar de madera clara con su tira de cuero y una cuenta.",
     credit: { source: "IA" },
   },
+  totem: {
+    name: "Método Tótem",
+    /*
+     * IMAGEN GENERADA CON IA, provisional, de la misma serie que la portada del método.
+     *
+     * Es vertical y las miniaturas de equipo son cuadradas, así que se recorta por
+     * arriba y por abajo. Aguanta porque lo que hay que reconocer —el perfil ondulado de
+     * las dos piezas apiladas y el filtro entrando— está en el centro.
+     *
+     * Qué tiene mal, que es lo que hay que dejar anotado de cada imagen sintética: el
+     * juego real son cuatro piezas y aquí solo se dibujan dos, sin la base ni la taza, y
+     * los colores no corresponden a ningún acabado concreto del fabricante. El filtro
+     * plisado sí está bien dibujado, y es lo que esta entrada tiene que enseñar.
+     */
+    photo: "/images/equipo/totem.jpg",
+    alt: "Un juego de cerámica apilado sobre una báscula negra, en una mesa de madera: arriba un dripper color cobre y debajo una jarra gris verdosa, las dos con el mismo perfil ondulado de anillos. Una mano deja caer dentro del dripper un filtro de papel blanco de fondo plano y pared plisada en acordeón. Al fondo, una pared verde con un cuadro enmarcado y, desenfocados, un molino y una cafetera.",
+    credit: { source: "IA" },
+  },
+  /*
+   * Los filtros del Tótem son pieza aparte por el mismo motivo que los del V60 y los de
+   * la Chemex —se compran solos y se acaban—, y por uno más que solo tiene este método:
+   * **no los hace quien hace el aparato**. El dripper es cerámica mexicana y el filtro
+   * es un consumible japonés, y eso lo dice el propio fabricante en su página de
+   * producto: «El dripper utiliza un filtro Kalita Wave #155». Es justo lo que la ficha
+   * enseña sobre la forma de un dripper, así que tiene que poder verse como objeto.
+   */
+  "filtros-kalita-wave-155": {
+    name: "Filtros Kalita Wave 155",
+    /*
+     * El archivo llegó nombrado `filtros-Kalita-Wave-155.jpg`, con mayúsculas, y se
+     * renombró a la clave. No es manía de orden: Windows no distingue mayúsculas de
+     * minúsculas y aquí se habría visto bien, pero el servidor donde esto se publica sí
+     * las distingue, así que la miniatura habría desaparecido solo en producción y sin
+     * que nada fallara al compilar.
+     *
+     * ORIGEN SIN CONFIRMAR. Parece una foto de catálogo de producto —fondo blanco, sin
+     * escena— y no tiene las marcas de una imagen generada, pero no consta de dónde
+     * salió, así que el crédito se queda en `null`, que es lo que significa: la autoría
+     * no se pudo recuperar. Si resulta ser de un banco de imágenes hay que escribir su
+     * autor, y si es sintética tiene que decir `{ source: "IA" }` para que la página
+     * avise de que no es una fotografía.
+     */
+    photo: "/images/equipo/filtros-kalita-wave-155.jpg",
+    alt: "Una pila de filtros de papel blancos vistos de frente sobre fondo blanco liso: tienen el fondo plano y la pared plisada en acordeón, que se abre hacia arriba como una corona de pliegues rectos. Se distinguen tres o cuatro filtros encajados uno dentro de otro.",
+    credit: null,
+  },
   sifon: {
     name: "Sifón de café",
     photo: "/images/equipo/sifon.jpg",

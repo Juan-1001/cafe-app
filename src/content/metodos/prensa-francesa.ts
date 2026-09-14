@@ -16,7 +16,7 @@ export const prensaFrancesa: BrewMethod = {
      * plana por encima. Se lee como «a punto de bajar» y no como el gesto de prensar,
      * que es lo que la ficha cuenta. Es la primera que yo regeneraría.
      */
-    file: "/images/metodos/prensa-francesa.jfif",
+    file: "/images/metodos/prensa-francesa.png",
     alt: "Una prensa francesa de vidrio con armazón y tapa de madera, llena de café ya hecho, sobre una mesa de madera gastada. Una mano se acerca al pomo del émbolo, con la palma plana justo encima, sin llegar a agarrarlo. Al lado hay una taza clara servida, una bolsa de café de papel abierta y una cuchara de madera. Al fondo, la ventana de la cocina y una planta.",
     credit: { source: "IA" },
   },

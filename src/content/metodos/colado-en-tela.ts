@@ -55,7 +55,7 @@ export const coladoEnTela: BrewMethod = {
      * lector ve las dos en la misma página. Si algún día se unifica, esta es la que
      * coincide con lo que dicen los pasos.
      */
-    file: "/images/metodos/colado-en-tela.jfif",
+    file: "/images/metodos/colado-en-tela.png",
     alt: "Unas manos vierten agua caliente desde una olla de acero sobre un colador de tela sujeto por su mango de alambre, apoyado en la boca de una jarra de vidrio. La tela, teñida de marrón oscuro por el uso, está llena de café molido mojado y del que sube vapor. Alrededor, una mesa de madera gastada con una bolsa de café abierta, granos sueltos y dos tazas claras. A la izquierda, la ventana de la cocina con una planta.",
     credit: { source: "IA" },
   },
