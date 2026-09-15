@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Fraunces, IBM_Plex_Sans, Space_Mono } from "next/font/google";
 import { BackToTop, PAGE_TOP_ID } from "./back-to-top";
 import { SiteHeader } from "./site-header";
@@ -26,13 +27,30 @@ const spaceMono = Space_Mono({
 });
 
 /**
- * Los datos por defecto de la pestaña del navegador. Cada página pone su propio título
- * —la home, los índices y cada ficha—, así que esto solo se ve si alguna se olvida de
- * hacerlo; era el título de la plantilla de Next («Create Next App») hasta que hubo una
- * portada que lo enseñaba.
+ * Los datos de la pestaña del navegador que valen para todo el sitio.
+ *
+ * `default` es la reserva: lo que se ve si una página se olvida de poner su propio
+ * título. Hoy no se ve en ninguna parte, porque la home, los índices y cada ficha
+ * ponen el suyo; era el título de la plantilla de Next («Create Next App») hasta que
+ * hubo una portada que lo enseñaba. Se queda en la palabra sola a propósito: si algún
+ * día se ve, tiene que quedar claro que esa página se olvidó de nombrarse, y no
+ * disimularlo copiando el titular de la portada.
+ *
+ * `template` le pega « · Presunto Café» al título de todas las páginas de dentro, donde el
+ * `%s` es el título que cada una escribe. Se aplica sola a los hijos, así que se
+ * escribe una vez aquí y ninguna página vuelve a nombrar el sitio. Existe porque una
+ * pestaña que pone «Granos» a secas no dice de dónde es, y eso se nota en los
+ * marcadores, en el historial y en los resultados de búsqueda, que es donde el título
+ * se lee entero y fuera de contexto.
+ *
+ * La portada se salta la plantilla con `absolute` (src/app/page.tsx), porque su
+ * título ya empieza por «Café» y con el sufijo lo diría dos veces.
  */
 export const metadata: Metadata = {
-  title: "Café",
+  title: {
+    default: "Presunto Café",
+    template: "%s · Presunto Café",
+  },
   description:
     "Café de especialidad explicado desde cero: de dónde viene el grano y cómo prepararlo en casa.",
 };
@@ -55,6 +73,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader />
         {children}
         <BackToTop />
+        {/*
+          El contador de visitas de Vercel. No pinta nada en la página: solo avisa de
+          cada cambio de ruta, y solo hace algo cuando el sitio está desplegado allí
+          —en local y en el build de producción propio se queda callado—.
+
+          Va al final del body, después del contenido, porque nada de lo que se ve
+          depende de él y así no se pone por delante de la primera pintura.
+        */}
+        <Analytics />
       </body>
     </html>
   );

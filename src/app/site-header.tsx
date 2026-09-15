@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { Logo } from "./logo";
 
 /**
  * Cabecera del sitio. Solo aparecen las secciones que ya existen: enlazar a
@@ -67,8 +68,26 @@ export function SiteHeader() {
       ref={headerRef}
       className="relative z-20 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 bg-paper px-6 pt-8 pb-4 md:sticky md:top-0 md:px-16 md:pt-10 md:pb-6"
     >
-      <Link href="/" className="font-display text-2xl leading-none">
-        Café
+      {/*
+        El logotipo es un dibujo, así que no lo puede leer nadie que navegue con lector
+        de pantalla: el SVG va oculto para ellos y el nombre del sitio viaja en el texto
+        de al lado, que está escondido a la vista pero no al oído. Sin eso, el enlace de
+        vuelta a la portada se anunciaría como «enlace» a secas.
+
+        El alto se fija en `h-5` (20 px) y en escritorio sube a `h-7` (28 px); el ancho
+        sale solo de la proporción del dibujo. `w-auto` está escrito porque las
+        utilidades de Tailwind para SVG no lo dan por hecho.
+
+        En móvil va más bajo que en escritorio por una cuenta de ancho, no por gusto: el
+        dibujo es siete veces más ancho que alto, así que cada píxel de alto le cuesta
+        siete de ancho. A 24 px de alto mide unos 171, y junto a la navegación no cabe
+        en la línea de una pantalla de 375 px: la cabecera pasaría a dos líneas siempre.
+        A 20 px mide unos 142 y cabe. La cabecera sabe envolver —de ahí `flex-wrap` y
+        `gap-y-2`—, pero eso está para cuando hace falta, no como estado normal.
+      */}
+      <Link href="/" className="leading-none">
+        <Logo className="h-5 w-auto md:h-7" />
+        <span className="sr-only">Presunto Café · Volver a la portada</span>
       </Link>
 
       <nav>

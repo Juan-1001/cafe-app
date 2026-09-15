@@ -15,7 +15,12 @@ import { ClockIcon } from "./icons";
 import { DifficultyMeter } from "./metodos/indicators";
 
 export const metadata: Metadata = {
-  title: "Café · De dónde viene y cómo prepararlo",
+  /*
+   * `absolute` significa «este título va tal cual, sin la plantilla de src/app/layout.tsx».
+   * Las demás páginas reciben un « · Presunto Café» al final para que la pestaña diga de qué sitio
+   * son; esta ya empieza por la palabra, y con el sufijo la diría dos veces.
+   */
+  title: { absolute: "Presunto Café · De dónde viene y cómo prepararlo" },
   description:
     "Café de especialidad explicado desde cero: cómo preparar en casa el café que ya tienes y qué le pasó al grano antes de llegar a tu bolsa.",
 };
