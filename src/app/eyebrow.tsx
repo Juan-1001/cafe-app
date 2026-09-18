@@ -25,6 +25,17 @@ const TONES = {
    * etiqueta: es lo único con color en una página cuyos datos están todos a cero.
    */
   lavender: "text-lavender-deep",
+  /**
+   * El mismo lavanda de señal, pero sobre fondo `ink`: hoy solo la página sin
+   * conexión, que es la única oscura del sitio.
+   *
+   * Se llama por el fondo y no solo por el color a propósito, porque lo que lo
+   * distingue es dónde vale. Sobre negro la relación se invierte: el lavanda claro da
+   * 4,9:1 y pasa AA, y el profundo —que es el que vale sobre crema— se hunde. Usar
+   * este tono sobre `paper` sería exactamente el fallo de contraste que el resto de
+   * este archivo existe para evitar.
+   */
+  lavenderOnInk: "text-lavender",
 } as const;
 
 export function Eyebrow({

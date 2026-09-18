@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Fraunces, IBM_Plex_Sans, Space_Mono } from "next/font/google";
 import { BackToTop, PAGE_TOP_ID } from "./back-to-top";
+import { OfflineCache } from "./offline-cache";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import "./globals.css";
@@ -86,6 +87,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         */}
         <SiteFooter />
         <BackToTop />
+        {/*
+          Lo que instala el guion que guarda la página sin conexión en el teléfono. No
+          pinta nada y solo hace algo en producción; el porqué de las dos cosas está en
+          offline-cache.tsx.
+        */}
+        <OfflineCache />
         {/*
           El contador de visitas de Vercel. No pinta nada en la página: solo avisa de
           cada cambio de ruta, y solo hace algo cuando el sitio está desplegado allí

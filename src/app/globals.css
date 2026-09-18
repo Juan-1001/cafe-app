@@ -64,3 +64,33 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
+
+/*
+ * Las páginas desnudas: las que se pintan sin la cabecera ni el pie del sitio.
+ *
+ * Una página lo pide escribiendo `data-bare-page` en su `<main>`. Hoy solo lo hace
+ * `/sin-conexion`, donde los enlaces de la cabecera llevan a secciones que en ese
+ * momento no se pueden abrir y el pie remata un sitio que no está llegando.
+ *
+ * **Esto empezó siendo un componente que miraba en qué ruta estaba, y estaba mal.** La
+ * página sin conexión no se sirve en su propia dirección: el guion de `public/sw.js` la
+ * saca del cajón en la dirección que el visitante pidió, así que alguien que intenta
+ * abrir /metodos/prensa-francesa sin señal ve esa página con «/metodos/prensa-francesa»
+ * escrito en la barra. Preguntar por la ruta devolvía «prensa-francesa», que no es una
+ * ruta desnuda, y la cabecera reaparecía al hidratarse. Se vio apagando el servidor de
+ * verdad; con la red cortada desde las herramientas del navegador no se reproduce,
+ * porque esa emulación no alcanza a las peticiones del guion.
+ *
+ * De ahí la forma que tiene: **la condición viaja dentro del HTML**, en una marca que la
+ * propia página escribe, en lugar de deducirse de nada externo a ella. Da igual en qué
+ * dirección se sirva ese HTML, y funciona antes de que cargue ningún JavaScript, que es
+ * justo lo que hace falta en la página que se lee cuando no hay red.
+ *
+ * `display: none` y no `visibility`: así la cabecera oculta tampoco existe para un
+ * lector de pantalla ni para el tabulador, que es de lo que se trata. Ofrecer enlaces
+ * que no se abren es peor cuando no se ven.
+ */
+body:has(main[data-bare-page]) > header,
+body:has(main[data-bare-page]) > footer {
+  display: none;
+}

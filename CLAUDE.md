@@ -209,6 +209,20 @@ Referencia visual: revista de café bien editada. Cuidada y cálida.
 - Diseño responsive: se lee bien en móvil, que es donde se consultará una receta o un
   método mientras se prepara el café.
 
+**La excepción declarada: `/sin-conexion`.** Esa página va sobre fondo `ink` y es el único
+sitio donde el fondo oscuro está permitido. No es una variante estética: ahí el fondo **es
+el mensaje**. Esa página aparece sola, sin que nadie la pida, cuando el teléfono se queda
+sin señal, y el crema diría «aquí no pasa nada» justo cuando sí pasa; la pantalla apagada
+se entiende antes de leer una palabra. Por lo mismo va sin cabecera y sin pie: los enlaces
+de la cabecera llevan a secciones que en ese momento no se pueden abrir. La excepción es de
+esa ruta y no se extiende: cualquier otra página oscura vuelve a ser un antipatrón.
+
+Una página se queda sin cabecera ni pie escribiendo **`data-bare-page`** en su `<main>`;
+la regla está en `globals.css`. La marca va dentro del HTML y no se deduce de la ruta por
+un motivo que costó encontrar: **la página sin conexión no se sirve en su propia
+dirección**, sino en la que el visitante pidió, así que nada suyo puede depender de la
+URL. Preguntando por la ruta, la cabecera reaparecía al hidratarse.
+
 Evita: fondos oscuros, estilo «dashboard» y tarjetas dentro de tarjetas. La lista completa
 está en «Antipatrones visuales».
 
@@ -252,7 +266,11 @@ Estas reglas existen para no bajar del contraste AA; no son preferencias estéti
 - **Texto por debajo de 24 px sobre `paper`:** solo `ink`, `coffee`, `lavender-deep` o
   `sage-deep`.
 - **`lavender` y `sage`** solo en texto de **24 px o más**, fondos y elementos gráficos.
-- **`dust` nunca se usa para texto**, en ningún tamaño ni sobre ningún fondo.
+- **`dust` nunca se usa para texto**, en ningún tamaño ni sobre ningún fondo. La única
+  excepción declarada es el párrafo de entrada de `/sin-conexion`, que es `dust` sobre
+  `ink`. La regla se escribió midiendo `dust` sobre `paper`, que da 1,5:1 y es ilegible;
+  sobre `ink` da **9,97:1**, muy por encima del 4,5 de AA. Sigue prohibido sobre crema y
+  sobre cualquier otro fondo del sitio, que son todos claros.
 - **Sobre fondo `ink`, `lavender` sí es válido para texto pequeño.**
 
 Contrastes medidos sobre `paper`: `ink` 15.3:1 · `coffee` 10.3:1 · `sage-deep` 5.3:1 ·
@@ -411,10 +429,44 @@ Sigue en pie lo de **declarar qué se comprobó y qué no**: si algo quedó sin 
 dice. Y si la comprobación se hizo contra el servidor de desarrollo y no contra el de
 producción, también se dice.
 
+### Una comprobación que da falso verde
+
+**Lo sin conexión no se prueba cortando la red desde el navegador.** La casilla «Offline»
+de la pestaña Network deja pasar las peticiones que salen del guion de `public/sw.js`,
+porque no comparte el contexto de red de la pestaña. La página se carga como siempre, la
+copia guardada no llega a usarse y todo parece correcto: es un verde que no ha probado
+nada, y puede dar por buena una versión rota. **Se prueba apagando el servidor**, que no
+se puede confundir. El detalle está escrito en el propio `public/sw.js`.
+
+Va aquí por lo que enseña más allá del caso: **una forma de comprobar que puede mentir se
+anota junto a lo que comprueba**, porque el coste de descubrirla lo paga entero quien
+vuelva a probar lo mismo dentro de unos meses.
+
 ## Estado actual
 
 En pie: la **home**, **`/granos`** con cuatro artículos (uno por cada etapa del recorrido) y
 **`/metodos`** con cinco métodos. `/recetas` y `/tiendas` están por construir.
+
+También está en pie **`/sin-conexion`**, que no es una sección ni se llega a ella
+navegando: es la página que se ve cuando el teléfono se queda sin señal. La sirve
+`public/sw.js`, un guion que el navegador deja instalado y que se pone delante de cada
+petición. **Ese guion guarda dos cosas y nada más**: esa página y los archivos de
+tipografía de `/_next/static/media/`. Ninguna ficha, ningún artículo. Es lo que permite no
+tomar todavía la decisión que `src/app/manifest.ts` dejó aplazada —qué pasa cuando se
+corrige un dato y alguien tiene guardada la versión de antes—: las tipografías llevan una
+huella en el nombre y no pueden quedarse viejas, y la página guardada se vuelve a pedir
+sola si la copia tiene más de una hora. Guardar páginas de verdad para leerlas sin red es
+un trabajo aparte, y empieza por tomar aquella decisión, no por añadir rutas a esa lista.
+
+La receta que enseña esa página **no se escribe ahí**: sale de `colado-en-tela`, con las
+cantidades calculadas por el mismo `computeAmounts` que mueve la calculadora de la ficha.
+Qué método se guarda es una decisión editorial fijada a mano en `SAVED_METHOD`, como el
+método de entrada de la home, porque depende de algo que ningún dato del método declara:
+que se pueda preparar sin comprar nada.
+
+El guion **solo se instala en producción**. Uno instalado en `localhost` se quedaría ahí
+sirviendo páginas viejas por delante del servidor de desarrollo, así que esto se comprueba
+con `npm run build` y `npm start`, nunca con `npm run dev`.
 
 Cierra todas las páginas el **pie del sitio** (`src/app/site-footer.tsx`), montado una
 sola vez en el layout raíz. No es un mapa del sitio: no lleva ningún enlace, es el
@@ -465,6 +517,14 @@ portada el día que su ruta esté en pie.
 Defectos detectados y aceptados a sabiendas. No hace falta volver a señalarlos ni
 arreglarlos por iniciativa propia; si un trabajo futuro toca la zona, este es el sitio
 donde mirar antes.
+
+- **`/sin-conexion` es la única página que trata de usted.** Su texto dice «haga lo que
+  toca» y «Le dejamos una receta»; el resto del sitio tutea —«puedes usarla», «desde que
+  mojas el café»—. Viene así del diseño y se deja así. **No se corrige página por
+  página**: el tratamiento es una decisión de todo el sitio, pendiente desde la guía de
+  lenguaje, y arreglar esta sola dejaría el sitio con dos tratamientos igual que ahora
+  pero repartidos de otra forma. El día que se decida, esta es una de las páginas que hay
+  que repasar.
 
 - **La Fraunces del sitio no es la que dibuja Figma, y eso afecta a todos los títulos
   grandes.** Fraunces tiene un eje de tamaño óptico (`opsz`): no es una escala, es un
