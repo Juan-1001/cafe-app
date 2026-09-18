@@ -6,12 +6,36 @@
  * gracia es que sea idéntico en todo el sitio: es la marca que el lector aprende a
  * reconocer como «esto es un rótulo, no un título».
  *
- * Va en `sage-deep` y no en `sage` porque a 12 px el `sage` se queda en 3.7:1 sobre
- * `paper` y no llega al mínimo AA de texto normal.
+ * Lo que cambia entre tonos es el color y nada más —la tipografía, el tamaño, las
+ * mayúsculas y el espaciado son los mismos—, que es justo lo que mantiene en pie esa
+ * idea: dos rótulos de distinto color siguen leyéndose como el mismo objeto, igual
+ * que los enlaces de la navegación cambian de color sin dejar de ser la navegación.
+ *
+ * Los dos tonos son los «profundos» de cada acento y no los claros, y es por el
+ * contraste: a 12 px sobre `paper`, `sage` se queda en 3,7:1 y `lavender` en 3,2:1,
+ * cuando el mínimo AA de texto normal es 4,5:1. `sage-deep` da 5,3:1 y
+ * `lavender-deep` 4,9:1.
  */
-export function Eyebrow({ children }: { children: React.ReactNode }) {
+const TONES = {
+  /** El de siempre, y el que sale si nadie pide otro. */
+  sage: "text-sage-deep",
+  /**
+   * El del 404, donde el rótulo no nombra una sección sino que avisa de un error.
+   * El lavanda es el acento protagonista del sitio y ahí hace de señal, no de
+   * etiqueta: es lo único con color en una página cuyos datos están todos a cero.
+   */
+  lavender: "text-lavender-deep",
+} as const;
+
+export function Eyebrow({
+  children,
+  tone = "sage",
+}: {
+  children: React.ReactNode;
+  tone?: keyof typeof TONES;
+}) {
   return (
-    <p className="font-mono text-xs uppercase tracking-widest text-sage-deep">
+    <p className={`font-mono text-xs uppercase tracking-widest ${TONES[tone]}`}>
       {children}
     </p>
   );

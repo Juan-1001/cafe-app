@@ -416,6 +416,12 @@ producción, también se dice.
 En pie: la **home**, **`/granos`** con cuatro artículos (uno por cada etapa del recorrido) y
 **`/metodos`** con cinco métodos. `/recetas` y `/tiendas` están por construir.
 
+Cierra todas las páginas el **pie del sitio** (`src/app/site-footer.tsx`), montado una
+sola vez en el layout raíz. No es un mapa del sitio: no lleva ningún enlace, es el
+remate editorial de una franja de color donde el sitio dice que la receta era un punto
+de partida. Al no haber enlaces tampoco hay encabezados —las tres frases son párrafos—,
+porque un `h2` ahí metería el mismo título en el esquema de todas las páginas.
+
 ### La dificultad de un método se calcula, no se escribe
 
 Una ficha **no declara su nivel**. Declara cuatro notas del 1 al 5 —coste del error,
@@ -459,6 +465,21 @@ portada el día que su ruta esté en pie.
 Defectos detectados y aceptados a sabiendas. No hace falta volver a señalarlos ni
 arreglarlos por iniciativa propia; si un trabajo futuro toca la zona, este es el sitio
 donde mirar antes.
+
+- **La Fraunces del sitio no es la que dibuja Figma, y eso afecta a todos los títulos
+  grandes.** Fraunces tiene un eje de tamaño óptico (`opsz`): no es una escala, es un
+  dibujo distinto de la letra según el cuerpo en el que se vaya a leer —en cuerpos
+  pequeños es robusta y de poco contraste, y en cuerpos grandes adelgaza los trazos
+  finos y aprieta el espaciado—. Figma la pinta con ese eje y el sitio no: `next/font`
+  la carga solo con el eje de peso, así que **todo título del sitio usa el corte de
+  texto, mida 24 px o 96**. La diferencia es medible: «El café no tiene una» a 96 px
+  ocupa **789 px** con la del sitio y **674** con el corte de display, un 15 % menos.
+  La consecuencia práctica es que **un texto en Fraunces siempre va a medir más de lo
+  que mide en Figma**, así que un diseño que encaja justo en su caja aquí se parte en
+  una línea más; ya pasa en la frase del pie, dibujada en dos líneas y pintada en tres.
+  No se corrige por iniciativa propia: añadir `axes: ["opsz"]` al cargar la tipografía
+  cambiaría de golpe el dibujo de todos los títulos del sitio, y eso se decide mirando
+  todas las páginas a la vez, no arreglando una.
 
 - **Un artículo no puede enlazar a otro.** El bloque `paragraph` solo admite itálicas, así
   que cuando un artículo manda a otro lo hace en prosa, nombrándolo: es lo que hace el

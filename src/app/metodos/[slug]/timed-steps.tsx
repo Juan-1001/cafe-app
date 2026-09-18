@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { SITE_FOOTER_ID } from "@/app/site-footer";
 import { fillAmounts } from "@/content/metodos/amounts";
 import {
   activeStepNumber,
@@ -17,6 +18,9 @@ import type { TimedStep } from "@/content/metodos/timing";
  * Como `elapsed` va de segundo en segundo, con 2 el destello dura dos tictacs.
  */
 const FLASH_SECONDS = 2;
+
+/** El aire que se le deja al panel por encima del pie del sitio cuando lo alcanza. */
+const GAP_ABOVE_FOOTER = 24;
 
 /**
  * El cronómetro y la lista de pasos viven en el mismo componente porque comparten
@@ -162,6 +166,90 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
     };
   }, []);
 
+  /**
+   * Cuánto hay que subir el panel para no pisar el pie del sitio, en píxeles.
+   *
+   * En escritorio el panel es una tarjeta fija arriba a la derecha que flota sobre el
+   * contenido, y eso está bien mientras lo que tiene debajo es texto sobre crema. Al
+   * llegar al final aparece la franja morada del pie y la tarjeta se quedaba encima:
+   * un recuadro de color crema sobre el morado, que no se lee como una tarjeta que
+   * flota sino como un fallo de pintado.
+   *
+   * Así que el pie la empuja. En cuanto el borde de arriba de la franja sube por
+   * encima del bajo de la tarjeta, la tarjeta sube lo mismo que se solaparían, y al
+   * seguir bajando acaba saliéndose por arriba de la pantalla. Se empuja en vez de
+   * esconderla porque el empujón es continuo —la tarjeta se va cuando la echan, no de
+   * golpe— y porque hasta el último momento el cronómetro sigue a la vista, que es
+   * justo lo que se está mirando si sigue corriendo.
+   *
+   * La cuenta se hace midiendo las dos cosas en el navegador en cada fotograma de
+   * scroll, y no con un número escrito a mano: ni el alto de la tarjeta ni el del pie
+   * son fijos —el de la tarjeta cambia con el texto del paso actual y el del pie con
+   * el ancho de la ventana—, así que cualquier distancia copiada aquí se desajustaría
+   * sola.
+   */
+  const [footerPush, setFooterPush] = useState(0);
+  const footerPushRef = useRef(0);
+
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    // En móvil no hay nada que esquivar: ahí el panel es la barra pegada al borde de
+    // abajo, y el pie ya le reserva su hueco con `--brew-timer-height`.
+    const desktop = window.matchMedia("(min-width: 768px)");
+
+    let frame = 0;
+
+    const apply = (value: number) => {
+      if (value === footerPushRef.current) return;
+      footerPushRef.current = value;
+      setFooterPush(value);
+    };
+
+    const read = () => {
+      frame = 0;
+
+      const footer = document.getElementById(SITE_FOOTER_ID);
+      if (!footer || !desktop.matches) {
+        apply(0);
+        return;
+      }
+
+      // Lo que se mide es dónde está la tarjeta ahora, que puede estar ya subida: por
+      // eso se le devuelve el empujón actual para saber dónde caería sin él. Sin esa
+      // corrección la cuenta se mordería la cola y la tarjeta se iría subiendo sola.
+      const restingBottom =
+        panel.getBoundingClientRect().bottom + footerPushRef.current;
+      const overlap =
+        restingBottom + GAP_ABOVE_FOOTER - footer.getBoundingClientRect().top;
+
+      apply(Math.max(0, Math.round(overlap)));
+    };
+
+    const schedule = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(read);
+    };
+
+    read();
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+
+    // El alto de la tarjeta cambia con el texto del paso que esté activo, y eso pasa
+    // sin que nadie haga scroll ni toque la ventana.
+    const observer = new ResizeObserver(schedule);
+    observer.observe(panel);
+
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      observer.disconnect();
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   const previousActiveRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -213,6 +301,14 @@ export function TimedSteps({ steps }: { steps: TimedStep[] }) {
       */}
       <div
         ref={panelRef}
+        /* El empujón del pie va en `transform` y no en `top`: mover `top` obligaría al
+           navegador a rehacer la posición en cada fotograma de scroll, y esto se
+           limita a desplazar lo ya pintado. Sin transición, para que siga al dedo. */
+        style={
+          footerPush > 0
+            ? { transform: `translateY(-${footerPush}px)` }
+            : undefined
+        }
         className={`fixed inset-x-0 bottom-0 z-10 border-t border-ink px-6 py-4 transition-colors duration-200 motion-reduce:transition-none md:inset-x-auto md:top-(--brew-timer-top) md:right-6 md:bottom-auto md:w-80 md:border md:p-5 ${
           alerting ? "bg-lavender" : "bg-paper"
         }`}

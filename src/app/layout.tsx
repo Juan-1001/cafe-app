@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Fraunces, IBM_Plex_Sans, Space_Mono } from "next/font/google";
 import { BackToTop, PAGE_TOP_ID } from "./back-to-top";
+import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
 import "./globals.css";
 
@@ -72,6 +73,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <div id={PAGE_TOP_ID} tabIndex={-1} />
         <SiteHeader />
         {children}
+        {/*
+          El cierre del sitio. Va aquí, en el layout raíz, y no en cada página: este
+          layout envuelve todas las rutas —la portada, los índices, las fichas y
+          también el 404—, así que una sección nueva lo hereda el día que exista sin
+          tener que acordarse de nada.
+
+          Después de `{children}` y no dentro: el bloque «Fotografías» con el que
+          cierran varias páginas acredita las fotos de esa página en concreto, así que
+          pertenece a la página y tiene que quedar dentro de ella. Esta franja es del
+          sitio entero y va después.
+        */}
+        <SiteFooter />
         <BackToTop />
         {/*
           El contador de visitas de Vercel. No pinta nada en la página: solo avisa de

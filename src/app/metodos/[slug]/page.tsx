@@ -188,11 +188,13 @@ export default async function BrewMethodPage({
       shot={method.shot}
       waterPerCoffeeGram={ratio ? ratio.water / ratio.coffee : 0}
     >
-      {/* En móvil el panel del cronómetro va fijo abajo y ocupa unos 180 px: ese
-          hueco es el que evita que tape el final del artículo. Sin cronómetro no hay
-          nada que esquivar, y dejarlo abriría un vacío de 200 px al pie de la moka
-          que parecería un error de maquetación. */}
-      <article className={hasTimer ? "pb-52 md:pb-32" : "pb-24 md:pb-32"}>
+      {/* El mismo relleno de abajo que el resto del sitio, con cronómetro y sin él.
+          Las fichas con cronómetro llevaban aquí 208 px en móvil para que la barra
+          fija no tapara el final del artículo; ese trabajo lo hace ahora el pie del
+          sitio, que es lo último del documento y abre el hueco él mismo. Mantenerlo
+          aquí solo dejaba un vacío de crema del doble que en las demás páginas justo
+          antes de la franja. */}
+      <article className="pb-24 md:pb-32">
         <header>
           {/*
             La fotografía de cabecera. En escritorio ocupa el 80 % derecho en una
