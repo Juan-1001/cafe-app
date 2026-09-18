@@ -39,6 +39,14 @@ import type { BrewMethod } from "./types";
  *   además la llama «as historically defined». Por eso va con doble atribución en el texto
  *   visible y por eso la SCA **no está** en la lista de fuentes: ahí solo va lo que se
  *   leyó.
+ *
+ *   **Novedad del 2026-09-17, para quien retome este hueco**: al documentar el artículo
+ *   de la molienda se comprobó que los PDF de la serie de estándares de la SCA **sí se
+ *   descargan** desde sca.coffee —de ahí salió el `SCA Standard 102-2024`, el de la
+ *   catación, que cita el artículo—. Eso no cierra esto: la definición de espresso es
+ *   otro documento y sigue sin leerse. Lo que dice es por dónde intentarlo, y es
+ *   distinto de lo que se intentó: buscar el estándar de esa serie que la contenga, en
+ *   vez de volver a la página que no respondió.
  * - **Los 9 bar como óptimo.** Como convención certificada es certeza alta: el INEI los
  *   fija con tolerancia. Como *mejor presión posible* no lo sostiene nadie, y lo medido
  *   apunta al revés: el estudio encuentra «an increase in extraction yield with decrease

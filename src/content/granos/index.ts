@@ -1,6 +1,7 @@
 import type { Article } from "./types";
 import { JOURNEY_STAGES, type JourneyStageInfo } from "./journey";
 import { arabicaVsRobusta } from "./arabica-vs-robusta";
+import { laMolienda } from "./la-molienda";
 import { nivelesDeTueste } from "./niveles-de-tueste";
 import { procesosEnOrigen } from "./procesos-en-origen";
 import { assertSourcesAreUsable } from "../sources";
@@ -16,6 +17,7 @@ export const articles: Article[] = [
   arabicaVsRobusta,
   procesosEnOrigen,
   nivelesDeTueste,
+  laMolienda,
 ];
 
 /*

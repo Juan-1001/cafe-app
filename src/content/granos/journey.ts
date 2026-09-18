@@ -1,7 +1,16 @@
 /**
- * Las etapas del recorrido que hace el café antes de llegar a tu molino. Son el
+ * Las etapas del recorrido que hace el café mientras sigue siendo grano. Son el
  * esqueleto de la sección: el índice se lee de arriba abajo como ese viaje, y cada
  * artículo declara en qué etapa ocurre lo que cuenta.
+ *
+ * Esa frontera estuvo antes en otro sitio. Decía «antes de llegar a tu molino», y se
+ * movió al escribir el artículo de la molienda por dos razones. La primera es que la
+ * molienda es una fase que cuatro fichas de método dan por sabida —los finos que
+ * taponan, el molino de cuchillas— y que el sitio no contaba en ninguna parte. La
+ * segunda es que aquella línea dejaba sin dueño el café premolido: si moler es «cosa
+ * tuya», quien muele el premolido es el tostador y ese caso quedaba fuera del mapa.
+ * La línea nueva, en una frase: /granos es todo lo que se le hace al grano, y /metodos
+ * empieza cuando el agua lo toca.
  *
  * Se ordena así, y no por el nivel de los artículos, por dos razones. La primera es
  * que el recorrido deja ver los huecos: si una etapa no tiene artículos, se nota
@@ -32,6 +41,24 @@ export const JOURNEY_STAGES = [
     number: "03",
     title: "En el tostador",
     note: "El único paso donde el calor transforma el grano de verde a marrón. Es la parte del proceso que se suele resumir mal.",
+  },
+  /*
+   * La cuarta es la única que no se llama «En + un lugar», y la excepción está pensada.
+   * Las tres primeras son sitios donde alguien trabaja el café: la planta, la finca, el
+   * tostador. Aquí no hay un «alguien» fijo —puede molerlo el tostador si compras
+   * premolido, puedes ser tú, o puede no molerlo nadie mientras la bolsa espera—, así
+   * que la etapa se nombra por la condición del grano y no por el lugar.
+   *
+   * Y no se llama «En el molino», que era la primera idea, porque la etapa no es solo la
+   * molienda: la frescura y el almacenamiento pasan en la bolsa y también caben aquí. Un
+   * rótulo con el nombre de uno de los tres inquilinos afirmaría algo que los otros dos
+   * no cumplen.
+   */
+  {
+    key: "grano",
+    number: "04",
+    title: "Mientras sigue siendo grano",
+    note: "Lo que le pasa al café desde que sale del tostador hasta que deja de ser grano: la espera en la bolsa, la frescura y la molienda.",
   },
 ] as const;
 

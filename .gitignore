@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# graphify (mapa del código, generado; se reconstruye con /graphify)
+/graphify-out/

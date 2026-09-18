@@ -151,6 +151,48 @@ export type Lane = {
   range: boolean;
 };
 
+/**
+ * Cuánto mide un trozo y cuánto polvo lo acompaña en el dibujo de una molienda, de 1
+ * (lo más pequeño, lo más limpio) a 5.
+ *
+ * Es una unión cerrada y sin unidades por lo mismo que `RoastWeight`: **estos valores no
+ * son una medición**. Nadie ha publicado el reparto de tamaños de «una molienda media»,
+ * y lo único medido que cita el artículo es de un molino de laboratorio en un solo
+ * ajuste. Lo que sí está medido es la **dirección**: al apretar la molienda los trozos
+ * grandes se hacen más pequeños y la proporción de finos sube. El dibujo cuenta esa
+ * dirección y nada más, por eso el bloque no enseña estos números en pantalla y por eso
+ * su `note` es obligatorio.
+ */
+export type GrindWeight = 1 | 2 | 3 | 4 | 5;
+
+/**
+ * El tope de `GrindWeight`. Vive pegado al tipo porque los dos tienen que cambiar a la
+ * vez: si la unión llegara a 8 y esto siguiera en 5, los trozos se saldrían del cuadro
+ * sin que nada fallara al compilar.
+ */
+export const GRIND_WEIGHT_MAX = 5;
+
+/**
+ * El reparto que se dibuja dentro del cuadro de una molienda.
+ *
+ * Son dos cosas y no una porque el artículo se sostiene sobre esa diferencia: una
+ * molienda no es un tamaño, es un reparto. Si solo hubiera `chunk`, el dibujo diría que
+ * moler más fino encoge los trozos y se acabó, que es justo el error que el artículo
+ * desmonta.
+ */
+export type GrindSpread = {
+  /** Lo que miden los trozos grandes de este peldaño. */
+  chunk: GrindWeight;
+  /** Cuánto polvo hay entre ellos. Siempre hay: ninguna molienda sale sin finos. */
+  fines: GrindWeight;
+};
+
+/** Un peldaño de la escala de molienda. */
+export type GrindStep = ScaleStep & {
+  /** Qué se dibuja en el cuadro cuando este peldaño está elegido. */
+  spread: GrindSpread;
+};
+
 /** Un peldaño de la línea del beneficio. */
 export type ProcessStep = ScaleStep & {
   /** Su carril en el dibujo. */
@@ -251,10 +293,10 @@ export type ArticleBlock =
    * Una escala: un puñado de peldaños ordenados, uno elegido, y un dibujo que cambia
    * con él. Es el único bloque interactivo de un artículo.
    *
-   * Tiene dos variantes porque dos artículos pidieron la misma mecánica con distinta
-   * cara, y montar dos bloques habría significado mantener dos veces las tarjetas, el
-   * foco, el estado activo y todo el aparato de accesibilidad. Lo que de verdad cambia
-   * entre las dos es poco y está aquí declarado:
+   * Tiene tres variantes porque tres artículos pidieron la misma mecánica con distinta
+   * cara, y montar un bloque por artículo habría significado mantener tres veces las
+   * tarjetas, el foco, el estado activo y todo el aparato de accesibilidad. Lo que de
+   * verdad cambia entre ellas es poco y está aquí declarado:
    *
    * - `"roast"` tiene **deslizador**, porque entre un tueste medio y uno medio-oscuro
    *   hay un continuo de verdad: las posiciones intermedias existen. Dibuja granos que
@@ -264,8 +306,14 @@ export type ArticleBlock =
    *   la línea del beneficio con los tres carriles a la vez, y no lleva barras, porque
    *   los procesos no son un intercambio entre dos cosas opuestas —el coste del lavado
    *   es agua y el del natural es tiempo, y eso no son dos extremos de un mismo eje—.
+   * - `"grind"` tiene **deslizador**, y por el mismo motivo que el tueste: entre «media»
+   *   y «media-fina» hay un continuo de verdad, porque un molino tiene clics
+   *   intermedios, así que arrastrar a medio camino no miente. Dibuja el reparto de una
+   *   molienda —trozos desiguales con su polvo— dentro de un cuadro ampliado, y tampoco
+   *   lleva barras: aquí no hay dos cosas que se cambien la una por la otra, hay un
+   *   reparto que se desplaza entero.
    *
-   * En las dos, los peldaños están **todos** en la página con sus textos completos: lo
+   * En las tres, los peldaños están **todos** en la página con sus textos completos: lo
    * elegido se destaca, no aparece. Así el bloque se lee entero aunque el JavaScript no
    * llegue nunca.
    */
@@ -308,6 +356,31 @@ export type ArticleBlock =
       /**
        * Qué es el dibujo y qué no es: que los días están medidos pero en un solo
        * estudio, y que el alto de las barras es un diagrama y no una medición.
+       */
+      diagramNote: string;
+    }
+  | {
+      kind: "scale";
+      variant: "grind";
+      /** Qué hacer con el mando. Encabeza el bloque. */
+      intro: string;
+      /**
+       * Los rótulos de las dos notas de cada peldaño. El segundo nombra un dato que sale
+       * de `brewMethods` y no de este archivo: qué métodos del sitio piden ese punto.
+       */
+      axes: [string, string];
+      /** De la más fina a la más gruesa. El orden es el recorrido del deslizador. */
+      steps: GrindStep[];
+      /**
+       * Que el reparto dibujado no es una medición. Va sin `?` por lo mismo que en el
+       * tueste: un dibujo sin números que no avisa de que es un dibujo se lee como si
+       * alguien lo hubiera medido, y aquí nadie lo ha medido.
+       */
+      note: string;
+      /**
+       * Qué se está viendo en el cuadro. Va aparte de `note` porque dice otra cosa:
+       * `note` avisa de que el reparto es dibujo, y esto explica qué es cada mancha y
+       * por qué el polvo no desaparece nunca.
        */
       diagramNote: string;
     };

@@ -380,8 +380,19 @@ export const nivelesDeTueste: Article = {
       text: "Lo que sí trae una bolsa bien hecha es la fecha de tueste y las *notas de cata*: la lista de sabores que el tostador encontró al probarlo. Y ahí está el atajo. Si alguien se ha molestado en escribir «mandarina» y «panela», está diciéndote que el tueste es claro, porque en un tueste oscuro esas notas no sobreviven. Si pone «chocolate intenso» y «nuez», está diciendo lo contrario. Las notas de cata terminan siendo el mejor indicador de nivel de tueste que vas a encontrar en una etiqueta.",
     },
     {
+      /*
+       * Este párrafo se reescribió al abrir la etapa 04 de la sección. Antes decía que
+       * el tueste era «el último paso antes de que el café llegue a tu molino» y mandaba
+       * la molienda a /metodos; con la frontera de la sección movida a «mientras sigue
+       * siendo grano», eso habría quedado contradiciendo al propio índice.
+       *
+       * Y se cayó de paso la frase «el último en el que alguien decide por ti», que era
+       * la más bonita del párrafo: si compras café premolido, la molienda también la
+       * decide el tostador. Lo que sí se sostiene —y es lo que se queda— es que el tueste
+       * es el último paso que cambia el grano por dentro.
+       */
       kind: "paragraph",
-      text: "El tueste es el último paso antes de que el café llegue a tu molino, y también el último en el que alguien decide por ti. De ahí en adelante —la molienda, el agua, el tiempo— ya es cosa tuya, y de eso van los métodos de preparación.",
+      text: "El tueste es el último paso que cambia el grano por dentro, pero no el último que le pasa mientras sigue siendo grano. Le queda esperar en la bolsa y le queda partirse, y quien lo parte puede ser el tostador —si compras el café ya molido— o puedes ser tú. De eso va el resto de esta sección, empezando por la molienda: es ahí donde las palabras que usan las fichas de método, «media» o «gruesa», dejan de ser una comparación con la sal. Cuando ya no queda grano que partir y el agua entra, empiezan los métodos de preparación.",
     },
   ],
 

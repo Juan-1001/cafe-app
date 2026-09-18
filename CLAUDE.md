@@ -4,6 +4,17 @@
 
 ## Qué es
 
+El sitio se llama **Presunto Café**. Ese es el nombre completo y el que se escribe
+siempre que el sitio se nombre a sí mismo: el título de la pestaña, el manifest, las
+tarjetas al compartir un enlace. La carpeta y el paquete siguen llamándose `cafe-app`
+porque ese es el nombre del proyecto, no el de la web.
+
+La única abreviatura admitida es **«Presunto»**, y existe por una razón medida: es el
+nombre corto del manifest, que es lo que cabe debajo del icono en la pantalla de inicio
+de un móvil —unos doce caracteres, y «Presunto Café» son trece—. Se corta por esa mitad
+y no por la otra porque «Presunto» es la palabra que identifica; «Café» sola valdría
+para cualquier cosa. Fuera de ahí, el nombre va entero.
+
 Web de contenido para aficionados al café de especialidad. El objetivo es que alguien
 curioso llegue, aprenda y se lleve algo aplicable: entender de dónde viene un grano,
 cómo prepararlo en casa y dónde tomarse un buen café en Bogotá.
@@ -36,11 +47,19 @@ una misma ficha, y porque el catálogo de orígenes es contenido infinito: nunca
 terminado. Cada artículo tiene nivel (introductorio o intermedio), tiempo de lectura
 calculado del propio cuerpo y un cuerpo hecho de bloques con tipo.
 
-El índice se ordena por **el recorrido del café** —la planta, la finca, el tostador—, no
-por nivel. El recorrido deja ver los huecos que faltan por contar, mientras que una lista
+El índice se ordena por **el recorrido del café** —la planta, la finca, el tostador y
+«mientras sigue siendo grano»—, no por nivel. El recorrido deja ver los huecos que faltan por contar, mientras que una lista
 solo crece; y agrupar por nivel repetiría el recurso de los capítulos por dificultad de
 `/metodos`, con lo que las dos secciones se leerían como la misma plantilla rellenada dos
 veces. Los artículos se leen sueltos: cada uno se entiende por su cuenta.
+
+La sección llega **hasta donde el café sigue siendo grano**, y esa frontera estuvo antes
+en «antes de llegar a tu molino». Se movió al escribir el artículo de la molienda: es una
+fase que cuatro fichas de método daban por sabida y que ninguna página contaba, y la línea
+vieja dejaba sin dueño el café premolido, que lo muele el tostador. La etapa 04 nació con
+tres inquilinos previstos —la molienda, la frescura y el almacenamiento—, que es la razón
+de abrirla en vez de acomodar el caso: la explicación entera está en
+`src/content/granos/journey.ts`. `/metodos` empieza cuando el agua toca el café.
 
 Los orígenes y las variedades vuelven más adelante como artículo (por ejemplo, «las
 variedades que vas a ver en Colombia»), nunca como catálogo con una ficha por país.
@@ -247,6 +266,39 @@ La escala va en **múltiplos de 4 px** (`--spacing: 4px`), así que las utilidad
 Tailwind se leen directamente en píxeles: `p-1` = 4 px, `p-2` = 8 px, `gap-6` = 24 px.
 No uses valores arbitrarios tipo `p-[13px]`: redondea al múltiplo de 4 más cercano.
 
+### El logotipo y el icono
+
+Los dibuja el usuario y **no se rehacen ni se retocan por iniciativa propia**: si algo
+del logotipo no encaja, se dice y se espera a que llegue el archivo nuevo.
+
+El **logotipo** —«Presunto Café» con letras dibujadas, «Presunto» en `lavender-deep` y
+«Café» en `sage`— vive escrito dentro de `src/app/logo.tsx`, no como archivo en
+`/public`. Es la excepción a la regla de que las imágenes van en `/public`, y tiene dos
+motivos: al estar en el HTML se pinta con la página, sin una segunda petición ni el
+hueco en blanco mientras llega, y sus rellenos pueden ser las variables de la paleta en
+vez de dos hexadecimales copiados a mano. Va en la cabecera en lugar del nombre escrito.
+
+Es **muy apaisado** —952,6 × 134, algo más de siete veces más ancho que alto— y eso
+manda en cómo se usa: cada píxel de alto le cuesta siete de ancho. A 24 px de alto mide
+unos 171 y, junto a la navegación, no cabe en la línea de una pantalla de 375 px. Por
+eso va a 20 px en móvil y a 28 px en escritorio. Al tocar la cabecera, esa cuenta hay
+que rehacerla.
+
+Como es un dibujo y no texto, **el logotipo no lo lee ningún lector de pantalla**: el
+SVG va con `aria-hidden` y el nombre del sitio viaja en un texto oculto a su lado. Si se
+usa el logotipo en otro sitio, ese texto tiene que ir con él.
+
+El **icono** del sitio sale de un único SVG cuadrado, `src/app/icon.svg`. De ahí se
+generan con `sharp` los demás tamaños: `src/app/favicon.ico` (con 16, 32 y 48 px
+dentro), `src/app/apple-icon.png` (180 × 180) y `public/icon-192.png` y
+`public/icon-512.png` para el manifest. Los tres primeros los reconoce Next por el
+nombre del archivo y los enlaza solos. **Si cambia el SVG, hay que regenerar los cinco**:
+dejar el `.ico` viejo con el icono nuevo es tener dos marcas a la vez según dónde se mire.
+
+Un icono se ve **a 16 px**, y ahí lo que decide es cuánto del cuadro ocupa la marca, no
+lo bonita que sea de cerca. Antes de dar un icono por bueno hay que renderizarlo pequeño
+y mirarlo, no suponerlo.
+
 ## Antipatrones visuales
 
 Este sitio debe verse **editorial y hecho a mano, no generado**. Evita:
@@ -276,6 +328,39 @@ En su lugar:
   en `src/app/globals.css` y se reutilizan.
 - Sin librerías de UI ni dependencias nuevas salvo que se justifiquen y se acuerden antes.
 
+### Analítica
+
+El sitio lleva **Vercel Web Analytics** (`@vercel/analytics`), montado en
+`src/app/layout.tsx`. Se aceptó a sabiendas y esto es lo que se sabía al aceptarlo, para
+que no haya que volver a investigarlo.
+
+**Qué hace el paquete que está en el repositorio** (comprobado leyendo su código, no
+documentación): son unas 150 líneas que no miden nada. Solo cargan un script y, en cada
+cambio de página, envían dos datos: la **ruta patrón** (`/metodos/[slug]`) y la
+**dirección real** (`/metodos/v60`). En desarrollo carga otro script distinto y no manda
+nada real, así que en local no cuenta.
+
+**El matiz que importa**: el script se sirve desde `/_vercel/insights/script.js`, es
+decir, **desde el dominio del propio sitio**, no desde un dominio de Vercel. Lo reenvía
+Vercel por detrás. La consecuencia es que **los bloqueadores y las extensiones de
+privacidad lo detectan mucho menos que una analítica normal**, porque para el navegador
+no hay ningún tercero. Es bueno para la fiabilidad del dato y discutible para quien creía
+haberse librado de que lo midieran. Si alguna vez se escribe una página de privacidad,
+esto es lo que hay que contar ahí.
+
+**Qué recoge el script que mide**: no se puede verificar desde el repositorio —lo sirve
+Vercel en el momento de la petición y no está aquí—, así que lo que sigue es **lo que
+Vercel documenta**, no algo comprobado. Sin cookies y sin guardar nada en el navegador.
+Al visitante se le identifica con un número calculado en el servidor a partir de su IP,
+su navegador y una sal que cambia cada día, así que **ese identificador se rompe cada 24
+horas**: no sigue a nadie de un día para otro ni de una web a otra. Recoge la página
+vista, de dónde venía, el país (deducido de la IP, que no se guarda), el tipo de aparato,
+el sistema y el navegador. Sin perfiles publicitarios.
+
+**La palanca, si hiciera falta**: el componente acepta una función `beforeSend` que
+recibe cada evento antes de salir y puede modificarlo o cancelarlo devolviendo `null`.
+Ahí se quita lo que no se quiera enviar o se dejan páginas sin medir.
+
 Comandos:
 
 ```bash
@@ -299,9 +384,36 @@ No digas que un cambio está listo hasta haber comprobado, en este orden:
 Si alguno de los cuatro no pasa y no lo puedes arreglar, dímelo explícitamente en lugar
 de entregar el cambio como terminado.
 
+### Los 375 px se comprueban en un navegador, no a ojo
+
+Hay un navegador de verdad disponible. El punto 4 **se mide abriendo la página**, no
+razonando sobre las clases de Tailwind ni echando cuentas de anchos. Antes no lo había y
+la regla era revisarlo a mano; esa razón ya no existe.
+
+Los 375 px son el ancho del contenido, así que hay que **emular un dispositivo**: una
+ventana de escritorio no baja de unos 500 px y redimensionarla no sirve.
+
+**No basta con la página quieta.** Hay que mirar también los estados que solo existen
+usándola: el cronómetro andando, la calculadora en su valor más ancho, la página
+desplazada hasta abajo —que es cuando aparece «Volver al inicio»— y el final del
+contenido, para ver si el panel fijo tapa las últimas líneas.
+
+**Lo que se comprueba y lo que no.** Esta comprobación es de **hechos**, y su resultado
+es un sí o un no que no se discute: si algo desborda, si la navegación se parte en dos
+líneas, si un texto se corta, si una imagen sale deformada o rota, si un elemento fijo
+tapa a otro o al contenido. **El juicio de diseño no entra aquí y no es tuyo**: si la
+página respira, si la jerarquía funciona, si el logotipo se ve pequeño de más o si el
+cronómetro ocupa demasiada pantalla lo decide el usuario. Lo que se hace con eso es
+**darle la medida** —«el panel ocupa 171 px de los 812»— y dejar que él juzgue, en vez de
+opinar o de corregirlo por cuenta propia.
+
+Sigue en pie lo de **declarar qué se comprobó y qué no**: si algo quedó sin mirar, se
+dice. Y si la comprobación se hizo contra el servidor de desarrollo y no contra el de
+producción, también se dice.
+
 ## Estado actual
 
-En pie: la **home**, **`/granos`** con tres artículos (uno por cada etapa del recorrido) y
+En pie: la **home**, **`/granos`** con cuatro artículos (uno por cada etapa del recorrido) y
 **`/metodos`** con cinco métodos. `/recetas` y `/tiendas` están por construir.
 
 ### La dificultad de un método se calcula, no se escribe
@@ -348,6 +460,11 @@ Defectos detectados y aceptados a sabiendas. No hace falta volver a señalarlos 
 arreglarlos por iniciativa propia; si un trabajo futuro toca la zona, este es el sitio
 donde mirar antes.
 
+- **Un artículo no puede enlazar a otro.** El bloque `paragraph` solo admite itálicas, así
+  que cuando un artículo manda a otro lo hace en prosa, nombrándolo: es lo que hace el
+  final de «Niveles de tueste» con la molienda. Se decidió **no** abrir un enlace entre
+  artículos ahora y esperar a que haya dos casos reales —la frescura va a querer apuntar a
+  la molienda y al revés—, para montarlo bien en vez de improvisar uno suelto.
 - **El cronómetro se superpone al recuadro del título entre 768 y 1000 px de ancho.** En
   ese rango, el panel fijo del cronómetro de las fichas de método pisa la esquina derecha
   del recuadro crema del título. No tapa texto, así que se decidió no corregirlo por

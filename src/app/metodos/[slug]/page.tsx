@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Eyebrow } from "@/app/eyebrow";
 import { PhotoCredits } from "@/app/photo-credits";
@@ -65,6 +66,35 @@ const SPEC_FIELDS = [
   isTime: boolean;
   isRatio: boolean;
 }[];
+
+/**
+ * El pie de la casilla de molienda: una línea que lleva al artículo donde esa palabra
+ * deja de ser una comparación con la sal.
+ *
+ * Está escrita **una sola vez y aquí**, junto al rótulo «Molienda», y no en los diez
+ * archivos de contenido. El enlace es el mismo en las diez fichas, así que diez copias
+ * serían diez sitios donde se puede quedar desactualizado; y el método once lo hereda sin
+ * que nadie se acuerde, igual que hereda el cálculo de dificultad con solo puntuar sus
+ * cuatro ejes.
+ *
+ * Va debajo de la nota y en su propio renglón. No se enlaza el valor —«Media-fina» es el
+ * dato, y va a 24-30 px en mono— ni el rótulo, porque subrayar uno de los siete rótulos
+ * de la tabla descuadraría la columna. Una línea aparte se lee como lo que es, «esto
+ * tiene explicación en otro sitio», y cuesta un renglón en una tabla que ya tiene siete
+ * filas.
+ *
+ * El color no es el de los demás enlaces del sitio, y es por el fondo: esta tabla vive
+ * sobre `lavender`, no sobre `paper`. El `lavender-deep` que se usa en el resto de los
+ * enlaces se queda en 1,5:1 contra ese fondo y desaparece; `ink` sobre `lavender` da
+ * 4,9:1, que es lo que pide un texto pequeño. Al perder el color distintivo, lo que dice
+ * que esto es un enlace es el subrayado, y el hover lo cierra en vez de cambiar de tono:
+ * ningún color de la paleta llega al mínimo sobre este fondo, así que la respuesta al
+ * puntero no puede ser de color.
+ */
+const GRIND_ARTICLE = {
+  href: "/granos/la-molienda",
+  text: "Qué significa «media» o «gruesa» →",
+} as const;
 
 /**
  * El título de los errores lleva el número escrito con letra, no en cifra, así que
@@ -253,6 +283,17 @@ export default async function BrewMethodPage({
                         {spec.note ? (
                           <p className="mt-2 max-w-prose text-sm text-ink">
                             <Amounts text={spec.note} />
+                          </p>
+                        ) : null}
+
+                        {key === "grind" ? (
+                          <p className="mt-3">
+                            <Link
+                              href={GRIND_ARTICLE.href}
+                              className="font-mono text-xs uppercase tracking-widest text-ink underline decoration-ink/50 underline-offset-4 hover:decoration-ink"
+                            >
+                              {GRIND_ARTICLE.text}
+                            </Link>
                           </p>
                         ) : null}
                       </>

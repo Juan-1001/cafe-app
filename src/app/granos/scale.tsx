@@ -2,8 +2,11 @@
 
 import { useId, useState } from "react";
 import {
+  GRIND_WEIGHT_MAX,
   ROAST_WEIGHT_MAX,
   type ArticleBlock,
+  type GrindSpread,
+  type GrindWeight,
   type Lane,
   type ProcessStep,
   type RoastBean,
@@ -13,6 +16,7 @@ import {
 type ScaleBlock = Extract<ArticleBlock, { kind: "scale" }>;
 type RoastBlock = Extract<ScaleBlock, { variant: "roast" }>;
 type ProcessBlock = Extract<ScaleBlock, { variant: "process" }>;
+type GrindBlock = Extract<ScaleBlock, { variant: "grind" }>;
 
 /* ------------------------------------------------------------------ granos */
 
@@ -614,6 +618,172 @@ function HatchPattern({ id }: { id: string }) {
   );
 }
 
+/* ---------------------------------------------------------------- molienda */
+
+/**
+ * El lado del cuadro del reparto, en unidades del `viewBox`. Es cuadrado porque lo que
+ * enseña es un trozo de mesa visto muy de cerca, no una magnitud con eje.
+ */
+const SPREAD_BOX = 240;
+
+/**
+ * Tres siluetas de trozo, irregulares y distintas entre sí.
+ *
+ * Están dibujadas a mano y con los lados desiguales a propósito: un trozo de café roto
+ * no es un círculo, y una rejilla de puntos redondos del mismo tamaño diría justo lo
+ * contrario de lo que cuenta el artículo. Cada silueta ocupa unas 44 unidades de las 240
+ * del cuadro cuando se dibuja a tamaño completo.
+ */
+const CHUNK_SHAPES = [
+  "M -20 -14 L 4 -22 L 22 -4 L 12 18 L -14 16 Z",
+  "M -18 -16 L 16 -18 L 24 8 L -4 22 L -22 6 Z",
+  "M -14 -20 L 18 -8 L 8 20 L -18 12 Z",
+] as const;
+
+/**
+ * Dónde va cada trozo, cuánto se gira y cuánto mide respecto a su silueta.
+ *
+ * Los siete están puestos a mano, como los tres granos del tueste, y por el mismo motivo:
+ * una distribución regular se lee como una rejilla y delata el dibujo. El `size` de cada
+ * uno es lo que hace que ni siquiera dentro de un mismo peldaño midan todos igual, que es
+ * la mitad del asunto: en una molienda no hay un tamaño, hay un reparto.
+ */
+const CHUNK_POSITIONS = [
+  { x: 54, y: 58, rotate: 12, shape: 0, size: 1 },
+  { x: 152, y: 46, rotate: -20, shape: 1, size: 0.78 },
+  { x: 98, y: 120, rotate: 35, shape: 2, size: 1.14 },
+  { x: 190, y: 124, rotate: 8, shape: 0, size: 0.66 },
+  { x: 46, y: 172, rotate: -35, shape: 1, size: 0.92 },
+  { x: 130, y: 198, rotate: 22, shape: 2, size: 0.74 },
+  { x: 198, y: 192, rotate: -12, shape: 0, size: 0.55 },
+] as const;
+
+/**
+ * Cuánto se dibuja un trozo según su peso, de 1 a 5.
+ *
+ * No es `peso / 5`, y la diferencia importa. Con la proporción directa, el peldaño más
+ * fino dibujaba los trozos a un quinto de su tamaño y en pantalla dejaban de parecer
+ * trozos: el cuadro de la molienda fina salía con polvo y nada más. Eso es falso, y
+ * falso justo en lo que el artículo está explicando —en una molienda fina también hay
+ * una parte gruesa, solo que menor—, así que la escala tiene suelo: del 44 % al 100 %.
+ *
+ * Es una decisión de dibujo, no una medición, igual que el resto de este cuadro. Lo que
+ * el dibujo tiene que conservar es la lectura: los trozos se hacen menores y el polvo
+ * aumenta, y para eso los trozos tienen que seguir siendo reconocibles en los cinco.
+ */
+const CHUNK_SCALE: Record<GrindWeight, number> = {
+  1: 0.44,
+  2: 0.58,
+  3: 0.72,
+  4: 0.86,
+  5: 1,
+};
+
+/** Cuántos puntos de polvo hay dibujados en total. Se enseñan por tramos. */
+const FINE_COUNT = 60;
+
+/**
+ * Las posiciones del polvo.
+ *
+ * Aquí sí hay un generador y no una lista escrita a mano, al revés que con los trozos, y
+ * la razón es el número: sesenta pares de coordenadas escritos a mano serían sesenta
+ * líneas de ruido que nadie va a revisar. La semilla es fija y la cuenta es aritmética
+ * entera, así que el dibujo sale **idéntico** siempre y en cualquier máquina: en el
+ * servidor al generar el sitio y en el navegador al hidratar, que es lo que importa para
+ * que React no encuentre dos dibujos distintos.
+ *
+ * Es un generador congruencial de los de toda la vida, con los multiplicadores de
+ * `glibc`. No hace falta que sea bueno: hace falta que sea siempre el mismo.
+ */
+function buildFines() {
+  let seed = 20260917;
+  const next = () => {
+    seed = (seed * 1103515245 + 12345) % 2147483648;
+    return seed / 2147483648;
+  };
+
+  const margin = 10;
+  const span = SPREAD_BOX - margin * 2;
+
+  return Array.from({ length: FINE_COUNT }, () => ({
+    x: margin + next() * span,
+    y: margin + next() * span,
+    /* Entre 1 y 2,2 unidades: por debajo de eso el punto desaparece al reducir el
+       cuadro a 96 px en móvil, y por encima empieza a parecer un trozo pequeño. */
+    r: 1 + next() * 1.2,
+  }));
+}
+
+const FINES = buildFines();
+
+/**
+ * El reparto de una molienda: un cuadro ampliado con sus trozos y su polvo.
+ *
+ * Los trozos no aparecen ni desaparecen, cambian de tamaño; el polvo no cambia de tamaño,
+ * aparece y desaparece. Esa diferencia es deliberada y es lo que hace que el dibujo diga
+ * la frase entera: al apretar la molienda los trozos se hacen menores **y** el polvo
+ * aumenta. Si las dos cosas se movieran igual, el dibujo diría «todo se hace pequeño»,
+ * que es exactamente el error que el artículo desmonta.
+ *
+ * Los dos cambios llevan transición porque el mando recorre un continuo de verdad —un
+ * molino tiene clics intermedios—, así que interpolar entre dos peldaños no miente. No es
+ * una cantidad creciendo desde cero: es un estado que se desplaza al otro.
+ *
+ * Se esconde de los lectores de pantalla porque no cuenta nada que no esté escrito al
+ * lado: el nombre del peldaño está encima, y qué es cada mancha lo dice el pie del
+ * dibujo.
+ */
+function Spread({ spread }: { spread: GrindSpread }) {
+  const chunkScale = CHUNK_SCALE[spread.chunk];
+  const visibleFines = (spread.fines * FINE_COUNT) / GRIND_WEIGHT_MAX;
+
+  return (
+    <div className="w-24 shrink-0 border border-dust bg-paper lg:mt-8 lg:w-full lg:max-w-[240px]">
+      <svg
+        viewBox={`0 0 ${SPREAD_BOX} ${SPREAD_BOX}`}
+        aria-hidden="true"
+        focusable="false"
+        className="block h-auto w-full text-coffee"
+      >
+        {FINES.map((fine, index) => (
+          <circle
+            key={index}
+            cx={fine.x}
+            cy={fine.y}
+            r={fine.r}
+            fill="currentColor"
+            className={FADE}
+            style={{ opacity: index < visibleFines ? 0.85 : 0 }}
+          />
+        ))}
+
+        {CHUNK_POSITIONS.map((position) => (
+          <path
+            key={`${position.x}-${position.y}`}
+            d={CHUNK_SHAPES[position.shape]}
+            fill="currentColor"
+            className="transition-transform duration-500 ease-out motion-reduce:transition-none"
+            /*
+              Las dos primeras propiedades no son adorno: sin ellas el dibujo sale
+              descolocado. Una transformación de CSS sobre un elemento de SVG se aplica,
+              por omisión, alrededor del centro del `viewBox` —el 50 % 50 % de siempre—,
+              así que girar o encoger un trozo lo mandaría además de paseo. Fijando el
+              origen en la esquina 0,0 del `viewBox`, el `translate` coloca el trozo y el
+              giro y el tamaño ocurren donde está. Se usa CSS y no el atributo
+              `transform` porque un atributo no transiciona.
+            */
+            style={{
+              transformBox: "view-box",
+              transformOrigin: "0px 0px",
+              transform: `translate(${position.x}px, ${position.y}px) rotate(${position.rotate}deg) scale(${chunkScale * position.size})`,
+            }}
+          />
+        ))}
+      </svg>
+    </div>
+  );
+}
+
 /* -------------------------------------------------------------- compartido */
 
 /**
@@ -1057,13 +1227,110 @@ function ProcessScale({ intro, axes, steps, note, diagramNote }: ProcessBlock) {
 }
 
 /**
- * El bloque `scale`. Reparte según la variante y no comparte estado entre las dos: cada
+ * La escala de molienda, con deslizador.
+ *
+ * Es la variante del tueste sin las barras del intercambio, y la ausencia dice algo: en
+ * una molienda no hay dos cosas que se cambien la una por la otra. Hay un reparto que se
+ * desplaza entero, y eso es lo que dibuja el cuadro.
+ *
+ * El deslizador entra por el mismo criterio que en el tueste y no por simetría: entre
+ * «media» y «media-fina» hay un continuo de verdad, porque el molino tiene clics
+ * intermedios, así que arrastrar a medio camino no inventa un punto que no exista. Entre
+ * el lavado y el honey sí lo inventaría, y por eso los procesos no lo llevan.
+ *
+ * Aquí tampoco hay `Bar`, así que la columna izquierda tiene tres filas en vez de cuatro:
+ * el rótulo de arriba, el panel del mando y el pie del dibujo.
+ */
+function GrindScale({ intro, axes, steps, note, diagramNote }: GrindBlock) {
+  const [index, setIndex] = useState(0);
+  if (steps.length === 0) return null;
+
+  const selected = steps[Math.min(index, steps.length - 1)];
+
+  return (
+    <figure className="mt-16 border-t-2 border-lavender pt-6 md:mt-24">
+      {/* Los tres hijos de la izquierda y la lista comparten rejilla por lo mismo que en
+          las otras dos variantes: para que el panel pegajoso de móvil siga anclado
+          mientras pasan las tarjetas, su bloque contenedor tiene que abarcarlas. */}
+      <div className="lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-12 xl:gap-x-16">
+        <p className="max-w-[34ch] font-mono text-xs uppercase tracking-widest text-ink lg:col-start-1 lg:row-start-1">
+          {intro}
+        </p>
+
+        {/* Mismo panel que el del tueste, y por las mismas razones: `sticky` acotado por
+            el bloque contenedor, hasta `md` y no más —desde ahí la cabecera del sitio ya
+            se queda pegada arriba—, con los márgenes negativos sacando el fondo hasta el
+            borde de la pantalla para que el texto no se vea pasar por los lados. */}
+        <div className="sticky top-0 z-10 -mx-6 mt-6 border-b border-dust bg-paper px-6 py-3 md:static md:z-auto md:mx-0 md:border-b-0 md:px-0 md:py-0 lg:col-start-1 lg:row-start-2">
+          <div className="flex items-center gap-4 lg:block">
+            {/* A 24 px el lavanda cumple sobre el crema (3,15:1); en escritorio sube a
+                36 y no más, porque «Media-gruesa» a 48 px no cabe en esta columna. */}
+            <p className="min-w-0 flex-1 font-display text-2xl leading-none text-lavender lg:text-4xl">
+              {selected.name}
+            </p>
+
+            <Spread spread={selected.spread} />
+          </div>
+
+          <input
+            type="range"
+            min={0}
+            max={steps.length - 1}
+            step={1}
+            value={index}
+            onChange={(event) => setIndex(Number(event.target.value))}
+            aria-label="Punto de molienda"
+            aria-valuetext={selected.name}
+            /* El mismo carril y el mismo tirador que el deslizador del tueste: si los dos
+               bloques del sitio que se arrastran no se vieran iguales, el segundo
+               parecería otro tipo de control. */
+            className="mt-4 h-6 w-full appearance-none bg-transparent accent-lavender-deep focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lavender-deep lg:mt-8 [&::-moz-range-thumb]:size-6 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-lavender-deep [&::-moz-range-track]:h-2 [&::-moz-range-track]:bg-dust [&::-webkit-slider-runnable-track]:h-2 [&::-webkit-slider-runnable-track]:bg-dust [&::-webkit-slider-thumb]:-mt-2 [&::-webkit-slider-thumb]:size-6 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:bg-lavender-deep"
+          />
+
+          {/* Los dos extremos dicen hacia dónde va el mando. Se esconden de los lectores
+              de pantalla porque el propio control ya anuncia su valor y su recorrido. */}
+          <div
+            aria-hidden="true"
+            className="mt-2 flex justify-between font-mono text-xs uppercase tracking-widest text-coffee"
+          >
+            <span>Más fina</span>
+            <span>Más gruesa</span>
+          </div>
+        </div>
+
+        <p className="mt-8 max-w-[46ch] text-sm text-coffee lg:col-start-1 lg:row-start-3">
+          {diagramNote}
+        </p>
+
+        <div className="mt-12 lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:mt-0">
+          <StepList
+            steps={steps}
+            axes={axes}
+            selected={index}
+            onSelect={setIndex}
+            label="Los cinco puntos"
+          />
+        </div>
+      </div>
+
+      <figcaption className="mt-10 max-w-[58ch] border-t border-dust pt-5 text-sm text-coffee">
+        {note}
+      </figcaption>
+    </figure>
+  );
+}
+
+/**
+ * El bloque `scale`. Reparte según la variante y no comparte estado entre las tres: cada
  * una es un componente con su propio peldaño elegido.
  */
 export function Scale(block: ScaleBlock) {
-  return block.variant === "roast" ? (
-    <RoastScale {...block} />
-  ) : (
-    <ProcessScale {...block} />
-  );
+  switch (block.variant) {
+    case "roast":
+      return <RoastScale {...block} />;
+    case "process":
+      return <ProcessScale {...block} />;
+    case "grind":
+      return <GrindScale {...block} />;
+  }
 }
