@@ -104,8 +104,24 @@ export function SiteFooter() {
           de los 1240 de contenido), y por debajo de ese ancho no hace nada: en las
           pantallas medianas la frase ocupa lo que hay y solo a partir de que sobre
           sitio se convierte en la columna desplazada a la derecha.
+
+          **Se queda en 72 px y no sube a los 96 del diseño**, que es lo que la dejaba
+          en tres líneas. Es la discrepancia de la Fraunces anotada en el CLAUDE.md,
+          medida aquí: a 96 px «sola forma de hacerse.» ocupa 907 px y la caja mide
+          714, así que ni partiendo la frase por donde la parte el diseño cabía. El
+          mayor cuerpo que entra en esa caja son 74 px, y se usan 72 —el escalón de la
+          escala— porque ahí la segunda línea mide 680 y **la holgura son 34 px
+          elegidos**; con 74 quedarían diez, que es una casualidad.
+
+          La otra salida era dejar los 96 y ensanchar la caja hasta 914 px como mínimo,
+          y se descartó: la caja estrecha es lo que empuja la respuesta a la derecha, y
+          con 960 px la frase arrancaría casi donde la pregunta y se perdería el efecto
+          de contestar desde el otro lado. Cede el cuerpo, no la composición.
+
+          Como el cuerpo de `lg` y el de `xl` pasan a ser el mismo, aquí no hay tramo
+          `xl`. No es un olvido: es que a partir de 1024 px la frase ya no crece.
         */}
-        <p className="max-w-[714px] font-display text-4xl font-light leading-[0.96] tracking-[-0.03em] md:text-6xl lg:text-7xl xl:text-8xl">
+        <p className="max-w-[714px] font-display text-4xl font-light leading-[0.96] tracking-[-0.03em] md:text-6xl lg:text-7xl">
           El <em className="italic">café</em> no tiene una sola forma de hacerse.
         </p>
       </div>
