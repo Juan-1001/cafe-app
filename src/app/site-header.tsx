@@ -4,16 +4,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { Logo } from "./logo";
+import { rutaDe, secciones } from "@/content/secciones";
 
 /**
- * Cabecera del sitio. Solo aparecen las secciones que ya existen: enlazar a
- * /granos, /recetas o /tiendas antes de construirlas dejaría enlaces a un 404.
- * Cada sección nueva se añade a esta lista cuando su ruta esté en pie.
+ * Cabecera del sitio. La navegación **sale del registro de secciones** y ya no se
+ * escribe aquí: una sección nueva aparece al añadirla a `src/content/secciones.ts`.
+ *
+ * Están todas, también las que aún no tienen contenido, y eso es un cambio de criterio.
+ * Antes solo aparecían las construidas, y el motivo escrito era que «enlazar a /recetas
+ * antes de construirla dejaría enlaces a un 404». Desde que existe la pantalla «En
+ * proceso» ese 404 no existe: la ruta responde y explica qué se está construyendo. Lo
+ * que queda del criterio viejo es su fondo, y es lo que justifica la marca de abajo: un
+ * enlace de navegación no puede prometer lo que no hay.
  */
-const NAV_LINKS = [
-  { href: "/granos", label: "Granos" },
-  { href: "/metodos", label: "Métodos" },
-] as const;
 
 /**
  * Este componente es de cliente por una sola razón: medir su propia altura en el
@@ -91,16 +94,42 @@ export function SiteHeader() {
       </Link>
 
       <nav>
-        <ul className="flex gap-8">
-          {NAV_LINKS.map((link) => {
-            const isCurrentPage = pathname === link.href;
-            const isInSection = pathname.startsWith(`${link.href}/`);
+        {/*
+          ─────────────────────────────────────────────────────────────────────────
+           ESTO ES UN PARCHE CON FECHA. No es la forma final de la cabecera.
+          ─────────────────────────────────────────────────────────────────────────
+
+          Lo que va aquí es el menú del diseño: cuando se implemente, **esta cabecera
+          desaparece y en móvil pasa a ser un botón**. El `flex-wrap`, el reparto en dos
+          filas y la cuenta de holguras de abajo se van enteros con ese cambio; no hay
+          que conservarlos ni adaptarlos. Está anotado también en «Pendientes conocidos»
+          del CLAUDE.md.
+
+          Mientras tanto la lista envuelve, porque con cinco secciones no hay otra. Está
+          medido: los cinco nombres suman 361 px y en la cabecera de una pantalla de 375
+          caben 327. **No caben ni pegados sin separación**, así que no hay ajuste que lo
+          arregle; o envuelve, o desborda. Se eligió envolver para no entregar el sitio
+          con scroll horizontal, que sí es un defecto sin discusión.
+
+          La separación se queda en la misma de escritorio, 32 px, y no se aprieta en
+          móvil, porque con ella el corte cae solo donde conviene y con holgura de
+          sobra: arriba Granos, Métodos y Recetas —247 px de los 327, sobran 80— y
+          abajo Tiendas y Productores —210, sobran 117—. Apretarla a 24 dejaría la
+          primera fila en 327 exactos, que es la peor medida posible: envolvería o no
+          según el redondeo del navegador.
+        */}
+        <ul className="flex flex-wrap gap-x-8 gap-y-2">
+          {secciones.map((seccion) => {
+            const href = rutaDe(seccion);
+            const isCurrentPage = pathname === href;
+            const isInSection = pathname.startsWith(`${href}/`);
             const isActive = isCurrentPage || isInSection;
+            const enProceso = seccion.estado === "en-proceso";
 
             return (
-              <li key={link.href}>
+              <li key={seccion.slug}>
                 <Link
-                  href={link.href}
+                  href={href}
                   /*
                    * En la página de la propia sección el enlace es la página actual y
                    * va "page". Dentro de una ficha ya no lo es —es la sección que la
@@ -127,7 +156,33 @@ export function SiteHeader() {
                       : "border-transparent text-coffee"
                   }`}
                 >
-                  {link.label}
+                  {seccion.nombre}
+                  {/*
+                    La marca de «en proceso». Es un círculo hueco, y va acompañado de
+                    un texto que solo oye quien usa lector de pantalla, porque la marca
+                    no puede ser solo una forma ni solo un color: dicho en voz alta, el
+                    enlace tiene que sonar «Recetas, en proceso» y no «Recetas» a secas.
+
+                    Un círculo y no un asterisco: el asterisco promete una nota al pie
+                    que no existe. Y no la palabra entera escrita, porque en una
+                    navegación de cinco tramos en mono y mayúsculas, tres «EN PROCESO»
+                    seguidos son más ancho que todos los nombres juntos.
+
+                    Va en `sage-deep`, que es el segundo acento y a 12 px sobre crema da
+                    5,3:1: el lavanda queda reservado para el filete de la sección
+                    activa, que es otra cosa y no debe confundirse con esta.
+                  */}
+                  {enProceso && (
+                    <>
+                      <span
+                        aria-hidden="true"
+                        className="ml-1 align-super text-[0.7em] text-sage-deep"
+                      >
+                        ○
+                      </span>
+                      <span className="sr-only">, en proceso</span>
+                    </>
+                  )}
                 </Link>
               </li>
             );

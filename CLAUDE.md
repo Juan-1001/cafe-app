@@ -38,8 +38,13 @@ usuarios, no lo implementes: pregúntalo antes, porque está fuera del alcance a
 | `/metodos`  | Métodos de preparación | Guías paso a paso: V60, prensa francesa, Aeropress, espresso, moka, cold brew… |
 | `/recetas`  | Recetas                | Preparaciones concretas con ingredientes, proporciones y pasos |
 | `/tiendas`  | Tiendas en Bogotá      | Directorio de cafeterías recomendadas: barrio, qué las hace buenas, cómo llegar |
+| `/productores` | Productores         | Directorio de productores cafeteros con su contacto, para comprarles directo sin intermediarios. **Contenido bloqueado**: ver abajo |
 
 `/tiendas` es parte del alcance de la v1, no un extra para después.
+
+Las tres secciones sin construir **ya tienen ruta**: sirven la pantalla «En proceso»
+(`src/app/[seccion]/page.tsx`), que dice qué va a haber ahí y enlaza a lo que sí existe.
+La lista de secciones y su estado viven en un solo sitio, `src/content/secciones.ts`.
 
 `/granos` es una biblioteca de artículos, no un catálogo de orígenes. Se replanteó así
 porque variedades, países, procesos y altura son tipos de contenido distintos forzados en
@@ -76,10 +81,61 @@ locales caducan: sin fecha visible no se puede saber si la información sigue si
 Cada sección tiene una página índice que lista sus elementos y una página de detalle por
 elemento (por ejemplo `/metodos/v60`, `/tiendas/<slug>`).
 
+### Productores: la sección bloqueada
+
+**Está en el alcance y su contenido no se escribe hasta que lo revise un abogado.** No es
+falta de tiempo: publicar el contacto de personas reales es tratamiento de datos
+personales, lo regula la **Ley 1581 de 2012**, y la Superintendencia de Industria y
+Comercio puede multar con hasta 2.000 salarios mínimos (artículo 23). La ruta existe y
+sirve la pantalla «En proceso», que no enseña ni un dato de nadie; eso sí está permitido.
+
+Tres cosas condicionan la sección, y ninguna se resuelve escribiendo código:
+
+- **El teléfono necesita autorización.** El artículo 10 exceptúa los «datos de naturaleza
+  pública» y la calidad de comerciante lo es, así que «Fulano es productor de café» se
+  puede publicar. Pero la SIC concluyó (concepto 13-172191, 3 de septiembre de 2013) que
+  **dirección y teléfono no son datos públicos**, ni siquiera los de un comerciante. Es
+  decir: lo único que el directorio existe para dar es justo lo que exige autorización
+  previa, expresa e informada de cada productor, guardada y poder enseñarla.
+- **El historial de git choca con el derecho de supresión.** El artículo 8 literal e da al
+  titular el derecho a revocar la autorización y pedir que se borren sus datos. Borrarlos
+  de un archivo **no los borra del repositorio**: siguen en el historial, recuperables por
+  cualquiera que lo clone, para siempre. Para un artículo esa inmutabilidad es una virtud;
+  para un teléfono es un defecto que impide cumplir la ley.
+- **Hay que abrir contacto y política de tratamiento antes del primer productor.** El
+  artículo 12 obliga a identificar al responsable del tratamiento con dirección y teléfono,
+  y el artículo 8 a ofrecer un canal para ejercer los derechos. Hoy el sitio no tiene
+  página de contacto y el pie no lleva enlaces a propósito. Publicar el directorio obliga
+  a abrir las dos cosas, más la política de tratamiento y el aviso de privacidad.
+
+**Dónde van a vivir los datos, ya decidido:** el contacto **se enlaza, no se copia**, donde
+el productor ya tenga un canal público suyo —WhatsApp Business, Instagram, su página—,
+porque así el dato se queda con su dueño, se actualiza solo y el sitio no lo guarda. Para
+el resto, un **almacén fuera del repositorio leído al compilar**: el sitio sigue siendo
+estático y borrar es borrar de verdad.
+
+**Queda descartado guardarlos en archivos del repositorio, incluso como paso temporal.**
+Se propuso para los primeros cinco o diez y se rechazó: migrar contactos después es peor
+que hacerlo bien desde el primero, porque el coste crece con cada productor añadido y se
+paga entero justo cuando ya no hay tiempo.
+
+Lo que tiene que pasar por abogado antes del primer productor real: el texto de la
+autorización, la política de tratamiento, si aplica el Registro Nacional de Bases de Datos
+en este caso, y el descargo de responsabilidad. Ese descargo va **en el índice y en cada
+ficha**, no en una página de términos, por la misma razón que la fecha de verificación de
+las tiendas: si el dato compromete a alguien, el aviso va donde se lee el dato. Y no cubre
+publicar sin autorización — la responsabilidad frente a la SIC no se transfiere con un
+aviso.
+
 ## Contenido
 
 El contenido vive **en archivos dentro del repositorio**, en `src/content/<sección>/`.
 No hay base de datos ni gestor de contenidos externo.
+
+La única excepción ya decidida es **el contacto de los productores**, que no puede vivir en
+el repositorio porque el historial de git no permite borrarlo de verdad. El porqué está en
+«Productores: la sección bloqueada»; hasta que esa sección se desbloquee, esta regla no
+tiene excepciones en la práctica.
 
 - Un archivo por elemento (un grano, un método, una receta, una tienda).
 - Los datos estructurados (nombre, origen, tiempo de preparación, barrio, etc.) van en
@@ -417,9 +473,13 @@ desplazada hasta abajo —que es cuando aparece «Volver al inicio»— y el fin
 contenido, para ver si el panel fijo tapa las últimas líneas.
 
 **Lo que se comprueba y lo que no.** Esta comprobación es de **hechos**, y su resultado
-es un sí o un no que no se discute: si algo desborda, si la navegación se parte en dos
-líneas, si un texto se corta, si una imagen sale deformada o rota, si un elemento fijo
-tapa a otro o al contenido. **El juicio de diseño no entra aquí y no es tuyo**: si la
+es un sí o un no que no se discute: si algo desborda, si un texto se corta, si una imagen
+sale deformada o rota, si un elemento fijo tapa a otro o al contenido.
+
+La navegación en dos líneas **sigue siendo un defecto**, y hoy la cabecera lo tiene en
+móvil a sabiendas: es un parche con fecha, no la forma final. Está en «Pendientes
+conocidos», con qué lo sustituye. No hace falta volver a señalarlo, pero tampoco se puede
+tomar como permiso para que otra cosa se parta en dos líneas. **El juicio de diseño no entra aquí y no es tuyo**: si la
 página respira, si la jerarquía funciona, si el logotipo se ve pequeño de más o si el
 cronómetro ocupa demasiada pantalla lo decide el usuario. Lo que se hace con eso es
 **darle la medida** —«el panel ocupa 171 px de los 812»— y dejar que él juzgue, en vez de
@@ -445,7 +505,20 @@ vuelva a probar lo mismo dentro de unos meses.
 ## Estado actual
 
 En pie: la **home**, **`/granos`** con cuatro artículos (uno por cada etapa del recorrido) y
-**`/metodos`** con cinco métodos. `/recetas` y `/tiendas` están por construir.
+**`/metodos`** con cinco métodos.
+
+**`/recetas`, `/tiendas` y `/productores` existen como ruta y sirven la pantalla «En
+proceso»**, una sola para las tres: `src/app/[seccion]/page.tsx`, un tramo dinámico con
+`dynamicParams = false` cuyos slugs salen del registro de secciones. Los tramos escritos
+—`/granos`, `/metodos`, `/sin-conexion`— ganan siempre sobre el dinámico, y cualquier otra
+dirección sigue cayendo en el 404.
+
+El sitio tiene ahora **`sitemap.ts` y `robots.ts`**, que antes no existían. El sitemap lleva
+solo las secciones en pie y sus páginas; las que están en proceso quedan fuera por lo mismo
+que llevan `noindex`. El robots.txt deja pasar a todo el mundo y **no bloquea las rutas en
+proceso a propósito**: un `Disallow` no dice «no la indexes» sino «no la leas», y un
+buscador que no puede leer la página tampoco puede ver el `noindex` que lleva dentro. Las
+dos herramientas se estorban, así que el bloqueo vive en el metadato de cada página.
 
 También está en pie **`/sin-conexion`**, que no es una sección ni se llega a ella
 navegando: es la página que se ve cuando el teléfono se queda sin señal. La sirve
@@ -508,15 +581,68 @@ es el primero sin cronómetro y sin báscula: su fabricante da un suceso y no un
 el embudo hace de báscula. Las tres ausencias están contadas en la página, no dejadas en
 blanco.
 
-Mientras una sección no exista, **nada enlaza a su ruta**: ni la cabecera ni la home.
-Un enlace a `/recetas` hoy es un 404. Cada sección nueva se añade a la navegación y a la
-portada el día que su ruta esté en pie.
+### El registro de secciones
+
+**`src/content/secciones.ts` es la única lista de secciones del sitio.** Cada una declara
+su slug, su nombre, su estado (`"en-pie"` o `"en-proceso"`) y una frase con lo que va a
+haber ahí. De ese archivo salen cuatro cosas: la navegación de la cabecera, las rutas que
+sirve la pantalla «En proceso», el bloque de secciones del final de esa pantalla y el
+sitemap.
+
+**Completar una sección es cambiar su `estado` a `"en-pie"`**, y las cuatro se enteran
+solas: deja de tener pantalla de espera, entra al sitemap, pierde la marca de la cabecera
+y se convierte en enlace vivo dentro de las otras pantallas. Añadir una sección pendiente
+es una entrada más y nada más.
+
+Esto sustituye a la regla anterior —«mientras una sección no exista, nada enlaza a su
+ruta»—, que existía porque «un enlace a /recetas hoy es un 404». Ya no lo es: la ruta
+responde y explica qué se está construyendo. Lo que sobrevive de aquella regla es su
+fondo, y es lo que justifica la marca de la cabecera: **un enlace de navegación no puede
+prometer lo que no hay**. Las pendientes llevan un círculo hueco al lado, con un texto
+oculto que dice «, en proceso» para quien navega con lector de pantalla, porque la marca no
+puede ser solo una forma ni solo un color.
+
+Dos cuidados al tocar el registro:
+
+- **Lo importa la cabecera, que es componente de cliente**, así que ahí no puede entrar
+  `node:fs` ni nada de servidor. La comprobación que necesita el sistema de archivos —que
+  una sección marcada `"en-pie"` tenga de verdad su carpeta en `src/app/`— vive en
+  `src/app/sitemap.ts` y revienta la compilación si no cuadra.
+- **El nombre más largo manda en el rótulo de la pantalla «En proceso»**, que es donde
+  aparece: el titular es el mismo en las tres rutas —«Estamos tostando algo.»— y lo que
+  distingue una sección de otra es «EN CONSTRUCCIÓN · PRODUCTORES». Con el nombre más
+  largo de hoy ese rótulo mide 296 px de los 327 que quedan a 375 px de pantalla. Una
+  sección con un nombre más largo hay que medirla ahí.
+
+- **Las casillas del final son cuatro porque hay cinco secciones y una es la actual.**
+  Esa resta es lo que sostiene la fila de cuatro columnas del diseño. Con una sección más
+  serían cinco casillas y la fila hay que repensarla, no estirarla.
+
+Y una advertencia para cualquier diseño futuro que traiga su propio pie: **una franja de
+color al final de una página choca con el pie del sitio**, que va en el layout raíz y sale
+en todas. Ya ha pasado dos veces —el 404 y la pantalla «En proceso»—, y las dos veces se
+quitó la franja de la página y se dejó cerrar al pie: `lavender` sobre `lavender-deep` se
+lee como un fallo de pintado, no como una decisión.
 
 ## Pendientes conocidos
 
 Defectos detectados y aceptados a sabiendas. No hace falta volver a señalarlos ni
 arreglarlos por iniciativa propia; si un trabajo futuro toca la zona, este es el sitio
 donde mirar antes.
+
+- **La cabecera de móvil en dos filas es una solución temporal, no la definitiva.** Con
+  cinco secciones la navegación dejó de caber en una línea a 375 px —los cinco nombres
+  suman 361 px y en la cabecera caben 327, así que **no caben ni pegados sin
+  separación**—, y se la dejó envolver para no entregar el sitio con desborde horizontal.
+  Cae en 3 + 2: Granos, Métodos y Recetas arriba; Tiendas y Productores abajo, con 80 y
+  117 px de holgura.
+
+  **Lo que la sustituye es el menú del diseño de Figma**: cuando se implemente, esta
+  cabecera desaparece y en móvil pasa a ser un botón. Es decir, `flex-wrap` en la lista de
+  la navegación, el reparto en dos filas y la cuenta de holguras de arriba **se van
+  enteros** con ese cambio, y no hay que conservarlos ni adaptarlos. Quien toque
+  `src/app/site-header.tsx` antes de eso: esto es un apaño para que quepan cinco secciones,
+  no una decisión de composición que haya que respetar.
 
 - **`/sin-conexion` es la única página que trata de usted.** Su texto dice «haga lo que
   toca» y «Le dejamos una receta»; el resto del sitio tutea —«puedes usarla», «desde que
@@ -536,7 +662,16 @@ donde mirar antes.
   ocupa **789 px** con la del sitio y **674** con el corte de display, un 15 % menos.
   La consecuencia práctica es que **un texto en Fraunces siempre va a medir más de lo
   que mide en Figma**, así que un diseño que encaja justo en su caja aquí se parte en
-  una línea más; ya pasa en la frase del pie, dibujada en dos líneas y pintada en tres.
+  una línea más, y hay que contar con ello al pasar un título de Figma al sitio.
+
+  Dos frases ya se ajustaron por esto, y las dos cedieron por el mismo lado —**el
+  cuerpo, no la caja**—, que es el criterio a repetir: bajar el tamaño conserva la
+  composición, ensanchar la caja la deshace. La respuesta del pie del sitio se queda en
+  72 px en vez de los 96 dibujados, y el titular de `/sin-conexion` en 88 en vez de 92;
+  el cálculo de cada una está escrito en su archivo. **Sigue sin cuadrar en un sitio**:
+  esa frase del pie se parte en tres líneas a 375 px y por debajo, por cinco píxeles.
+  Desde 390 px, y a los 400 del diseño de móvil, son dos. Se decidió no inventar un
+  punto de corte a 390 px ni encoger el texto en teléfonos donde ya cabe.
   No se corrige por iniciativa propia: añadir `axes: ["opsz"]` al cargar la tipografía
   cambiaría de golpe el dibujo de todos los títulos del sitio, y eso se decide mirando
   todas las páginas a la vez, no arreglando una.
