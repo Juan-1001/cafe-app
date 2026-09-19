@@ -37,12 +37,13 @@
    * para siempre, porque al ser fijo tampoco vuelve al hacer scroll.
    *
    * Con la reserva dentro de var(), la posición es válida desde el primer instante,
-   * incluso sin JavaScript, y la medida real solo la afina cuando llega. Los 88 px
-   * son el alto de la cabecera hoy (40 de margen superior, 24 de la palabra «Café» y
-   * 24 de margen inferior); no hace falta mantenerlos exactos, porque son un punto de
-   * partida y no el valor con el que funciona la página.
+   * incluso sin JavaScript, y la medida real solo la afina cuando llega. Los 84 px
+   * son el alto de la cabecera de escritorio hoy (20 de margen, 44 del botón del menú
+   * —que es la pieza más alta de la barra— y 20 de margen); no hace falta mantenerlos
+   * exactos, porque son un punto de partida y no el valor con el que funciona la
+   * página.
    */
-  --brew-timer-top: calc(var(--site-header-height, 88px) + 32px);
+  --brew-timer-top: calc(var(--site-header-height, 84px) + 32px);
 
   /*
    * Cuánto alto ocupa el panel del cronómetro, o cero si la página no lo tiene. Lo
@@ -89,8 +90,15 @@ body {
  * `display: none` y no `visibility`: así la cabecera oculta tampoco existe para un
  * lector de pantalla ni para el tabulador, que es de lo que se trata. Ofrecer enlaces
  * que no se abren es peor cuando no se ven.
+ *
+ * El `<dialog>` del menú entra en la misma regla porque es hermano de la cabecera y no
+ * hijo suyo: sin nombrarlo aquí se quedaría en el HTML de una página que se está viendo
+ * sin red, con sus enlaces a secciones que no se pueden abrir. Hoy no se podría llegar a
+ * abrir —el botón que lo abre está dentro de la cabecera, que sí se oculta—, pero eso es
+ * una casualidad de la composición actual y no algo en lo que apoyarse.
  */
 body:has(main[data-bare-page]) > header,
-body:has(main[data-bare-page]) > footer {
+body:has(main[data-bare-page]) > footer,
+body:has(main[data-bare-page]) > dialog[data-site-menu] {
   display: none;
 }

@@ -327,7 +327,7 @@ export const coldBrew: BrewMethod = {
       title: "Échalo en el frasco y añade {frasco} de agua",
       description:
         "Agua del grifo, del tiempo, sin calentar. Échala encima del café de una vez y sin cuidado: aquí no hay vertido que controlar.",
-      why: "Esta es la única diferencia real con los otros cinco métodos y es lo que conviene entender del cold brew: el agua fría disuelve las mismas cosas que la caliente, solo que mucho más despacio y no todas por igual. El calor no es imprescindible para hacer café; es un acelerador. Quitarlo y poner tiempo en su lugar da una taza distinta, no una taza mal hecha.",
+      why: "Esta es la única diferencia real con los otros nueve métodos y es lo que conviene entender del cold brew: el agua fría disuelve las mismas cosas que la caliente, solo que mucho más despacio y no todas por igual. El calor no es imprescindible para hacer café; es un acelerador. Quitarlo y poner tiempo en su lugar da una taza distinta, no una taza mal hecha.",
     },
     {
       time: "Antes de tapar",

@@ -5,6 +5,7 @@ import { BackToTop, PAGE_TOP_ID } from "./back-to-top";
 import { OfflineCache } from "./offline-cache";
 import { SiteFooter } from "./site-footer";
 import { SiteHeader } from "./site-header";
+import { buildMenuModel } from "@/content/menu/model";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -72,7 +73,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           meterlo en el recorrido del tabulador de todo el mundo.
         */}
         <div id={PAGE_TOP_ID} tabIndex={-1} />
-        <SiteHeader />
+        {/*
+          El menú de la cabecera se arma aquí, que es servidor, y no dentro de la
+          cabecera, que es cliente: resolver las fotos obliga a mirar el disco y contar
+          los métodos obliga a importar los diez. El porqué entero está en
+          src/content/menu/model.ts.
+        */}
+        <SiteHeader menu={buildMenuModel()} />
         {children}
         {/*
           El cierre del sitio. Va aquí, en el layout raíz, y no en cada página: este

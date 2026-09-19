@@ -334,9 +334,14 @@ export default async function BrewMethodPage({
         <section className="mt-24 px-6 md:mt-36 md:px-16">
           <Eyebrow>Paso a paso</Eyebrow>
           <h2 className="mt-4 max-w-prose font-display text-3xl md:text-5xl">
-            {/* «Del café molido» y no «de la jarra vacía»: la moka no tiene jarra,
-                y de los cinco métodos solo dos la usan. Lo que sí comparten los
-                cinco es que empiezan con el café ya molido. */}
+            {/* «Del café molido» y no «de la jarra vacía»: la jarra no la usan
+                todos los métodos —la moka, por ejemplo, no tiene—, y el café ya
+                molido sí es el punto de partida de todos. El titular se pinta en
+                todas las fichas, así que tiene que ser cierto en todas.
+
+                Va sin contar cuántos son a propósito: este comentario decía «de los
+                cinco métodos solo dos la usan» y se quedó viejo al pasar de cinco a
+                diez. Un porqué no necesita el censo para explicarse. */}
             {method.steps.length} pasos, del café molido a la taza servida
           </h2>
 

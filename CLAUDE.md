@@ -127,6 +127,16 @@ las tiendas: si el dato compromete a alguien, el aviso va donde se lee el dato. 
 publicar sin autorización — la responsabilidad frente a la SIC no se transfiere con un
 aviso.
 
+**La franja «Quiero ser un Presunto» se desbloquea con esta sección, no antes.** El menú
+del diseño de Figma cierra con una franja que invita a postular una tienda o un café, y
+queda fuera de la implementación por la misma razón que el directorio: «postular»
+significa recoger el nombre, el negocio y el contacto de una persona real, que es
+tratamiento de datos y obliga a lo mismo —autorización, política de tratamiento, canal
+para ejercer los derechos—. Y hoy no tendría siquiera adónde enlazar, porque el sitio no
+tiene página de contacto y el pie no lleva enlaces a propósito. Es decir: abre la misma
+puerta que los productores y hay que abrirla una sola vez, con lo mismo revisado. Quien
+retome cualquiera de las dos, que mire aquí antes: **se desbloquean juntas**.
+
 ## Contenido
 
 El contenido vive **en archivos dentro del repositorio**, en `src/content/<sección>/`.
@@ -207,7 +217,15 @@ gobierna las cifras: **aquí no se enseña material de otro sin decir de quién 
 
 Cada imagen lleva un campo `credit` con el nombre, el enlace a la página de la foto y la
 fuente. **Va sin `?`**: dejarlo en `null` tiene que ser un acto escrito, y `null` significa
-«autoría no recuperable», no «da igual». Donde es null, la página lo dice en voz alta
+«autoría no recuperable», no «da igual».
+
+**Las fotografías propias se declaran `{ source: "Propia" }`** y la página dice «Fotografía
+propia». Es una variante sin nombre y sin enlace, y las dos ausencias están pensadas: no
+hay página contra la que comprobar el crédito —que es para lo que existe el enlace de
+Pexels y Unsplash—, y el nombre sería el mismo en todas, o sea una constante repetida
+archivo a archivo. Lo que sí importa es que **no se confunda con `null`**: null es «no se
+sabe de quién es», y una foto propia sí se sabe, así que salir como «autoría no registrada»
+sería falso. Hoy las llevan las tres fotos de las secciones que usa el menú. Donde es null, la página lo dice en voz alta
 —«autoría no registrada»— en vez de callarse. Hoy lo son las seis fotos descargadas a mano
 antes de que existiera el campo: Pexels y Unsplash quitan los metadatos al servir el archivo
 y los originales ya no están. **Un crédito a ojo sería peor que el hueco.**
@@ -353,10 +371,10 @@ hueco en blanco mientras llega, y sus rellenos pueden ser las variables de la pa
 vez de dos hexadecimales copiados a mano. Va en la cabecera en lugar del nombre escrito.
 
 Es **muy apaisado** —952,6 × 134, algo más de siete veces más ancho que alto— y eso
-manda en cómo se usa: cada píxel de alto le cuesta siete de ancho. A 24 px de alto mide
-unos 171 y, junto a la navegación, no cabe en la línea de una pantalla de 375 px. Por
-eso va a 20 px en móvil y a 28 px en escritorio. Al tocar la cabecera, esa cuenta hay
-que rehacerla.
+manda en cómo se usa: cada píxel de alto le cuesta siete de ancho. Va a 20 px de alto en
+móvil, donde mide 142, y a 28 en escritorio, donde mide 199. Esos 199 son la pieza que
+decide a partir de qué ancho caben los cinco nombres en la barra; la cuenta está en «El
+menú de la cabecera» y hay que rehacerla al tocarla.
 
 Como es un dibujo y no texto, **el logotipo no lo lee ningún lector de pantalla**: el
 SVG va con `aria-hidden` y el nombre del sitio viaja en un texto oculto a su lado. Si se
@@ -505,7 +523,7 @@ vuelva a probar lo mismo dentro de unos meses.
 ## Estado actual
 
 En pie: la **home**, **`/granos`** con cuatro artículos (uno por cada etapa del recorrido) y
-**`/metodos`** con cinco métodos.
+**`/metodos`** con diez métodos.
 
 **`/recetas`, `/tiendas` y `/productores` existen como ruta y sirven la pantalla «En
 proceso»**, una sola para las tres: `src/app/[seccion]/page.tsx`, un tramo dinámico con
@@ -581,6 +599,74 @@ es el primero sin cronómetro y sin báscula: su fabricante da un suceso y no un
 el embudo hace de báscula. Las tres ausencias están contadas en la página, no dejadas en
 blanco.
 
+### El menú de la cabecera
+
+La cabecera lleva un **botón que abre un panel con las cinco secciones y lo que hay dentro
+de cada una**. Sustituye al apaño del `flex-wrap`, que dejaba la navegación de móvil en dos
+filas; de aquello no queda nada. Vive en `src/app/site-header.tsx` y
+`src/app/site-menu-panel.tsx`, y lo que enseña se arma en `src/content/menu/`.
+
+**El buscador del diseño no se implementó.** Con quince piezas de contenido no se
+justifica, y un campo que no busca nada es peor que no tenerlo. Su hueco en la barra de
+escritorio lo ocupa el botón del menú, que en el diseño no existía: el panel es global —no
+es un desplegable por sección— y necesitaba un disparador propio.
+
+**Qué enseña el panel y de dónde sale.** Las secciones vienen del registro. Las que tienen
+fotografía salen en grande, con la imagen y cuánto hay dentro; las que no, como una línea
+bajo el rótulo «En construcción». **No hay un campo que diga cuál es destacada: lo decide
+tener foto o no**, para que las dos cosas no puedan contradecirse. Debajo de cada una van
+sus enlaces: los cuatro artículos de `/granos`, que son todos, y cuatro métodos de los
+diez, elegidos a mano en `src/content/menu/index.ts` con el criterio escrito allí —cuatro
+formas distintas de extraer, ninguna repetida—.
+
+**El móvil llega exactamente a lo mismo que el escritorio.** El diseño de Figma ponía las
+listas solo en el panel de escritorio; se llevaron también al de móvil, porque que desde el
+teléfono no se pueda saltar a un método es una diferencia sin justificación en un sitio que
+se consulta con el teléfono en la cocina. Por eso la composición es la misma en los dos
+anchos —cada lista debajo de su propia sección— en lugar del reparto izquierda/derecha del
+diseño, que obligaría a escribir los enlaces dos veces y esconder la mitad.
+
+**La navegación aparece en la barra a partir de 1100 px, y ese número está medido.** Con
+las cinco secciones de hoy la barra necesita 1053 px. Se corta en 1100 para que la holgura
+sean 47 px elegidos y no los 8 que sobrarían al cortar justo encima del mínimo. **Al añadir
+una sección hay que volver a medirlo**: un nombre más son unos 90 px. Por debajo de ese
+ancho la barra es el logotipo y el botón, y no se pierde nada porque el panel las lleva
+todas.
+
+**Los márgenes laterales del diseño no ganan.** El menú de Figma dibuja la barra con 48 px
+a los lados y 16 en móvil; el sitio usa 64 y 24, en veintitrés sitios. Se conservan los del
+sitio: una cabecera con márgenes propios dejaría de alinearse con el contenido de todas las
+páginas, y arreglarlo por el otro lado sería rehacer el sitio entero para que encaje la
+cabecera. **Esta es la excepción a que el diseño de Figma mande**, y manda porque lo que
+está en conflicto no es una decisión de composición del menú sino la retícula de todo el
+sitio.
+
+**La navegación va centrada en la barra, y el centrado no depende de que las piezas midan
+lo mismo.** El logotipo mide 199 px y el botón 172; cada uno va en una casilla que ocupa la
+mitad del espacio libre, así que los cinco nombres caen en el centro exacto pase lo que
+pase. Si dependiera de que las dos piezas coincidieran, estaría descentrado 13 px sin que
+nadie lo hubiera decidido.
+
+**El panel se abre como `<dialog>` modal, y esa decisión resuelve la accesibilidad sola.**
+El navegador atrapa el tabulador dentro, cierra con Escape y deja el resto de la página sin
+poder pulsarse **y sin anunciarse al lector de pantalla**. Solo hay dos cosas escritas a
+mano: devolver el foco al botón al cerrar —salvo cuando se cierra por haber navegado, que
+entonces el foco es de la página nueva— y bloquear el desplazamiento de detrás.
+
+De ahí sale lo único que puede extrañar al leer el código: **el panel lleva su propia copia
+de la barra**. Al estar en la capa superior, la barra de la página deja de poder pulsarse, y
+el botón de cerrar está justo ahí. La copia cae exactamente encima de la original y mide lo
+mismo, así que no se ve que haya dos; para el lector de pantalla tampoco, porque lo de fuera
+está callado mientras el panel esté abierto.
+
+**El fondo de detrás no se oscurece.** Sigue cerrando al pulsarlo, pero un velo oscuro
+chocaría con la regla del sitio. En escritorio, donde el panel acaba a media pantalla y
+debajo se sigue viendo la página del mismo crema, lo que marca dónde termina es un filete
+de `dust`, no un fondo.
+
+La franja «Quiero ser un Presunto» del diseño **queda fuera**, por lo mismo que el
+directorio de productores: ver «Productores: la sección bloqueada».
+
 ### El registro de secciones
 
 **`src/content/secciones.ts` es la única lista de secciones del sitio.** Cada una declara
@@ -629,20 +715,6 @@ lee como un fallo de pintado, no como una decisión.
 Defectos detectados y aceptados a sabiendas. No hace falta volver a señalarlos ni
 arreglarlos por iniciativa propia; si un trabajo futuro toca la zona, este es el sitio
 donde mirar antes.
-
-- **La cabecera de móvil en dos filas es una solución temporal, no la definitiva.** Con
-  cinco secciones la navegación dejó de caber en una línea a 375 px —los cinco nombres
-  suman 361 px y en la cabecera caben 327, así que **no caben ni pegados sin
-  separación**—, y se la dejó envolver para no entregar el sitio con desborde horizontal.
-  Cae en 3 + 2: Granos, Métodos y Recetas arriba; Tiendas y Productores abajo, con 80 y
-  117 px de holgura.
-
-  **Lo que la sustituye es el menú del diseño de Figma**: cuando se implemente, esta
-  cabecera desaparece y en móvil pasa a ser un botón. Es decir, `flex-wrap` en la lista de
-  la navegación, el reparto en dos filas y la cuenta de holguras de arriba **se van
-  enteros** con ese cambio, y no hay que conservarlos ni adaptarlos. Quien toque
-  `src/app/site-header.tsx` antes de eso: esto es un apaño para que quepan cinco secciones,
-  no una decisión de composición que haya que respetar.
 
 - **`/sin-conexion` es la única página que trata de usted.** Su texto dice «haga lo que
   toca» y «Le dejamos una receta»; el resto del sitio tutea —«puedes usarla», «desde que

@@ -73,6 +73,15 @@ export function PhotoCreditLine({ credit }: { credit: PhotoCredit | null }) {
     );
   }
 
+  // Propia: se sabe de quién es y no hay adónde enlazar. Se dice y se acaba.
+  if (credit?.source === "Propia") {
+    return (
+      <span className="mt-2 block font-mono text-xs text-coffee">
+        Fotografía propia
+      </span>
+    );
+  }
+
   return (
     <span className="mt-2 block font-mono text-xs text-coffee">
       {credit ? (
@@ -124,6 +133,7 @@ export function PhotoCredits({ images }: { images: ContentImage[] }) {
   const bySource = new Map<Attributed["source"], Attributed[]>();
   let unknown = 0;
   let generated = 0;
+  let own = 0;
 
   for (const image of shown) {
     if (!image.credit) {
@@ -135,6 +145,13 @@ export function PhotoCredits({ images }: { images: ContentImage[] }) {
     // como lo que son, que es lo que de verdad hay que decirle a quien mira.
     if (image.credit.source === "IA") {
       generated += 1;
+      continue;
+    }
+
+    // Las propias tampoco enlazan a ninguna parte, pero por el motivo contrario: se sabe
+    // perfectamente de quién son. Se cuentan aparte para no acabar en el saco del hueco.
+    if (image.credit.source === "Propia") {
+      own += 1;
       continue;
     }
 
@@ -199,8 +216,18 @@ export function PhotoCredits({ images }: { images: ContentImage[] }) {
           </p>
         ) : null}
 
-        {unknown > 0 ? (
+        {own > 0 ? (
           <p className={bySource.size > 0 || generated > 0 ? "mt-2" : undefined}>
+            {countWord(own)} {own === 1 ? "fotografía propia" : "fotografías propias"}.
+          </p>
+        ) : null}
+
+        {unknown > 0 ? (
+          <p
+            className={
+              bySource.size > 0 || generated > 0 || own > 0 ? "mt-2" : undefined
+            }
+          >
             {countWord(unknown)}{" "}
             {unknown === 1 ? "fotografía" : "fotografías"} sin autoría registrada.
           </p>

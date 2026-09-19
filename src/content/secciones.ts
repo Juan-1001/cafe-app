@@ -19,6 +19,8 @@
  * `src/app/sitemap.ts`.
  */
 
+import type { DeclaredImage } from "./types";
+
 export type EstadoSeccion =
   /** Tiene su ruta construida y su contenido. */
   | "en-pie"
@@ -31,6 +33,26 @@ export type Seccion = {
   /** Como se nombra en la navegación y en su propia página. */
   nombre: string;
   estado: EstadoSeccion;
+  /**
+   * La fotografía que retrata la sección, para el menú de la cabecera.
+   *
+   * Es opcional, y de si está o no depende cómo sale la sección en el menú: **con foto
+   * sale como destacado —imagen, nombre y cuánto hay dentro— y sin foto sale como una
+   * línea de texto**. No hay un segundo campo que diga «esta es destacada»: la foto es
+   * la que lo decide, para que no puedan contradecirse.
+   *
+   * Hoy la tienen las tres secciones que son bibliotecas de contenido propio —granos,
+   * métodos y recetas— y no la tienen los dos directorios, que es también la división
+   * que hace el diseño del menú. El día que /tiendas tenga su foto, pasará a destacado
+   * sola y sin tocar el menú.
+   *
+   * La ruta se escribe aunque el archivo no exista todavía, como en el resto del sitio;
+   * quien mira si está es `resolveContentImage` al compilar. Ojo: **este archivo lo
+   * importa la cabecera, que es componente de cliente**, así que aquí solo puede vivir
+   * la imagen declarada. Quien la resuelve es `src/content/menu/model.ts`, que corre en
+   * el servidor.
+   */
+  imagen?: DeclaredImage;
   /**
    * Qué va a haber ahí, en una frase.
    *
@@ -54,6 +76,11 @@ export const secciones: Seccion[] = [
     estado: "en-pie",
     promesa:
       "Lo que le pasa al café antes de prepararlo, desde la planta hasta que deja de ser grano.",
+    imagen: {
+      file: "/images/secciones/granos.png",
+      alt: "Dos manos ahuecadas llenas de cerezas de café rojas y verdes recién recogidas, recortadas dentro de la silueta de una cafetera moka.",
+      credit: { source: "Propia" },
+    },
   },
   {
     slug: "metodos",
@@ -61,6 +88,11 @@ export const secciones: Seccion[] = [
     estado: "en-pie",
     promesa:
       "Guías paso a paso para preparar café en casa, con sus cantidades y sus tiempos.",
+    imagen: {
+      file: "/images/secciones/metodos.png",
+      alt: "Un goteador visto desde arriba con el café molido mojándose en el centro, recortado dentro de la silueta de una cafetera moka.",
+      credit: { source: "Propia" },
+    },
   },
   {
     slug: "recetas",
@@ -68,6 +100,11 @@ export const secciones: Seccion[] = [
     estado: "en-proceso",
     promesa:
       "Preparaciones concretas, con ingredientes, proporciones y pasos.",
+    imagen: {
+      file: "/images/secciones/recetas.png",
+      alt: "Un remolino de leche dibujado sobre la superficie de un café, recortado dentro de la silueta de una cafetera moka.",
+      credit: { source: "Propia" },
+    },
   },
   {
     slug: "tiendas",

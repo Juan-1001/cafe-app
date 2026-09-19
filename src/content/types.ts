@@ -37,7 +37,23 @@ export type PhotoCredit =
    * la real es un disco liso con agujeros redondos. Quien la mire tiene que saber que
    * lo que ve puede no ser el objeto.
    */
-  | { source: "IA" };
+  | { source: "IA" }
+  /**
+   * Fotografía hecha por quien hace el sitio.
+   *
+   * Es una variante sin `photographer` y sin `photoUrl`, y las dos ausencias son
+   * deliberadas. No lleva enlace porque **no hay página contra la que comprobar el
+   * crédito**: el enlace de las otras dos fuentes existe para eso, y uno inventado aquí
+   * no comprobaría nada. Y no lleva nombre porque sería el mismo en todas, o sea una
+   * constante repetida archivo a archivo, que es justo la clase de dato que en este
+   * sitio se escribe una vez o no se escribe.
+   *
+   * Lo que sí hace falta es que se distinga de `null`, y ese es el motivo de existir de
+   * esta variante: `null` significa «no se sabe de quién es» y la página lo dice en voz
+   * alta. Una foto propia sí se sabe de quién es, así que salir como «autoría no
+   * registrada» sería falso. La página dice «Fotografía propia».
+   */
+  | { source: "Propia" };
 
 /**
  * La imagen tal y como la escribe el contenido: la ruta donde la foto **va a estar**,
