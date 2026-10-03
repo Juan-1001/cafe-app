@@ -671,13 +671,17 @@ directorio de productores: ver «Productores: la sección bloqueada».
 
 **`src/content/secciones.ts` es la única lista de secciones del sitio.** Cada una declara
 su slug, su nombre, su estado (`"en-pie"` o `"en-proceso"`) y una frase con lo que va a
-haber ahí. De ese archivo salen cuatro cosas: la navegación de la cabecera, las rutas que
-sirve la pantalla «En proceso», el bloque de secciones del final de esa pantalla y el
-sitemap.
+haber ahí. De ese archivo salen cinco cosas: la navegación de la cabecera, el panel del
+menú, las rutas que sirve la pantalla «En proceso», el bloque de secciones del final de
+esa pantalla y el sitemap.
 
-**Completar una sección es cambiar su `estado` a `"en-pie"`**, y las cuatro se enteran
-solas: deja de tener pantalla de espera, entra al sitemap, pierde la marca de la cabecera
-y se convierte en enlace vivo dentro de las otras pantallas. Añadir una sección pendiente
+**Completar una sección es cambiar su `estado` a `"en-pie"`**, y las cinco se enteran
+solas: deja de tener pantalla de espera, entra al sitemap, pierde la marca de la cabecera,
+deja de anunciarse «En proceso» en el menú y se convierte en enlace vivo dentro de las
+otras pantallas. **Lo único que hay que escribir además es su contador** en
+`CONTADORES` (`src/content/menu/model.ts`), lo que el menú dice que hay dentro: una
+sección en pie sin él no compila, porque se vería como una sección vacía y no como un
+error. Añadir una sección pendiente
 es una entrada más y nada más.
 
 Esto sustituye a la regla anterior —«mientras una sección no exista, nada enlaza a su
