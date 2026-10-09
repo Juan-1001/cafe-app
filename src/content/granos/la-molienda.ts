@@ -181,11 +181,13 @@ export const laMolienda: Article = {
     {
       kind: "image",
       image: {
-        // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que
-        // se guarde, `resolveContentImage` deja el bloque de color en su sitio.
         file: "/images/granos/la-molienda-cafe-molido.jpg",
-        alt: "Primer plano extremo de un montón de café recién molido, visto desde arriba y ocupando todo el encuadre. De lejos parecería un polvo marrón uniforme, pero de cerca se distinguen trozos de tamaños muy distintos: algunos pedazos angulosos y brillantes del tamaño de un grano de sal gruesa, otros mucho menores, y entre todos ellos un polvo mate y clarísimo que rellena los huecos.",
-        credit: null,
+        alt: "Café molido visto muy de cerca, llenando todo el encuadre sin nada más alrededor. Es una superficie marrón rojiza que a primera vista parece tierra, pero está hecha de trozos sueltos de formas angulosas y tamaños distintos: unos se distinguen uno a uno, algunos con una cara más clara donde se partió el grano, y entre ellos queda una masa de partículas tan pequeñas que ya no se separan a la vista.",
+        credit: {
+          photographer: "Jonathan Borba",
+          photoUrl: "https://www.pexels.com/photo/high-resolution-close-up-of-ground-coffee-texture-36343661/",
+          source: "Pexels",
+        },
       },
       caption:
         "Lo que de lejos parece un polvo uniforme, de cerca son trozos de muchos tamaños con polvo entre ellos. Esa mezcla es la molienda.",

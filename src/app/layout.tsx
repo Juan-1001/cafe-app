@@ -8,9 +8,16 @@ import { SiteHeader } from "./site-header";
 import { buildMenuModel } from "@/content/menu/model";
 import "./globals.css";
 
+/*
+ * La itálica se carga por un solo sitio: el «Sigue leyendo» que cierra los artículos de
+ * /granos, que el diseño dibuja en Fraunces itálica. Sin ella el navegador inclinaría la
+ * redonda a la fuerza, que no es la misma letra: la itálica de Fraunces tiene su propio
+ * dibujo.
+ */
 const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
