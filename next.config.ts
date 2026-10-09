@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
      * original del que salen los demás, no lo que se acaba descargando.
      */
     formats: ["image/avif", "image/webp"],
+    /*
+     * Las calidades que una imagen puede pedir (Next 16 obliga a enumerarlas). 75 es la
+     * de siempre, para las fotos. 90 es para los recortes sin fondo y los mosaicos de
+     * /recetas: a 75 el AVIF emborronaba sus bordes, que son lo que se mira en una
+     * silueta, y se veían pixelados. A 90 el mosaico de móvil pesa 48 KB en vez de 18 y
+     * ya no se distingue del de 100.
+     */
+    qualities: [75, 90],
   },
 };
 

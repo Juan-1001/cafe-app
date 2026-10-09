@@ -7,6 +7,7 @@ import { PhotoCreditLine } from "@/app/photo-credits";
 import { resolveContentImage } from "@/content/image";
 import { getBrewMethod } from "@/content/metodos";
 import { getRecipe, recipes } from "@/content/recetas";
+import { CUTOUT_QUALITY } from "../quality";
 
 export const dynamicParams = false;
 
@@ -75,6 +76,7 @@ export default async function RecipePage({
                 fill
                 loading="eager"
                 sizes="(min-width: 1024px) 40vw, 100vw"
+                quality={CUTOUT_QUALITY}
                 className="object-contain p-8 md:p-12"
               />
             ) : null}

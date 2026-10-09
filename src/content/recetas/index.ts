@@ -29,24 +29,24 @@ export const recipes: Recipe[] = [
 ];
 
 /**
- * Las dos fotos del banner de arriba del índice, que no son de ninguna receta y por eso
- * viven aquí. Son la misma foto de granos tostados dos veces, como en el diseño de
- * Figma: nítida en el recuadro del centro y estirada a lo ancho, como fondo, detrás del
- * velo. El fondo es adorno y no lleva texto alternativo propio (ver la página).
+ * El banner de arriba del índice: el mosaico de cafeteras moka del diseño de Figma,
+ * cada silueta rellena con una foto de café. No es de ninguna receta, así que vive aquí.
+ *
+ * Son dos archivos porque el diseño dibuja dos mosaicos distintos y no el mismo
+ * recortado: diez columnas por tres filas en escritorio y seis por cinco en móvil.
+ * Mientras no estén guardados, la página pinta el bloque de color en su proporción.
  */
 export const recipesCover: DeclaredImage = {
-  file: "/images/recetas/portada-granos.jpg",
-  alt: "Granos de café tostado, de color marrón oscuro y brillantes, amontonados y llenando todo el encuadre.",
-  // PENDIENTE: foto de Magnific o Pexels del diseño de Figma; falta el enlace para el
-  // crédito.
-  credit: null,
+  file: "/images/recetas/portada-mokas-escritorio.png",
+  alt: "Treinta siluetas de cafetera moka en tres filas, cada una rellena con una foto de café: granos verdes y tostados, cerezas, café molido, tazas, vasos y un filtro de goteo.",
+  // Composición de Juan: la declara como fotografía propia.
+  credit: { source: "Propia" },
 };
 
-export const recipesCoverBackground: DeclaredImage = {
-  file: "/images/recetas/portada-granos-fondo.jpg",
-  alt: "",
-  // PENDIENTE: es la misma foto que la portada, estirada; lleva su mismo crédito.
-  credit: null,
+export const recipesCoverMobile: DeclaredImage = {
+  file: "/images/recetas/portada-mokas-movil.png",
+  alt: "Treinta siluetas de cafetera moka en cinco filas, cada una rellena con una foto de café: granos verdes y tostados, cerezas, café molido, tazas y vasos.",
+  credit: { source: "Propia" },
 };
 
 /*

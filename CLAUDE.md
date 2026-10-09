@@ -300,12 +300,13 @@ se entiende antes de leer una palabra. Por lo mismo va sin cabecera y sin pie: l
 de la cabecera llevan a secciones que en ese momento no se pueden abrir. La excepción es de
 esa ruta y no se extiende: cualquier otra página oscura vuelve a ser un antipatrón.
 
-**Dos excepciones más, en el índice de `/recetas`**, aceptadas el 2026-10-09 al pasar el
+**Otra excepción, en el índice de `/recetas`**, aceptada el 2026-10-09 al pasar el
 diseño «Recetas — bento» de Figma: la tarjeta de la moka va sobre `ink` con el texto en
-`paper` (15,3:1), y el banner de arriba lleva un velo de `ink` al 40 % sobre la foto. No
-son páginas oscuras sino dos piezas oscuras dentro de una página crema, y el velo se hace
-con el token `ink` con opacidad, no con un negro escrito a mano. Las dos están anotadas
-en `src/app/recetas/`. No abren la puerta a más: otra pieza oscura se decide aparte.
+`paper` (15,3:1). No es una página oscura sino una pieza oscura dentro de una página
+crema, y está anotada en `src/app/recetas/recipe-index.tsx`. No abre la puerta a más:
+otra pieza oscura se decide aparte. (Hubo una segunda, un velo de `ink` al 40 % sobre la
+foto del banner, y se fue con la versión siguiente del diseño, que cambió la foto por un
+mosaico sobre fondo claro.)
 
 Una página se queda sin cabecera ni pie escribiendo **`data-bare-page`** en su `<main>`;
 la regla está en `globals.css`. La marca va dentro del HTML y no se deduce de la ruta por
@@ -551,8 +552,11 @@ se ven en el código a primera vista:
   Figma, que Juan hizo sobre fotos de Magnific y Pexels, y van colocados donde los pone
   el diseño, saliéndose de su casilla. Esas posiciones están medidas en px para esa foto
   en esa casilla (`BENTO`, en `src/app/recetas/recipe-index.tsx`): cambiar una foto o el
-  orden obliga a medir otra vez. Por eso la rejilla compuesta empieza en 1440 px, el
-  ancho del diseño; a 1280 los recortes ya se metían bajo el texto.
+  orden obliga a medir otra vez. **Hay dos composiciones**, una por diseño: la de móvil
+  hasta 767 px y la de escritorio desde 1440, el ancho de su diseño; a 1280 los
+  recortes ya se metían bajo el texto. Entre las dos, y siempre que hay un filtro
+  puesto, las recetas van en una rejilla regular. Los recortes de móvil se midieron
+  sobre una captura y no sobre Figma, así que son menos exactos.
 
 - **Ninguna receta tiene fuente primaria para sus cantidades ni sus tiempos.** Son
   elección declarada del sitio, parten de la ficha del método de base y cada ficha lo
