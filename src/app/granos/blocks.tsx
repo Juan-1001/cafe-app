@@ -2,30 +2,8 @@ import Image from "next/image";
 import { resolveContentImage } from "@/content/image";
 import { PhotoCreditLine } from "@/app/photo-credits";
 import type { ArticleBlock, ComparisonRow } from "@/content/granos/types";
+import { withEmphasis } from "@/app/emphasis";
 import { Scale } from "./scale";
-
-/**
- * Convierte los tramos entre asteriscos en itálica. Es el único marcado que admite el
- * texto de un artículo y está aquí por una necesidad concreta: los nombres
- * científicos y las variedades van en itálica por convención tipográfica, y eso no
- * merece un bloque propio pero tampoco se puede perder.
- *
- * Un asterisco suelto, sin pareja, se queda tal cual en el texto en vez de romper el
- * párrafo o comerse el resto de la frase.
- */
-function withEmphasis(text: string) {
-  return text.split(/(\*[^*]+\*)/g).map((part, index) => {
-    if (part.length > 2 && part.startsWith("*") && part.endsWith("*")) {
-      return (
-        <em key={index} className="italic">
-          {part.slice(1, -1)}
-        </em>
-      );
-    }
-
-    return part;
-  });
-}
 
 /**
  * Una fila de la comparación.

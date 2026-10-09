@@ -1,6 +1,8 @@
 import { articles } from "../granos";
+import { glossaryTermCount } from "../glosario";
 import { resolveContentImage } from "../image";
 import { brewMethods, getBrewMethod } from "../metodos";
+import { recipes } from "../recetas";
 import { rutaDe, secciones, type EstadoSeccion } from "../secciones";
 import type { ContentImage } from "../types";
 import { MENU_METHODS } from "./index";
@@ -61,6 +63,13 @@ export type MenuModel = {
   destacadas: MenuSection[];
   /** Las secciones sin foto, las que salen como una línea de texto. */
   resto: MenuSection[];
+  /**
+   * Las páginas de consulta, que no son secciones: hoy solo el glosario. No salen del
+   * registro de secciones a propósito —meterlo allí lo pondría en la barra de la
+   * cabecera y obligaría a volver a medir el corte de 1100 px—, y por eso el menú las
+   * recibe aparte y las enseña bajo su propio rótulo.
+   */
+  consulta: { href: string; nombre: string; cuenta: string }[];
 };
 
 /**
@@ -79,6 +88,7 @@ export type MenuModel = {
 const CONTADORES: Record<string, () => string> = {
   granos: () => contar(articles.length, "artículo", "artículos"),
   metodos: () => contar(brewMethods.length, "método", "métodos"),
+  recetas: () => contar(recipes.length, "receta", "recetas"),
 };
 
 function contar(cuantos: number, singular: string, plural: string): string {
@@ -137,5 +147,12 @@ export function buildMenuModel(): MenuModel {
   return {
     destacadas: preparadas.filter((seccion) => seccion.imagen !== null),
     resto: preparadas.filter((seccion) => seccion.imagen === null),
+    consulta: [
+      {
+        href: "/glosario",
+        nombre: "Glosario",
+        cuenta: contar(glossaryTermCount(), "término", "términos"),
+      },
+    ],
   };
 }

@@ -300,6 +300,13 @@ se entiende antes de leer una palabra. Por lo mismo va sin cabecera y sin pie: l
 de la cabecera llevan a secciones que en ese momento no se pueden abrir. La excepción es de
 esa ruta y no se extiende: cualquier otra página oscura vuelve a ser un antipatrón.
 
+**Dos excepciones más, en el índice de `/recetas`**, aceptadas el 2026-10-09 al pasar el
+diseño «Recetas — bento» de Figma: la tarjeta de la moka va sobre `ink` con el texto en
+`paper` (15,3:1), y el banner de arriba lleva un velo de `ink` al 40 % sobre la foto. No
+son páginas oscuras sino dos piezas oscuras dentro de una página crema, y el velo se hace
+con el token `ink` con opacidad, no con un negro escrito a mano. Las dos están anotadas
+en `src/app/recetas/`. No abren la puerta a más: otra pieza oscura se decide aparte.
+
 Una página se queda sin cabecera ni pie escribiendo **`data-bare-page`** en su `<main>`;
 la regla está en `globals.css`. La marca va dentro del HTML y no se deduce de la ruta por
 un motivo que costó encontrar: **la página sin conexión no se sirve en su propia
@@ -531,14 +538,37 @@ vuelva a probar lo mismo dentro de unos meses.
 
 ## Estado actual
 
-En pie: la **home**, **`/granos`** con cuatro artículos (uno por cada etapa del recorrido) y
-**`/metodos`** con diez métodos.
+En pie: la **home**, **`/granos`** con cuatro artículos (uno por cada etapa del recorrido),
+**`/metodos`** con diez métodos, **`/recetas`** con siete recetas y **`/glosario`**, que no
+es una sección (ver «El glosario»).
 
-**`/recetas`, `/tiendas` y `/productores` existen como ruta y sirven la pantalla «En
-proceso»**, una sola para las tres: `src/app/[seccion]/page.tsx`, un tramo dinámico con
+**`/recetas`** entró el 2026-10-09 con el diseño «Recetas — bento» de Figma para el índice
+y una ficha propia, sin diseño de Figma, con la retícula de las demás. Cuatro cosas que no
+se ven en el código a primera vista:
+
+- **Las fotos de las recetas son recortes sin fondo, en `.png`**, y por eso no siguen
+  la regla del `.jpg`: un `.jpg` no guarda transparencia. Son los recortes del diseño de
+  Figma, que Juan hizo sobre fotos de Magnific y Pexels, y van colocados donde los pone
+  el diseño, saliéndose de su casilla. Esas posiciones están medidas en px para esa foto
+  en esa casilla (`BENTO`, en `src/app/recetas/recipe-index.tsx`): cambiar una foto o el
+  orden obliga a medir otra vez. Por eso la rejilla compuesta empieza en 1440 px, el
+  ancho del diseño; a 1280 los recortes ya se metían bajo el texto.
+
+- **Ninguna receta tiene fuente primaria para sus cantidades ni sus tiempos.** Son
+  elección declarada del sitio, parten de la ficha del método de base y cada ficha lo
+  dice en «De dónde sale esta receta». Lo que sí tiene fuente (las definiciones de tinto,
+  panela, cortado y perico; las 14 h del cold brew) va en sus fuentes.
+- **«A base de filtrados» es la casilla del diseño, no una clase de extracción**: mete el
+  tinto de panela, el cold brew y la moka, para que ninguna receta se quede fuera de los
+  dos botones. Está escrito en `RecipeFamily`.
+- **La receta «Moka» se llama igual que el método «Moka»**, como en el diseño. Se aceptó
+  a sabiendas, aunque choca con que una palabra signifique una sola cosa en el sitio.
+
+**`/tiendas` y `/productores` existen como ruta y sirven la pantalla «En proceso»**, una
+sola para las dos: `src/app/[seccion]/page.tsx`, un tramo dinámico con
 `dynamicParams = false` cuyos slugs salen del registro de secciones. Los tramos escritos
-—`/granos`, `/metodos`, `/sin-conexion`— ganan siempre sobre el dinámico, y cualquier otra
-dirección sigue cayendo en el 404.
+—`/granos`, `/metodos`, `/recetas`, `/sin-conexion`— ganan siempre sobre el dinámico, y
+cualquier otra dirección sigue cayendo en el 404.
 
 El sitio tiene ahora **`sitemap.ts` y `robots.ts`**, que antes no existían. El sitemap lleva
 solo las secciones en pie y sus páginas; las que están en proceso quedan fuera por lo mismo
@@ -722,6 +752,37 @@ color al final de una página choca con el pie del sitio**, que va en el layout 
 en todas. Ya ha pasado dos veces —el 404 y la pantalla «En proceso»—, y las dos veces se
 quitó la franja de la página y se dejó cerrar al pie: `lavender` sobre `lavender-deep` se
 lee como un fallo de pintado, no como una decisión.
+
+### El glosario
+
+**`/glosario` es una página de consulta, no una sección.** No está en el registro de
+secciones a propósito: entrar ahí la pondría en la barra de la cabecera —un nombre más son
+unos 90 px y obligaría a volver a medir el corte de 1100— y haría seis casillas en la
+pantalla «En proceso». El precio de dejarla fuera es que **no se entera sola de nada**: el
+sitemap la escribe a mano (`src/app/sitemap.ts`) y el menú la recibe aparte, en
+`consulta` (`src/content/menu/model.ts`), bajo el rótulo «Para consultar».
+
+El contenido vive en `src/content/glosario/`, un archivo por término, y cada término dice
+**dónde se lo encuentra el lector**: Bolsa, Barra, Menú/Carta o Receta, que son los
+botones del filtro. Decisiones que no hay que repetir:
+
+- **Un término puede tener varias categorías o ninguna.** Las que no tienen ninguna
+  —mucílago, pergamino, cereza…— son palabras que solo se encuentran leyendo el sitio, y
+  el propio glosario las usa en sus definiciones. Salen solo con «Todas».
+- **«Menú/Carta» lleva las dos palabras** porque «Menú» sola choca con el botón «Menú»
+  de la cabecera, que en la misma página significa otra cosa.
+- **El anglicismo que se oye es una remisión, no una entrada**: «Bloom» manda a
+  «Floración» y «Shot» a «Peso de bebida», porque el nombre del sitio es el español y
+  quien busca la palabra inglesa tiene que encontrarla en su letra.
+- **Las definiciones no llevan cifras.** El número vive en la ficha o el artículo que lo
+  tiene verificado, y el término enlaza ahí. Las que resumen una página del sitio no citan
+  fuentes propias —su respaldo es esa página—; las de la carta citan el DLE o el
+  Diccionario de americanismos —el capuchino, el folleto del Istituto Nazionale Espresso
+  Italiano—, y se listan al final de la página.
+- **El filtro funciona sin JavaScript**: son botones de opción y el CSS esconde lo que no
+  toca con `group-has-[#filtro-…:checked]`. El porqué y una trampa que costó encontrar
+  —los botones escondidos ensanchaban la página en móvil— están en
+  `src/app/glosario/page.tsx`.
 
 ## Pendientes conocidos
 

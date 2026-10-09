@@ -97,7 +97,7 @@ export const secciones: Seccion[] = [
   {
     slug: "recetas",
     nombre: "Recetas",
-    estado: "en-proceso",
+    estado: "en-pie",
     promesa:
       "Preparaciones concretas, con ingredientes, proporciones y pasos.",
     imagen: {

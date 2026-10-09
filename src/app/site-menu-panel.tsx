@@ -33,6 +33,9 @@ import type { MenuModel, MenuSection } from "@/content/menu/model";
 /** Las secciones sin foto se anuncian bajo este rótulo, para que el hueco no sorprenda. */
 const ROTULO_RESTO = "En construcción";
 
+/** El rótulo de las páginas que no son secciones y sirven para consultar. */
+const ROTULO_CONSULTA = "Para consultar";
+
 function ChevronRight() {
   return (
     <svg
@@ -172,32 +175,63 @@ export function SiteMenuPanel({ menu }: { menu: MenuModel }) {
           En móvil las separa del bloque de arriba la misma distancia que separa dos
           secciones con foto entre sí: 24 y 24.
         */}
-        {menu.resto.length > 0 ? (
-          <div className="mt-6 border-t border-dust pt-6 md:mt-0 md:w-48 md:border-t-0 md:pt-0">
+        <div className="md:w-48">
+          {menu.resto.length > 0 ? (
+            <div className="mt-6 border-t border-dust pt-6 md:mt-0 md:border-t-0 md:pt-0">
+              <h2 className="font-mono text-xs uppercase tracking-widest text-sage-deep">
+                {ROTULO_RESTO}
+              </h2>
+
+              <ul className="mt-4 space-y-3">
+                {menu.resto.map((section) => (
+                  <li key={section.slug}>
+                    {/*
+                      Aquí no se repite «En proceso» debajo de cada nombre, aunque sea lo
+                      que dice su `cuenta`: el rótulo de arriba ya lo ha dicho para las
+                      dos, y escribirlo otra vez en cada línea es decir dos veces lo
+                      mismo. En los destacados sí va, porque allí no hay rótulo que lo
+                      diga.
+                    */}
+                    <Link
+                      href={section.href}
+                      className="block py-1 font-display text-lg hover:text-lavender-deep"
+                    >
+                      {section.nombre}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {/*
+            Las páginas de consulta, que no son secciones: hoy el glosario. Van en la
+            misma columna estrecha que las secciones en construcción y con el mismo
+            tratamiento —rótulo en mono y nombres en Fraunces—, pero bajo su propio
+            rótulo, porque no son lo mismo: estas sí tienen algo dentro, y por eso
+            llevan su cuenta debajo como los destacados.
+          */}
+          <div className="mt-6 border-t border-dust pt-6 md:mt-10 md:pt-6">
             <h2 className="font-mono text-xs uppercase tracking-widest text-sage-deep">
-              {ROTULO_RESTO}
+              {ROTULO_CONSULTA}
             </h2>
 
             <ul className="mt-4 space-y-3">
-              {menu.resto.map((section) => (
-                <li key={section.slug}>
-                  {/*
-                    Aquí no se repite «En proceso» debajo de cada nombre, aunque sea lo
-                    que dice su `cuenta`: el rótulo de arriba ya lo ha dicho para las dos,
-                    y escribirlo otra vez en cada línea es decir dos veces lo mismo. En
-                    los destacados sí va, porque allí no hay rótulo que lo diga.
-                  */}
-                  <Link
-                    href={section.href}
-                    className="block py-1 font-display text-lg hover:text-lavender-deep"
-                  >
-                    {section.nombre}
+              {menu.consulta.map((pagina) => (
+                <li key={pagina.href}>
+                  <Link href={pagina.href} className="group block py-1">
+                    <span className="block font-display text-lg group-hover:text-lavender-deep">
+                      {pagina.nombre}
+                    </span>
+                    <span className="mt-1 block font-mono text-xs text-coffee">
+                      {pagina.cuenta}
+                    </span>
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
-        ) : null}
+        </div>
       </div>
     </div>
   );

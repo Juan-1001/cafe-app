@@ -3,6 +3,7 @@ import path from "node:path";
 import type { MetadataRoute } from "next";
 import { brewMethods } from "@/content/metodos";
 import { articles } from "@/content/granos";
+import { recipes } from "@/content/recetas";
 import { rutaDe, seccionesEnPie, secciones } from "@/content/secciones";
 
 /**
@@ -34,12 +35,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
+  /*
+   * El glosario no es una sección y no está en el registro, así que no entra solo como
+   * las demás: se escribe a mano. Es lo que cuesta haberlo dejado fuera de la barra.
+   */
+  paginas.push({ url: `${SITIO}/glosario`, changeFrequency: "monthly", priority: 0.7 });
+
   for (const article of articles) {
     paginas.push({ url: `${SITIO}/granos/${article.slug}`, priority: 0.6 });
   }
 
   for (const method of brewMethods) {
     paginas.push({ url: `${SITIO}/metodos/${method.slug}`, priority: 0.6 });
+  }
+
+  for (const recipe of recipes) {
+    paginas.push({ url: `${SITIO}/recetas/${recipe.slug}`, priority: 0.6 });
   }
 
   return paginas;
