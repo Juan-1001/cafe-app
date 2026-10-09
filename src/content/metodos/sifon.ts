@@ -56,17 +56,22 @@ export const sifon: BrewMethod = {
     "Dos bulbos de vidrio, un mechero de alcohol y el café subiendo solo por un tubo. Es el método más aparatoso que existe y el único donde se ve la extracción entera mientras ocurre: por eso te lo preparan delante en la barra y no en la cocina de tu casa.",
   image: {
     /*
-     * IMAGEN GENERADA CON IA, provisional, de la misma serie que el resto de portadas.
+     * Fotografía de Magnific, elegida el 2026-10-09 junto con el índice nuevo de /metodos.
+     * Sustituye a la imagen de IA provisional de la serie de portadas, que sigue en el
+     * historial de git.
      *
-     * Cambia el escenario respecto a lo que se había escrito a ciegas: no es la barra de
-     * una cafetería sino la misma cocina que las demás portadas, y eso está bien, porque
-     * lo que la serie gana en conjunto vale más que el guiño al sitio donde uno suele
-     * ver un sifón. Tampoco hay nadie removiendo con la varilla: la varilla está en la
-     * mesa, al lado, y es de vidrio y no de bambú. El alt lo dice tal cual.
+     * La recomendada al principio era otra, de un sifón en plena subida en una barra de
+     * mármol, y se descartó al mirarla de cerca: tenía café arriba y el globo de abajo
+     * lleno a la vez, lo que en un sifón no pasa. Señal de imagen generada aunque el banco
+     * no la marcara como IA.
      */
-    file: "/images/metodos/sifon.png",
-    alt: "Un sifón de café en marcha sobre una mesa de madera gastada: abajo la esfera de vidrio con agua y la llama azul del mechero debajo, sujeta por un soporte de latón con mango de madera, y arriba el vaso cilíndrico donde el café ya está oscuro y espumoso, soltando vapor. Al lado hay un vaso corto con café servido, una varilla de vidrio sobre la mesa, dos tazas claras y la tapa metálica de un frasco. A la izquierda, la ventana de la cocina con una planta.",
-    credit: { source: "IA" },
+    file: "/images/metodos/sifon.jpg",
+    alt: "Una mujer con blusa blanca y delantal negro se inclina sobre una mesa de madera brillante y enciende el quemador de gas que hay bajo un sifón. El globo de vidrio de abajo tiene agua clara; la cámara de arriba, un cilindro de vidrio, todavía está vacía salvo por un poco de café en el fondo. El quemador va conectado con un tubo a una bombona de gas pequeña. Detrás, sobre una bandeja, un hervidor de cuello de cisne y una jarrita de metal.",
+    credit: {
+      photographer: "syda_productions",
+      photoUrl: "https://www.magnific.com/premium-photo/equipment-coffee-shop-people-technology-concept-close-up-woman-with-butane-gas-burner-heating-water-siphon-coffeemaker-cafe-bar-restaurant-kitchen_35643590.htm",
+      source: "Magnific",
+    },
   },
 
   /*

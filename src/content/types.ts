@@ -22,7 +22,15 @@ export type PhotoCredit =
       photographer: string;
       /** La página de la foto, no la del perfil. Es la que se enlaza. */
       photoUrl: string;
-      source: "Pexels" | "Unsplash";
+      /**
+       * Magnific es el banco de Freepik con otro nombre: las fotos se buscan con su
+       * MCP y su página vive en magnific.com, así que se acredita con el nombre que
+       * se ve en el enlace. Sus fotos **premium** se descargan con créditos de la
+       * cuenta, no gratis, y su filtro de «sin IA» no es fiable: dos fotos de
+       * tostadores que no marcaba como IA dibujaban llamas dentro del tambor. Cada
+       * candidata se mira entera antes de proponerla.
+       */
+      source: "Pexels" | "Unsplash" | "Magnific";
     }
   /**
    * Imagen generada con IA, puesta como provisional mientras no haya una fotografía.

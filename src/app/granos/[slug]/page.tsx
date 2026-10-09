@@ -5,7 +5,8 @@ import Link from "next/link";
 import { articles, getArticle, JOURNEY_STAGES } from "@/content/granos";
 import type { Article, Source } from "@/content/granos";
 import { readingMinutes } from "@/content/granos/reading-time";
-import { resolveContentImage } from "@/content/image";
+import { PhotoCredits } from "@/app/photo-credits";
+import { articleCover } from "../cover";
 import { formatDate } from "@/app/date";
 import { Block, PullQuote, Stat } from "../blocks";
 import { splitIntoSections, type ArticleSection } from "../sections";
@@ -107,7 +108,7 @@ function Ficha({
         <p>{meta}</p>
       </div>
 
-      <div className="hidden flex-col gap-1.5 xl:flex">
+      <div className="hidden flex-col gap-2 xl:flex">
         {stage ? (
           <>
             <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-coffee">
@@ -265,25 +266,14 @@ const CARD_SHAPES = [
   { grow: "grow-[274]", desktop: "md:aspect-[274/220]", mobile: "aspect-[160/220]" },
 ] as const;
 
-/**
- * La foto de la tarjeta es la primera fotografía del propio artículo. No hay un campo de
- * portada: los artículos no lo tienen, y la primera foto es la que el artículo ya
- * eligió para enseñarse. Si no hay ninguna, o su archivo todavía no está, la tarjeta
- * pinta el bloque de color, como cualquier otra foto pendiente.
- */
-function coverOf(article: Article) {
-  const first = article.blocks.find((block) => block.kind === "image");
-  return first?.kind === "image" ? resolveContentImage(first.image) : null;
-}
-
 function ReadNextCard({ article, index }: { article: Article; index: number }) {
   const shape = CARD_SHAPES[index % CARD_SHAPES.length];
   const stage = JOURNEY_STAGES.find((item) => item.key === article.stage);
-  const cover = coverOf(article);
+  const cover = articleCover(article);
 
   return (
     <li className={`md:basis-0 ${shape.grow}`}>
-      <Link href={`/granos/${article.slug}`} className="group flex flex-col gap-3.5">
+      <Link href={`/granos/${article.slug}`} className="group flex flex-col gap-4">
         <div
           className={`relative w-full overflow-hidden bg-dust ${shape.mobile} ${shape.desktop}`}
         >
@@ -298,7 +288,7 @@ function ReadNextCard({ article, index }: { article: Article; index: number }) {
           ) : null}
         </div>
 
-        <div className="flex items-start gap-2.5">
+        <div className="flex items-start gap-3">
           {stage ? (
             <p
               aria-hidden="true"
@@ -308,7 +298,7 @@ function ReadNextCard({ article, index }: { article: Article; index: number }) {
             </p>
           ) : null}
 
-          <div className="flex min-w-0 flex-col gap-0.5 pt-1">
+          <div className="flex min-w-0 flex-col gap-1 pt-1">
             <p className="text-[13px] leading-[1.3] text-ink group-hover:text-lavender-deep xl:text-[15px]">
               {article.title}
             </p>
@@ -345,7 +335,7 @@ function JourneyProgress({ stageKey }: { stageKey: Article["stage"] }) {
 
       <div
         aria-hidden="true"
-        className="flex items-center gap-2.5 font-mono text-[10px] tracking-[0.08em] xl:gap-3.5 xl:text-[11px]"
+        className="flex items-center gap-3 font-mono text-[10px] tracking-[0.08em] xl:gap-4 xl:text-[11px]"
       >
         {isFirst ? null : (
           <>
@@ -354,7 +344,7 @@ function JourneyProgress({ stageKey }: { stageKey: Article["stage"] }) {
           </>
         )}
 
-        <span className="size-2 shrink-0 rounded-full bg-lavender-deep xl:size-2.5" />
+        <span className="size-2 shrink-0 rounded-full bg-lavender-deep xl:size-3" />
         <span className="shrink-0 text-lavender-deep">
           {stage.number} · <span className="xl:hidden">Aquí</span>
           <span className="hidden xl:inline">Estás aquí</span>
@@ -403,11 +393,11 @@ function ReadNext({ current }: { current: Article }) {
       </h2>
 
       {/* Móvil: dos columnas, la segunda más baja. */}
-      <div className="flex gap-3.5 md:hidden">
+      <div className="flex gap-4 md:hidden">
         {columns.map((column, columnIndex) => (
           <ul
             key={columnIndex}
-            className={`flex min-w-0 flex-1 flex-col gap-5.5 ${
+            className={`flex min-w-0 flex-1 flex-col gap-6 ${
               columnIndex === 1 ? "pt-12" : ""
             }`}
           >
@@ -468,6 +458,15 @@ export default async function ArticlePage({
       ) : null}
 
       <ReadNext current={article} />
+
+      {/* Las tarjetas de «Sigue leyendo» enseñan fotos de otros artículos, que en esta
+          página no se acreditan en ningún otro sitio. Solo sirven para reconocer cada
+          artículo, así que su crédito va agrupado al pie. */}
+      <PhotoCredits
+        images={articles
+          .filter((other) => other.slug !== article.slug)
+          .flatMap((other) => articleCover(other) ?? [])}
+      />
     </article>
   );
 }

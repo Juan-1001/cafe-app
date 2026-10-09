@@ -52,6 +52,7 @@ function joinNames(items: React.ReactNode[]): React.ReactNode[] {
 const SOURCE_HOME = {
   Pexels: "https://www.pexels.com",
   Unsplash: "https://unsplash.com",
+  Magnific: "https://www.magnific.com",
 } as const;
 
 /**

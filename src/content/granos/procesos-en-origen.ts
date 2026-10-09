@@ -101,11 +101,13 @@ export const procesosEnOrigen: Article = {
       // ahora: es lo que dice qué fotografía hay que ir a buscar.
       kind: "image",
       image: {
-        // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que
-        // se guarde, `resolveContentImage` deja el bloque de color en su sitio.
         file: "/images/granos/procesos-en-origen-camas-de-secado.jpg",
-        alt: "Vista desde arriba de una cama de secado: una gran bandeja de malla elevada sobre patas de madera, cubierta de una capa fina de granos de café extendidos a mano. Se distinguen dos zonas, una de cerezas enteras arrugadas y oscuras y otra de granos pálidos con su cascarilla. Al fondo, más camas en fila bajo un techo de plástico translúcido.",
-        credit: null,
+        alt: "Un secadero de café bajo un techo de plástico translúcido, con la estructura de cañas de bambú, visto en diagonal desde un lado. A la izquierda, en bandejas de malla con marco de madera, cerezas enteras ya secas, oscuras y arrugadas; a la derecha, en una cama larga y elevada, una capa de granos pálidos con su cascarilla. Al fondo siguen más camas en fila.",
+        credit: {
+          photographer: "rachenzero",
+          photoUrl: "https://www.magnific.com/premium-photo/coffee-beans-are-dried-greenhouse_95188242.htm",
+          source: "Magnific",
+        },
       },
       caption:
         "Camas de secado. Es donde se pasan los días que decide todo lo que viene después.",

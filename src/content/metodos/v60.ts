@@ -7,19 +7,19 @@ export const v60: BrewMethod = {
     "Un cono acanalado y un filtro de papel para una taza limpia, aromática y fácil de repetir todas las mañanas.",
   image: {
     /*
-     * IMAGEN GENERADA CON IA, provisional, de la serie de portadas: la misma cocina, la
-     * misma ventana y la misma luz que las otras siete. Sustituye a una fotografía real
-     * de Pexels, que sigue en el historial de git.
+     * Fotografía de Magnific, elegida el 2026-10-09 junto con el índice nuevo de /metodos.
+     * Sustituye a la imagen de IA provisional de la serie de portadas, que sigue en el
+     * historial de git.
      *
-     * Hubo en medio una versión que dibujaba un goteador de cerámica de cuerpo
-     * redondeado en vez del cono acanalado, y se descartó por eso: la entradilla de esta
-     * ficha empieza con «Un cono acanalado», así que el lector habría leído eso y visto
-     * otra cosa al lado. Esta sí enseña el cono cónico, que es lo que da nombre al
-     * método y lo que lo separa de un goteador cualquiera.
+     * Enseña el cono acanalado, que es lo que nombra la entradilla de esta ficha.
      */
-    file: "/images/metodos/v60.png",
-    alt: "Una mano vierte agua caliente desde un hervidor de acero de cuello fino y curvo sobre un cono V60 con su filtro de papel, del que sube vapor. El cono está encajado en una jarra de vidrio que ya tiene café hecho, y el conjunto se apoya sobre una báscula digital, encima de una mesa de madera gastada. A la derecha, dos tazas de cerámica clara; a la izquierda, la ventana de la cocina con una planta en el alféizar.",
-    credit: { source: "IA" },
+    file: "/images/metodos/v60.jpg",
+    alt: "Una persona con los brazos tatuados vierte agua desde un hervidor de acero de cuello de cisne sobre un cono V60 blanco con su filtro de papel, que sujeta con la otra mano. El cono está encajado en una jarra de vidrio con medidas, sobre una báscula negra, en una mesa de madera clara. Al lado, un vaso con café molido y un taco de filtros; detrás, una pared gris azulada.",
+    credit: {
+      photographer: "cookie_studio",
+      photoUrl: "https://www.magnific.com/free-photo/male-barista-brewing-coffee-alternative-method-pour_9029465.htm",
+      source: "Magnific",
+    },
   },
 
   /*

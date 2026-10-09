@@ -73,11 +73,13 @@ export const nivelesDeTueste: Article = {
       // igual desde ahora: es lo que dice qué fotografía hay que ir a buscar.
       kind: "image",
       image: {
-        // Foto pendiente: la ruta ya está escrita y el archivo todavía no. Hasta que
-        // se guarde, `resolveContentImage` deja el bloque de color en su sitio.
         file: "/images/granos/niveles-de-tueste-cafe-verde.jpg",
-        alt: "Un montón de granos de café verde sin tostar, vistos de cerca y desde arriba. No son marrones sino de un gris verdoso apagado y mate, y cada grano tiene una hendidura que lo recorre a lo largo por el centro. Entre ellos quedan restos de la película fina y translúcida que los envuelve.",
-        credit: null,
+        alt: "Granos de café verde sin tostar llenando una bandeja de madera, vistos de cerca y un poco desde arriba; el borde curvo de la bandeja asoma a la derecha. No son marrones sino de un verde oliva apagado y mate, y en muchos se ve la hendidura que recorre el grano a lo largo por el centro.",
+        credit: {
+          photographer: "subsri13",
+          photoUrl: "https://www.magnific.com/premium-photo/green-coffee-raw-graons-top-view_7802260.htm",
+          source: "Magnific",
+        },
       },
       caption:
         "Café verde, tal y como llega al tostador después de meses de finca. Todavía no huele a café.",

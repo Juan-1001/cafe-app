@@ -63,18 +63,21 @@ export const moka: BrewMethod = {
     "La cafetera italiana de toda la vida: aluminio, fuego y un gorgoteo que avisa. Es el único método del sitio donde tú no decides casi nada, y el único que no perdona haberte distraído.",
   image: {
     /*
-     * IMAGEN GENERADA CON IA, provisional, de la misma serie que el resto de portadas.
+     * Fotografía de Magnific, elegida el 2026-10-09 junto con el índice nuevo de /metodos.
+     * Sustituye a la imagen de IA provisional de la serie de portadas, que sigue en el
+     * historial de git.
      *
-     * Con una ventaja que conviene aprovechar: **aquí sí se ve la válvula de
-     * seguridad**, el botoncito redondo en el costado de la caldera. Es la pieza que
-     * marca hasta dónde llega el agua y que sale nombrada en los pasos, en los errores
-     * comunes y en el bloque de cantidades, y la miniatura del catálogo de equipo no
-     * llega a enseñarla. Va nombrada en el alt para que quien no ve la imagen tampoco
-     * se quede sin ese dato.
+     * La recomendada al principio era otra, de una moka humeando con la llama encendida, y
+     * se descartó al mirarla de cerca: la tapa estaba dibujada abierta y fundida a media
+     * altura, señal de imagen generada aunque el banco no la marcara como IA.
      */
-    file: "/images/metodos/moka.png",
-    alt: "Una cafetera moka de aluminio sobre la hornilla de una cocina de gas, con la llama azul baja y recogida bajo la base. En el costado de la caldera se distingue el botón redondo de la válvula de seguridad. La tapa está abierta y por el tubo central asoma el café, oscuro, mientras sube un hilo de vapor. A la derecha, tres tacitas de cerámica clara sobre la encimera; a la izquierda, la ventana con una planta.",
-    credit: { source: "IA" },
+    file: "/images/metodos/moka.jpg",
+    alt: "Una cafetera moka de aluminio de ocho caras, gastada y con manchas, sobre el fogón de una cocina de gas apagado. El asa y el pomo de la tapa son de plástico negro y en la parte baja se ve la válvula de latón. Detrás, una pared de tablas de madera con la pintura blanca y azul desconchada.",
+    credit: {
+      photographer: "kaboompics",
+      photoUrl: "https://www.magnific.com/free-photo/coffee-maker-burner_934088.htm",
+      source: "Magnific",
+    },
   },
 
   /*

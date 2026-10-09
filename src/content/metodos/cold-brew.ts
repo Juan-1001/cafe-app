@@ -84,16 +84,21 @@ export const coldBrew: BrewMethod = {
     "Café hecho sin una sola gota de agua caliente. Lo que en los demás métodos hace el calor en tres minutos, aquí lo hace el tiempo en catorce horas: se deja el café en agua del tiempo, se olvida uno de él y al día siguiente está hecho.",
   image: {
     /*
-     * IMAGEN GENERADA CON IA, provisional, de la misma serie que el resto de portadas.
-     * El archivo venía como `coldbrew` y se renombró al slug del método.
+     * Fotografía de Magnific, elegida el 2026-10-09 junto con el índice nuevo de /metodos.
+     * Sustituye a la imagen de IA provisional de la serie de portadas, que sigue en el
+     * historial de git.
      *
-     * Tiene un fallo típico de imagen sintética que el alt no oculta: el chorro de café
-     * entra en el frasco **sin que se vea de dónde sale**, no hay ni mano ni recipiente
-     * arriba. Se describe tal cual en vez de inventarle un origen.
+     * Enseña el café ya servido con hielo y no el reposo en frío, que es lo que define el
+     * método: no apareció ninguna foto del reposo. Por eso el texto alternativo no dice
+     * «cold brew»: lo que se ve podría ser cualquier café frío.
      */
-    file: "/images/metodos/cold-brew.png",
-    alt: "Un frasco de vidrio alto sobre una mesa de madera, lleno de café ya oscuro con el molido grueso suspendido y una capa de posos flotando arriba. Cae dentro un chorro de café desde fuera del encuadre, sin que se vea quién lo vierte. Al lado, un vaso corto con hielo y café servido, y la tapa metálica del frasco apoyada boca arriba. Al fondo, dos tazas claras y la ventana de la cocina con una planta.",
-    credit: { source: "IA" },
+    file: "/images/metodos/cold-brew.jpg",
+    alt: "Un tarro de vidrio con asa lleno de café oscuro con cubitos de hielo, sobre una mesa de madera pintada de azul. Detrás, desenfocados, otro tarro igual, una jarrita de leche y una tabla de madera.",
+    credit: {
+      photographer: "pixel-shot.com",
+      photoUrl: "https://www.magnific.com/premium-photo/mason-jar-with-cold-brew-coffee-ice-wooden-table_49842571.htm",
+      source: "Magnific",
+    },
   },
 
   /*

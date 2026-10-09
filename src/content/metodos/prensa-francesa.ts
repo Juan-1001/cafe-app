@@ -7,18 +7,17 @@ export const prensaFrancesa: BrewMethod = {
     "Un cilindro de vidrio, una malla de metal y cuatro minutos de espera. Es el método que más perdona y el que más cuerpo le deja a la taza.",
   image: {
     /*
-     * IMAGEN GENERADA CON IA, provisional, y la más visible del sitio: esta es la
-     * portada del método de entrada, o sea la única foto de la home. Sustituye a una
-     * fotografía real de Pexels, que sigue en el historial de git; se cambió para que
-     * las ocho portadas sean una serie con la misma cocina y la misma luz.
-     *
-     * Tiene un defecto que el alt no disimula: **la mano no agarra el pomo**, se queda
-     * plana por encima. Se lee como «a punto de bajar» y no como el gesto de prensar,
-     * que es lo que la ficha cuenta. Es la primera que yo regeneraría.
+     * Fotografía de Magnific, elegida el 2026-10-09 junto con el índice nuevo de /metodos.
+     * Sustituye a la imagen de IA provisional de la serie de portadas, que sigue en el
+     * historial de git.
      */
-    file: "/images/metodos/prensa-francesa.png",
-    alt: "Una prensa francesa de vidrio con armazón y tapa de madera, llena de café ya hecho, sobre una mesa de madera gastada. Una mano se acerca al pomo del émbolo, con la palma plana justo encima, sin llegar a agarrarlo. Al lado hay una taza clara servida, una bolsa de café de papel abierta y una cuchara de madera. Al fondo, la ventana de la cocina y una planta.",
-    credit: { source: "IA" },
+    file: "/images/metodos/prensa-francesa.jpg",
+    alt: "Una mano sostiene por el asa una prensa francesa de vidrio con tapa de bambú y base de corcho, delante de una pared de azulejos blancos iluminada por un sol duro. Dentro hay café oscuro con una capa de espuma clara encima, y el émbolo todavía está subido: el café no se ha prensado. En el vidrio se ven las marcas de una y dos tazas.",
+    credit: {
+      photographer: "magnific",
+      photoUrl: "https://www.magnific.com/free-photo/view-french-press-coffee-with-wooden-cup_38658988.htm",
+      source: "Magnific",
+    },
   },
 
   // 27,5 sobre 100: nivel 1. El método más fácil del sitio junto con el colado en tela,

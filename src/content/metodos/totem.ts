@@ -82,7 +82,7 @@ export const totem: BrewMethod = {
      * marca dos tiempos distintos a la vez: es de las cosas que la IA dibuja mal sin que
      * se note. Por eso el texto alternativo describe lo dibujado y no el objeto real.
      */
-    file: "/images/metodos/totem.png",
+    file: "/images/metodos/totem.jpg",
     alt: "Sobre una encimera de madera gastada junto a una ventana, una mano vierte agua caliente desde un hervidor blanco de cuello de cisne sobre un filtro de papel plisado puesto en un dripper de cerámica color terracota. El dripper está apilado sobre una jarra de cerámica verde salvia y esta sobre una base gris claro, y el conjunto descansa en una báscula negra con pantalla. Dentro del filtro, el café molido mojado forma una costra con burbujas de la que sube vapor. A la derecha hay una taza de cerámica color crema; a la izquierda, en el alféizar, un jarrón verde con una planta.",
     credit: { source: "IA" },
   },

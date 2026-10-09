@@ -51,19 +51,17 @@ export const chemex: BrewMethod = {
     "La jarra de vidrio con collar de madera que has visto en media Bogotá. Por dentro es el mismo método que el V60 —agua caliente cayendo sobre papel— pero hace café para tres y se sirve en la misma jarra en la que se cuela, y por eso es la que te llevan a la mesa.",
   image: {
     /*
-     * IMAGEN GENERADA CON IA, provisional, de la misma serie que el resto de portadas.
-     * El aparato está bien dibujado, que en esta ficha importa más que en otras: se ve
-     * la jarra de una sola pieza en reloj de arena, el collar de madera con su correa de
-     * cuero anudada y el filtro grueso abierto, que es de lo que habla el texto.
-     *
-     * Difiere de lo que se había escrito a ciegas en que nadie está vertiendo: el café
-     * ya está colando solo. Y hay un vaso con hielo al lado que la ficha no menciona,
-     * porque esta ficha es de café caliente; no estorba, pero si algún día se regenera,
-     * sobra.
+     * Fotografía de Magnific, elegida el 2026-10-09 junto con el índice nuevo de /metodos.
+     * Sustituye a la imagen de IA provisional de la serie de portadas, que sigue en el
+     * historial de git.
      */
-    file: "/images/metodos/chemex.png",
-    alt: "Una Chemex sobre una mesa de madera gastada: una jarra de vidrio de una sola pieza con forma de reloj de arena, con el collar de madera clara ceñido por una correa de cuero anudada con una cuenta. Arriba lleva puesto el filtro de papel blanco y grueso con el café molido dentro, y por el cuello cae un hilo de café al cuerpo de abajo, que ya tiene una capa hecha. Al lado, un vaso con hielo y café, dos tazas claras y la tapa metálica de un frasco. A la izquierda, la ventana de la cocina con una planta.",
-    credit: { source: "IA" },
+    file: "/images/metodos/chemex.jpg",
+    alt: "Un hervidor oscuro de cuello de cisne deja caer un hilo fino de agua sobre una Chemex vista de cerca y un poco desde arriba. Dentro del cono de vidrio, el filtro de papel grueso doblado contiene el café mojado, de superficie oscura y lisa. Por debajo asoma el collar de madera atado con un cordón de cuero. La Chemex está sobre una mesa de madera cálida, con una libreta oscura desenfocada al lado.",
+    credit: {
+      photographer: "rachenzero",
+      photoUrl: "https://www.magnific.com/premium-photo/chemex-brewing-coffeecoffee-chemex-pour-coffee-maker-drip-kettle_31462818.htm",
+      source: "Magnific",
+    },
   },
 
   /*

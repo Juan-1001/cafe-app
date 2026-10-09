@@ -174,8 +174,13 @@ la portada sin su bloque principal.
 
 ### Imágenes
 
-- Las fotografías se descargan de **Unsplash o Pexels** y se guardan en el repositorio,
-  en `/public/images/<sección>/`.
+- Las fotografías se descargan de **Unsplash, Pexels o Magnific** y se guardan en el
+  repositorio, en `/public/images/<sección>/`. Magnific es el banco de Freepik, se busca
+  con su MCP y entró el 2026-10-09 para las fotos del índice de `/granos`. Dos cosas lo
+  distinguen de los otros dos: sus fotos **premium gastan créditos de la cuenta** (150
+  cada una, 40 las gratuitas) y **su filtro «sin IA» no es fiable** —dejó pasar dos
+  tostadores con llamas dentro del tambor—, así que cada candidata se mira entera
+  antes de proponerla.
 - **Nunca se enlazan imágenes desde dominios externos.** Nada de URLs a Unsplash, a un CDN
   ni a ningún otro sitio: el archivo vive en `/public`.
 - Mientras no exista la imagen real se pinta un **bloque de color sólido de la paleta** con
@@ -190,7 +195,7 @@ la portada sin su bloque principal.
 - Por eso el contenido declara **`file`** y las páginas reciben **`src`**. Son nombres
   distintos a propósito: así una imagen sin resolver no encaja donde se espera una resuelta
   y saltarse el resolutor es un error de compilación, no un hueco que aparece en la web.
-- **Nombres de archivo**: `<slug>.png` para la portada de un método, `<slug>-<qué-es>.jpg`
+- **Nombres de archivo**: `<slug>.jpg` para la portada de un método, `<slug>-<qué-es>.jpg`
   para las fotos dentro de un artículo, y el nombre que diga el catálogo para las piezas de
   equipo. Si se cambia la convención, se renombra también lo que ya existía: una convención
   que solo gobierna lo nuevo son dos formatos conviviendo.
@@ -199,15 +204,16 @@ la portada sin su bloque principal.
   y el servidor donde esto se publica sí, así que un `Kalita-Wave` guardado tal cual se ve
   perfecto en local y desaparece en producción sin que nada falle al compilar. Ya pasó una
   vez, con los filtros del Tótem.
-- **Las portadas de método van en `.png`.** Antes iban en `.jfif` porque era lo que escupía
-  el generador de imágenes y así se dejaba el archivo sin renombrar; el generador ahora da
-  `.png` y las nueve portadas se migraron de una vez. El cambio además quita de en medio
-  una advertencia que ya no hace falta: el `.jfif` solo funcionaba porque `next/image` lo
-  decodifica y sirve `image/jpeg`, y **enlazarlo en crudo no funcionaba** —el servidor de
-  archivos estáticos no reconocía la extensión, la servía como `application/octet-stream` y
-  el navegador se la descargaba en vez de pintarla—. Con `.png` eso deja de ser un riesgo y
-  estas rutas se pueden usar fuera de `next/image`, en una etiqueta `og:image` o en un
-  `<img>` a pelo.
+- **Las portadas de método van en `.jpg`, a 2400 px de ancho.** Han pasado por tres
+  formatos y cada cambio migró las diez de una vez. Primero `.jfif`, lo que escupía el
+  generador de imágenes, que solo funcionaba porque `next/image` lo decodifica: **enlazado
+  en crudo no funcionaba**, el servidor lo servía como `application/octet-stream` y el
+  navegador se lo descargaba en vez de pintarlo. Luego `.png`, cuando el generador empezó a
+  dar ese formato. Y el 2026-10-09 `.jpg`, al sustituir ocho de las diez imágenes de IA por
+  fotos de Magnific: una foto en `.png` pesa varias veces más que en `.jpg`, y las dos de
+  IA que se quedan (colado en tela y Tótem, para los que no hay foto de banco que sirva) se
+  convirtieron también para que no convivan dos formatos. Con `.jpg` las rutas se pueden
+  usar fuera de `next/image`, en una etiqueta `og:image` o en un `<img>` a pelo.
 
 ### Autoría de las fotografías
 
@@ -243,7 +249,10 @@ agrupa al pie de la página cuando la foto solo sirve para reconocer algo.** En 
 va pegado en los bloques de imagen de un artículo, que ya tienen pie; y agrupado en un
 bloque «Fotografías» al final de la home, del índice de métodos y de cada ficha, donde son
 ocho portadas seguidas o miniaturas cuadradas y una línea bajo cada una las convertiría en
-un muro de letra pequeña. Solo se acredita **lo que de verdad se ve**: una foto que todavía
+un muro de letra pequeña. Lo mismo en el índice de `/granos` y en el «Sigue leyendo» de
+cada artículo, que enseñan la foto de un artículo para reconocerlo: esa foto es **la
+primera fotografía del propio artículo** (`articleCover`, en `src/app/granos/cover.ts`),
+no un campo de portada aparte. Solo se acredita **lo que de verdad se ve**: una foto que todavía
 es bloque de color no se le ha pedido a nadie.
 
 ### Equipo de los métodos

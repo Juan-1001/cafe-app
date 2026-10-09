@@ -46,12 +46,21 @@ export const aeropress: BrewMethod = {
   tagline:
     "Dos cilindros de plástico, un filtro de papel del tamaño de una moneda y un empujón. Es el método más rápido del sitio y el que menos margen de error deja abierto.",
   image: {
-    // IMAGEN GENERADA CON IA, provisional, de la misma serie que el resto de portadas.
-    // Es de las más fieles: el gesto de prensar se lee bien y las dos manos están donde
-    // tienen que estar, una arriba y otra sujetando el cuerpo.
-    file: "/images/metodos/aeropress.png",
-    alt: "Dos manos empujan hacia abajo el émbolo de un AeroPress montado sobre una taza de cerámica clara, en una mesa de madera gastada: una mano apoyada en el extremo del émbolo y la otra rodeando el cilindro. Al lado, una bolsa de café de papel abierta con granos derramados y una báscula digital negra. Al fondo, la ventana de la cocina y una planta.",
-    credit: { source: "IA" },
+    /*
+     * Fotografía de Magnific, elegida el 2026-10-09 junto con el índice nuevo de /metodos.
+     * Sustituye a la imagen de IA provisional de la serie de portadas, que sigue en el
+     * historial de git.
+     *
+     * La foto no es 3:2 sino algo más alta (2400 × 1658); las páginas la recortan con
+     * `object-cover` y lo que se pierde es pared y mesa.
+     */
+    file: "/images/metodos/aeropress.jpg",
+    alt: "Un hombre con camisa vaquera vierte agua caliente desde un hervidor de acero de cuello de cisne dentro de un AeroPress. El AeroPress, un cilindro de plástico oscuro y translúcido, está encajado sobre un vaso de vidrio que descansa en una báscula blanca, encima de una barra de madera; dentro del cilindro se ve el café mojado con su espuma. Detrás, estanterías con tazas blancas.",
+    credit: {
+      photographer: "bublikhaus",
+      photoUrl: "https://www.magnific.com/free-photo/step-by-step-aero-press-coffee-preparation-barista-blue-jeans-shirt-pours-hot-boiled-water-from-teapot-aeropress-professional-coffee-brewing-cafe-shop_11622212.htm",
+      source: "Magnific",
+    },
   },
 
   /*

@@ -88,29 +88,17 @@ export const espresso: BrewMethod = {
     "Agua caliente empujada a nueve bares a través de un lecho de café muy fino, en menos de medio minuto. Es el método más exigente del sitio y el único donde lo que ves salir te dice qué corregir en la siguiente.",
   image: {
     /*
-     * IMAGEN GENERADA CON IA, provisional, de la misma serie que las otras nueve
-     * portadas: la misma cocina, la misma ventana y la misma planta.
-     *
-     * Tres cosas que **dibuja mal o de más**, y conviene tenerlas anotadas antes de que
-     * alguien las tome por documentación:
-     *
-     * 1. **Es una máquina de palanca, y esta ficha está escrita para una de bomba.** El
-     *    brazo largo que sale del grupo no es un adorno: en esas máquinas la presión la
-     *    da un muelle y no una bomba. Nada de lo que dice la ficha se apoya en la imagen,
-     *    pero es la primera candidata a sustituir.
-     * 2. **El vaso lleva muchísimo más de lo que es un espresso.** Ahí hay bastante más
-     *    de la bebida que la ficha manda cortar; en la taza de verdad no llega ni a la
-     *    mitad de un vaso así.
-     * 3. **La cuchara de madera del primer plano es justo lo que la ficha dice que no
-     *    uses**, y no hay báscula por ninguna parte. Sale en el alt porque está en la
-     *    imagen, no porque forme parte del método.
-     *
-     * El archivo llegó guardado como `expresso.png` y se renombró a `espresso.png`: el
-     * nombre tiene que ser el slug, y «expresso» además no es como se llama el método.
+     * Fotografía de Magnific, elegida el 2026-10-09 junto con el índice nuevo de /metodos.
+     * Sustituye a la imagen de IA provisional de la serie de portadas, que sigue en el
+     * historial de git.
      */
-    file: "/images/metodos/espresso.png",
-    alt: "Una máquina de espresso pequeña de acero brillante sobre una encimera de madera gastada, junto a una ventana con una planta. Del grupo sale un brazo largo de palanca con puño negro, y debajo, encajado, un portafiltro del que cae un chorro de café oscuro dentro de un vaso de vidrio recto, ya lleno hasta media altura de un líquido marrón con espuma clara encima. Por detrás sube un hilo de vapor. En primer plano, sobre la madera, una cuchara medidora de madera; a la derecha, dos tazas de cerámica color crema y la tapa metálica de un frasco.",
-    credit: { source: "IA" },
+    file: "/images/metodos/espresso.jpg",
+    alt: "Primer plano de un chorro fino de espresso, de color caramelo, que cae desde el portafiltro de una máquina hasta el fondo de una taza blanca de cerámica. El metal de la máquina brilla arriba; el resto queda en penumbra.",
+    credit: {
+      photographer: "rawpixel.com",
+      photoUrl: "https://www.magnific.com/free-photo/closeup-coffee-machine-making-espresso-drink_3075203.htm",
+      source: "Magnific",
+    },
   },
 
   /*
